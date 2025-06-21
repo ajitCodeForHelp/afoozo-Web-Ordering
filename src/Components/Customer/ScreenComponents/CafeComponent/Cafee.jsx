@@ -21,7 +21,7 @@ export default function Cafee() {
         <Container fluid className="p-3">
            
 
-            <h5 className="mb-2 d-flex justify-content-between">
+            {/* <h5 className="mb-2 d-flex justify-content-between">
                 <span>Popular Items</span><a href="#">View All</a>
             </h5>
             <Row className="mb-3">
@@ -61,7 +61,7 @@ export default function Cafee() {
                 <div className="text-center"><BsTruck /> <div className="small">Delivery</div></div>
                 <div className="text-center"><BsFillPersonFill /> <div className="small">Dine-in</div></div>
                 <div className="text-center"><FaShoppingCart /> <div className="small">Orders</div></div>
-            </div>
+            </div> */}
         </Container>
     );
 }
