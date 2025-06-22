@@ -1,6 +1,5 @@
 import React from "react";
 import banner from "../../../Assets/hero-bg.jpg";
-import { Button, Card } from "react-bootstrap";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
@@ -28,17 +27,9 @@ function Banner() {
         },
         // Add more slides if needed
     ];
-    // const images = [banner, banner, banner, banner];
 
     return (
         <>
-            {/* <Card className="mb-4">
-                <Card.Body className="text-center text-white bg-danger rounded banner-img">
-                    <Card.Title>Fast Food Sweet Treats</Card.Title>
-                    <Card.Text>Buy 1 Get 1 Free on Desserts</Card.Text>
-                    <Button variant="light">Order Now</Button>
-                </Card.Body>
-            </Card> */}
             <div className="p-4">
                 <Swiper
                     spaceBetween={10}

@@ -9,18 +9,41 @@
 a {
   text-decoration: none !important;
 }
-.catImg-container{
+
+.catImg-container {
   aspect-ratio: 1/1;
 }
-.catImg{
+
+.catImg {
   aspect-ratio: 2/2 !important;
   mix-blend-mode: darken;
+}
+
+.b-r-2 {
+  border-radius: 20px !important;
+}
+
+.two-line-ellipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-menu-btn {
+  background-color: white;
+  padding: 5px;
+  margin-right: 10px;
+  border: none;
+  display: none;
 }
 
 .search-icon {
   color: #9CA3AF !important;
   top: 33% !important;
-  left: 1.5%;
+  left: 20px;
+  right: 0%;
 }
 
 .search-input::placeholder {
@@ -113,4 +136,254 @@ a {
 /* swiper */
 .mySwiper {
   border-radius: 20px;
+}
+
+@media (max-width: 768px) {
+  .ft-res {
+    font-size: 14px !important;
+  }
+
+  .dis-none {
+    display: none !important;
+  }
+
+  .wallet-none {
+    display: block !important;
+  }
+}
+
+.show-992 {
+  display: none;
+}
+
+.hide-992 {
+  display: block;
+}
+
+@media (max-width: 992px) {
+  .show-992 {
+    display: flex !important;
+  }
+
+  .hide-992 {
+    display: none !important;
+  }
+
+  .nav-menu-btn {
+    display: block;
+  }
+}
+
+.wallet-none {
+  display: none;
+}
+
+/* cafe category */
+.category-scroll {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 10px;
+}
+
+.category-item {
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.category-icon img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  background-color: #fff;
+  border-radius: 50%;
+  padding: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.view-all {
+  cursor: pointer;
+}
+
+/* drawer section */
+/* Backdrop */
+.drawer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1024;
+}
+
+.drawer-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Drawer Styles */
+.sidebar-drawer {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  height: 100vh;
+  width: 260px;
+  background: #fff;
+  box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1);
+  padding: 1.2rem;
+  z-index: 1025;
+  transition: left 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidebar-drawer.open {
+  left: 0;
+}
+
+/* Logo & Header */
+.logo {
+  color: #f44336;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.btn-close-icon {
+  background: transparent;
+  border: none;
+  color: #000;
+}
+
+/* Menu */
+.menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+  flex-grow: 1;
+}
+
+.menu-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 8px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #111;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.menu-list li:hover {
+  background-color: #f6f6f6;
+}
+
+.logout-section {
+  list-style: none;
+  padding: 0;
+}
+
+.logout-section li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #f44336;
+  font-weight: 500;
+  padding: 12px 8px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.logout-section li:hover {
+  background-color: #ffecec;
+}
+
+/* select cafe screen */
+.logo-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: contain;
+}
+
+.address {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #666;
+}
+
+.change-location {
+  cursor: pointer;
+  color: #f59e0b;
+  /* Bootstrap warning shade */
+}
+
+.cuisine-scroll {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 16px;
+  padding-bottom: 10px;
+}
+
+.cuisine-card {
+  flex: 0 0 auto;
+  width: 130px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.cuisine-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.cuisine-img {
+  width: 100%;
+  height: 100px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+
+/* responsive header */
+.header {
+  width: 100%;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #dc2626;
+  /* Bootstrap red-600 */
+  letter-spacing: 0.1rem;
+}
+
+.wallet {
+  background-color: #f3f4f6;
+  /* Light gray */
+}
+
+.wallet-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  background-color: #dc2626;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.wallet-amount {
+  font-weight: 500;
+  font-size: 0.9rem;
 }

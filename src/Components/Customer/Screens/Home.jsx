@@ -1,12 +1,20 @@
 import React from "react";
 import HomeCards from "../ScreenComponents/HomeComponent/HomeCards";
-import { useNavigation } from "react-router-dom";
+import Header from "../CommonComponent/Navbar";
+import BottomNav from "../CommonComponent/BottomNav";
+import Banner from "../CommonComponent/Banner";
 
 function Home() {
-   
+
     return (
         <>
-            <HomeCards />
+            <div className="" style={{ paddingBottom: "70px" }}>
+                <Header />
+                <Banner />
+                <HomeCards />
+                <Banner />
+                <BottomNav />
+            </div>
         </>
     )
 }
