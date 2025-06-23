@@ -23,8 +23,8 @@ function Routing() {
 
     return (
         <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/cafeMenu" element={<CafeMenu />} />
+            <Route path="/cafeMenu" element={<Home />} />
+            <Route path="/" element={<CafeMenu />} />
             <Route path="/cafe" element={<Cafe/>}/>
         </Routes>
     )
