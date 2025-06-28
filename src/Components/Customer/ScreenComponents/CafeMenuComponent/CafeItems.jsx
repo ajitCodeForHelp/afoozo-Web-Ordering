@@ -46,7 +46,7 @@ const CafeItems = () => {
               <div className="flex-grow-1 ms-sm-3">
                 <div className="d-flex justify-content-between flex-wrap">
                   <h6 className="fw-bold mb-1">{item.name}</h6>
-                  <span className="fw-bold text-danger">{item.price}</span>
+                  <span className="fw-bold text-warning">{item.price}</span>
                 </div>
                 <div className="text-muted small mb-1">
                   {item.desc.length > 60 ? item.desc.slice(0, 60) + "..." : item.desc}
@@ -58,7 +58,7 @@ const CafeItems = () => {
                 </div>
               </div>
               <div className="mt-2 mt-sm-0 ms-sm-3">
-                <button className="btn btn-danger px-4 py-1 rounded-pill">Add</button>
+                <button className="btn btn-danger text-warning them-bg-black border-dark px-4 py-1 rounded-pill">Add</button>
               </div>
             </div>
           </div>

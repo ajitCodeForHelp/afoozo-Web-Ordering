@@ -22,7 +22,7 @@ const PaymentSection = ({ walletChecked, onWalletChange, walletAmount, onAddPaym
 
       <div className="fw-bold mb-2">Payment Mode</div>
 
-      <button className="btn btn-warning them-bg w-100 text-white fw-semibold shadow-sm" onClick={onAddPayment}>
+      <button className="btn btn-warning border-dark them-bg-black w-100 text-warning fw-semibold shadow-sm" onClick={onAddPayment}>
         ADD PAYMENT MODE
       </button>
     </div>

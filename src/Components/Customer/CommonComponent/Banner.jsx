@@ -4,6 +4,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import useIsMobile from "../../../Utilities/IsMobile";
+import DeskBanner from "../DeskTopUi/DeskCommonComponent/DeskBanner";
 
 function Banner() {
     const slides = [
@@ -27,10 +29,10 @@ function Banner() {
         },
         // Add more slides if needed
     ];
-
+    const isMobile = useIsMobile();
     return (
         <>
-            <div className="p-4">
+            {isMobile ? <div className="p-4">
                 <Swiper
                     spaceBetween={10}
                     pagination={{ clickable: true }}
@@ -55,7 +57,7 @@ function Banner() {
                                 <div className="absolute inset-0 bg-black/40 rounded-xl flex flex-col justify-center px-4 text-white">
                                     <h2 className="text-lg font-bold">{slide.title}</h2>
                                     <p className="text-sm">{slide.subtitle}</p>
-                                    <button className="mt-2 bg-red-600 text-white px-4 py-1 rounded them-bg border-0">
+                                    <button className="mt-2 bg-red-600 text-warning px-4 py-1 rounded them-bg-black border-dark border-0">
                                         {slide.buttonText}
                                     </button>
                                 </div>
@@ -63,7 +65,9 @@ function Banner() {
                         </SwiperSlide>
                     ))}
                 </Swiper>
-            </div>
+            </div> :
+                <DeskBanner />
+            }
         </>
     )
 }

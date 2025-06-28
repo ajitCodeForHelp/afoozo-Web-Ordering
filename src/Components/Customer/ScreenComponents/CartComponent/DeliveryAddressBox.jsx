@@ -1,10 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 const DeliveryAddressBox = ({ address, onChange }) => {
 
-    useEffect(() => {
-        console.log(window.innerWidth);
-    }, [window.innerWidth]);
     return (
         <div className="delivery-box p-3 bg-white rounded shadow-sm mb-3">
             <div className="text-muted fw-medium mb-2">Delivering Food To</div>

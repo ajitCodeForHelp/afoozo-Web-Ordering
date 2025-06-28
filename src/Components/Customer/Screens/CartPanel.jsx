@@ -8,6 +8,7 @@ import PaymentSection from '../ScreenComponents/CartComponent/PaymentSection';
 import DeliveryAddressBox from '../ScreenComponents/CartComponent/DeliveryAddressBox';
 import PromoCodePannel from './PromoCodePannel';
 import CookingInstructionModal from '../CommonComponent/Modals/CookingInstructionModal';
+import AddressDrawer from '../ScreenComponents/AddressComonent.jsx/AddressSection';
 
 const CartPanel = ({ show, onClose, items, increment, decrement, edit }) => {
 
@@ -27,9 +28,11 @@ const CartPanel = ({ show, onClose, items, increment, decrement, edit }) => {
     const [showCookingPopup, setShowCookingPopup] = useState(false);
 
     const handleAddInstruction = (text) => {
-        console.log('Added instruction:', text);
         setShowCookingPopup(false);
     };
+
+    // Address Drawer
+    const [showAddressDrawer, setShowAddressDrawer] = useState(false);
 
     // cart outside click
     const cartRef = useRef(null);
@@ -40,25 +43,25 @@ const CartPanel = ({ show, onClose, items, increment, decrement, edit }) => {
                 onClose(); // close cart
             }
         };
-        if (show && !isPromoOpen && !showCookingPopup) {
+        if (show && !isPromoOpen && !showCookingPopup && !showAddressDrawer) {
             document.addEventListener('mousedown', handleClickOutside);
         }
 
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [show, onClose, isPromoOpen, showCookingPopup]);
+    }, [show, onClose, isPromoOpen, showCookingPopup, showAddressDrawer]);
 
     return (
         <>
             <div className={`${show ? 'cart-blur-overlay' : ''}`}>
                 <div className={`cart-offcanvas ${show ? 'show' : ''}`} ref={cartRef}>
-                    <div className="cart-header d-flex justify-content-start gap- align-items-center p-3 border-bottom them-bg text-white">
-                        <button className="text-white m-0 cart-cross-btn" style={{ color: "white !important" }} onClick={onClose}><ImCross /></button>
+                    <div className="cart-header d-flex justify-content-start gap- align-items-center p-3 border-bottom them-bg-black text-warning">
+                        <button className="text-warning m-0 cart-cross-btn" style={{ color: "white !important" }} onClick={onClose}><ImCross /></button>
                         <h5 className="m-auto">Checkout</h5>
                     </div>
 
-                    <div className="cart-body p-3" style={{paddingBottom:"60px !important"}}>
+                    <div className="cart-body p-3" style={{ paddingBottom: "60px !important" }}>
                         {items.map((item) => (
                             <CartItems
                                 key={item.id}
@@ -86,7 +89,7 @@ const CartPanel = ({ show, onClose, items, increment, decrement, edit }) => {
                         />
                         <DeliveryAddressBox
                             address={`301 Kakad Industrial Area, Kakad Industrial Estate,\n32 Sitaram Keer Marg, VSNL Colony,\nMahim, Mumbai, Maharashtra 400016, India`}
-                            onChange={() => alert('Open address selector')}
+                            onChange={() => setShowAddressDrawer(true)}
                         />
                         <PaymentSection
                             walletChecked={isWalletUsed}
@@ -112,7 +115,8 @@ const CartPanel = ({ show, onClose, items, increment, decrement, edit }) => {
                 onClose={() => setShowCookingPopup(false)}
                 onAdd={handleAddInstruction}
             />
-
+            <AddressDrawer show={showAddressDrawer} onClose={() => setShowAddressDrawer(false)} />
+           
         </>
     );
 };

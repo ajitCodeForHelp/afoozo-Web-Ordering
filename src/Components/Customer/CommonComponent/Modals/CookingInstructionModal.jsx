@@ -17,9 +17,9 @@ const CookingInstructionModal = ({ show, onClose, onAdd }) => {
     if (!show) return null;
 
     return (
-        <div className={`cooking-popup-overlay ${visible ? '' : 'hidden'}`}  onClick={handleClose}>
-            <div  className={`cooking-popup-box ${visible ? '' : 'hidden'}`} onClick={(e) => e.stopPropagation()}>
-                <div className="cooking-popup-header them-bg text-white">Cooking Instruction</div>
+        <div className={`cooking-popup-overlay ${visible ? '' : 'hidden'}`} onClick={handleClose}>
+            <div className={`cooking-popup-box ${visible ? '' : 'hidden'}`} onClick={(e) => e.stopPropagation()}>
+                <div className="cooking-popup-header them-bg-black text-warning">Cooking Instruction</div>
 
                 <input
                     type="text"
@@ -29,7 +29,7 @@ const CookingInstructionModal = ({ show, onClose, onAdd }) => {
                     onChange={(e) => setInstruction(e.target.value)}
                 />
 
-                <button className="cooking-popup-add-btn them-bg text-white" onClick={() => onAdd(instruction)}>
+                <button className="cooking-popup-add-btn them-bg-black text-warning" onClick={() => onAdd(instruction)}>
                     ADD
                 </button>
             </div>

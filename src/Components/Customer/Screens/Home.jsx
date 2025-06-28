@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import HomeCards from "../ScreenComponents/HomeComponent/HomeCards";
 import Header from "../CommonComponent/Navbar";
-import BottomNav from "../CommonComponent/BottomNav";
 import Banner from "../CommonComponent/Banner";
 import CartButton from "../CommonComponent/CartButton";
 import CartPanel from "./CartPanel";
@@ -32,7 +31,6 @@ function Home() {
                 <Banner />
                 <HomeCards />
                 <Banner />
-                <BottomNav />
                 <CartButton openClose={() => setCartVisible(true)}/>
                 <CartPanel
                     show={cartVisible}

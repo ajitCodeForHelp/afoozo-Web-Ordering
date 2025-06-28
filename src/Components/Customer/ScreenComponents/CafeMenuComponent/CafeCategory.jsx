@@ -16,7 +16,7 @@ function CafeCategory() {
             <Container fluid className="py-3">
                 <div className="d-flex justify-content-between align-items-center px-2 mb-3">
                     <h5 className="fw-bold mb-0">Categories</h5>
-                    <span className="text-danger fw-semibold view-all">View All</span>
+                    <span className="text-warning fw-semibold view-all">View All</span>
                 </div>
 
                 <div className="category-scroll px-2">

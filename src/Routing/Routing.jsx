@@ -1,8 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Home from "../Components/Customer/Screens/Home";
 import CafeMenu from "../Components/Customer/Screens/CafeMenu";
-import Cafe from "../Components/Customer/Screens/Cafe";
+import Restaurants from "../Components/Customer/Screens/Restaurants";
 
 function Routing() {
 
@@ -23,9 +22,9 @@ function Routing() {
 
     return (
         <Routes>
-            <Route path="/cafeMenu" element={<Home />} />
-            <Route path="/" element={<CafeMenu />} />
-            <Route path="/cafe" element={<Cafe/>}/>
+            <Route path="/cafe" element={<CafeMenu />} />
+            {/* <Route path="/cafeMenu" element={<Home />} /> */}
+            <Route path="/" element={<Restaurants/>}/>
         </Routes>
     )
 }
