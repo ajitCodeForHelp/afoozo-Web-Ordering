@@ -8,6 +8,8 @@ import CartButton from "../CommonComponent/CartButton";
 import CartPanel from "./CartPanel";
 import ServiceTabs from "../DeskTopUi/DeskCommonComponent/ServiceTab";
 import ScrollToTop from "../../../Utilities/ScrollToTop";
+import useIsMobile from "../../../Utilities/IsMobile";
+import BottomNav from "../CommonComponent/BottomNav";
 
 function CafeMenu() {
     const [cartVisible, setCartVisible] = useState(false);
@@ -26,17 +28,19 @@ function CafeMenu() {
     };
 
     const editItem = (id) => alert(`Edit item ${id}`);
+    const isMobile = useIsMobile();
 
     return (
         <>
-        <ScrollToTop/>
+            <ScrollToTop />
             <div className="" style={{ paddingBottom: "70px" }}>
                 <Header />
                 <Banner />
-                <ServiceTabs />
+                {!isMobile && <ServiceTabs />}
                 <CafeCategory />
                 <PopularItem />
                 <CafeItems />
+                {isMobile && <BottomNav />}
                 <CartButton openClose={() => setCartVisible(true)} />
                 <CartPanel
                     show={cartVisible}

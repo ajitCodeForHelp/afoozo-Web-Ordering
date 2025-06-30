@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import banner from "../../../Assets/hero-bg.jpg";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
@@ -29,6 +29,19 @@ function Banner() {
         },
         // Add more slides if needed
     ];
+
+    const getItems = async (lat, lng) => {
+        // ${process.env.REACT_APP_BASE_URL}
+        const res = await fetch(`http://65.0.136.206:8080/v1/api/getAdBannerList/DashboardTop`)
+        const getRes = await res.json();
+        if (getRes.errorCode === 0) {
+            console.log(getRes, "gerRes");
+        }
+    };
+    useEffect(() => {
+            getItems();
+    }, []);
+
     const isMobile = useIsMobile();
     return (
         <>

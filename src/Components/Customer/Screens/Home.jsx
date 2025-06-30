@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import HomeCards from "../ScreenComponents/HomeComponent/HomeCards";
-import Header from "../CommonComponent/Navbar";
+// import Header from "../CommonComponent/Navbar";
 import Banner from "../CommonComponent/Banner";
 import CartButton from "../CommonComponent/CartButton";
 import CartPanel from "./CartPanel";
+import Nav from "../ScreenComponents/RestaurantsComponent/Nav";
 
 function Home() {
 
@@ -27,11 +28,12 @@ function Home() {
     return (
         <>
             <div className="" style={{ paddingBottom: "70px" }}>
-                <Header />
+                {/* <Header /> */}
+                <Nav />
                 <Banner />
                 <HomeCards />
                 <Banner />
-                <CartButton openClose={() => setCartVisible(true)}/>
+                <CartButton openClose={() => setCartVisible(true)} />
                 <CartPanel
                     show={cartVisible}
                     onClose={() => setCartVisible(false)}

@@ -45,7 +45,7 @@ const RestaurantList = () => {
       </p>
       <div className="d-flex flex-column gap-3">
         {restaurants.map((res, idx) => (
-          <Link to="/cafe">
+          <Link to="/cafeMenu">
             <div
               key={idx}
               className="d-flex gap-3 p-2 rounded-3 shadow-sm align-items-start bg-white"

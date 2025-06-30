@@ -6,7 +6,7 @@ import "swiper/css/pagination";
 import img from "../../../../Assets/Banner.jpg";
 
 function DeskBanner() {
-    const images = [img, img, img]
+    const images = [img, img, img];
     return (
         <>
             <div className="container-fluid px-0 banner-carousel">

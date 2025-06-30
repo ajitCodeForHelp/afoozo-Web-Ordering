@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 
 function HomeCards() {
     const menuItems = [
-        { title: "DINE IN", icon: "🍽️", path: "/cafeMenu" },
-        { title: "DELIVERY", icon: "🛵", path: "/cafeMenu" },
-        { title: "TAKE AWAY", icon: "🧺", path: "/cafeMenu" },
-        { title: "Work Café", icon: "☕", path: "/cafeMenu" },
-        { title: "Check -In", icon: "🚪", path: "/cafeMenu" },
+        { title: "DINE IN", icon: "🍽️", path: "/cafe" },
+        { title: "DELIVERY", icon: "🛵", path: "/cafe" },
+        { title: "TAKE AWAY", icon: "🧺", path: "/cafe" },
+        { title: "Work Café", icon: "☕", path: "/cafe" },
+        { title: "Check -In", icon: "🚪", path: "/cafe" },
     ];
     return (
         <>
