@@ -9,7 +9,7 @@ import AuthGate from "../Utilities/AuthGate";
 function Routing() {
 
     return (
-        <LocationGate>
+        // <LocationGate>
             <Routes>
                 <Route path="/" element={<AuthGate/>}/>
                 <Route path="/home" element={<Restaurants />} />
@@ -18,7 +18,7 @@ function Routing() {
 
                 {/* <Route path="/cafeMenu" element={<Home />} /> */}
             </Routes>
-        </LocationGate>
+        // </LocationGate>
     )
 }
 export default Routing;
