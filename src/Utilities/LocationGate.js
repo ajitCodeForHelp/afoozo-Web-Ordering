@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 
 function LocationGate({ children }) {
   const [locationAllowed, setLocationAllowed] = useState(null); // null = checking
@@ -17,9 +17,13 @@ function LocationGate({ children }) {
         if (result.state === 'granted') {
           setLocationAllowed(true);
         } else if (result.state === 'prompt') {
+          // Actively request location – this will trigger browser popup
           navigator.geolocation.getCurrentPosition(
             () => setLocationAllowed(true),
-            () => setLocationAllowed(false)
+            () => {
+              setLocationAllowed(false);
+              setShowModal(true);
+            }
           );
         } else if (result.state === 'denied') {
           setLocationAllowed(false);
@@ -29,39 +33,32 @@ function LocationGate({ children }) {
   }, []);
 
   if (locationAllowed === null) {
-    return <div className="text-center mt-5">Checking location permission...</div>;
+    return <div className="text-center mt-5">Requesting location access...</div>;
   }
 
   if (locationAllowed === false) {
     return (
       <>
-        {/* Optional fallback UI */}
         <div className="text-center mt-5">
-          <h4>Location Access Required</h4>
-          <p>This site needs your location to continue.</p>
+          <h4>Location Access Needed</h4>
+          <p>This site cannot function without your location.</p>
         </div>
 
-        {/* Modal for denied permission */}
-        <Modal show={showModal} onHide={() => {}} backdrop="static" keyboard={false}>
-          <Modal.Header className='bg-dark text-warning'>
-            <Modal.Title>Location Permission Denied</Modal.Title>
+        <Modal show={showModal} onHide={() => { }} backdrop="static" keyboard={false}>
+          <Modal.Header className="bg-dark text-warning">
+            <Modal.Title>Location Access Denied</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <p>
-              You have previously denied location access. Please follow these steps to re-enable it:
+              You denied location access. Please enable it in your browser settings to continue:
             </p>
             <ul>
-              <li>Click the 🔒 icon in the address bar.</li>
-              <li>Go to "Site Settings".</li>
-              <li>Find "Location" and change it to "Allow".</li>
-              <li>Reload this page.</li>
+              <li>Click the 🔒 icon in your browser’s address bar.</li>
+              <li>Select “Site settings”.</li>
+              <li>Change “Location” to “Allow”.</li>
+              <li>Refresh this page manually.</li>
             </ul>
           </Modal.Body>
-          <Modal.Footer>
-            <Button variant="primary" className='bg-dark text-warning border-0' onClick={() => window.location.reload()}>
-              Retry
-            </Button>
-          </Modal.Footer>
         </Modal>
       </>
     );

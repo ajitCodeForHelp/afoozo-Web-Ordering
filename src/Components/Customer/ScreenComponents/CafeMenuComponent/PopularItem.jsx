@@ -74,7 +74,7 @@
 import React from "react";
 import bur from "../../../../Assets/burgur.jpg";
 
-function PopularItem() {
+function PopularItem({resMenu}) {
     const foodItems = [
         {
             name: "Cheeseburger Deluxe",
@@ -106,28 +106,28 @@ function PopularItem() {
         <div className="p-3">
             <div className="d-flex justify-content-between align-items-center px-2 mb-3">
                 <h5 className="fw-bold mb-0">Popular Items</h5>
-                <span className="text-warning fw-semibold view-all">View All</span>
+                {/* <span className="text-warning fw-semibold view-all">View All</span> */}
             </div>
 
             {/* Horizontal Scroll Wrapper */}
             <div className="horizontal-scroll-wrapper d-flex gap-3 overflow-auto px-2">
-                {foodItems.map((item, index) => (
+                {resMenu?.map((item, index) => (
                     <div className="card h-100 shadow-sm border-0 rounded-4" style={{ minWidth: "250px" }} key={index}>
                         <img
-                            src={item.img}
-                            alt={item.name}
+                            src={item.itemImageUrl}
+                            alt={item.title}
                             className="card-img-top rounded-top-4"
                             style={{ objectFit: "cover", height: "180px" }}
                         />
                         <div className="card-body d-flex flex-column">
                             <h6 className="card-title fw-bold mb-1">
-                                {item.name.split(" ")[0]} <span className="text-warning">{item.price}</span>
+                                {item.title.split(" ")[0]} <span className="text-warning">{item.finalPrice}</span>
                             </h6>
                             <p className="card-subtitle text-muted mb-2">
-                                {item.name.split(" ").slice(1).join(" ")}
+                                {item.title.split(" ").slice(1).join(" ")}
                             </p>
                             <p className="card-text text-muted small flex-grow-1">
-                                {item.desc.length > 50 ? item.desc.slice(0, 50) + "..." : item.desc}
+                                {item.description.length > 50 ? item.desc.slice(0, 50) + "..." : item.description}
                             </p>
                             <button className="btn btn-danger them-bg-black border-dark text-warning w-100 mt-auto rounded-pill fw-semibold">
                                 Add to Cart

@@ -13,7 +13,7 @@ function Restaurants() {
     const location = useContext(LocationContext);
     const [RestaurantLists, setRestaurantLists] = useState([]);
     // const [filterResList, setFilterResList] = useState([...RestaurantList]);
-    // const [cuisineList,setCuisineList] = useState([]);
+    const [cuisineList, setCuisineList] = useState([]);
     const [orderType, setOrderType] = useState("HomeDelivery");
 
     const getList = async (typeOrder) => {
@@ -51,12 +51,27 @@ function Restaurants() {
             console.error("Fetch failed:", error);
         }
     };
-
     useEffect(() => {
         if (location && orderType) {
             getList(orderType);
         }
     }, [location, orderType]);
+
+    const getCuisine = async () => {
+        try {
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/cuisineList`);
+            const getRes = await res.json();
+            if (getRes.errorCode === 0) {
+                setCuisineList(getRes.responsePacket);
+            }
+        } catch (e) {
+            console.log(e, "error in getCusine");
+        }
+    };
+    useEffect(() => {
+        getCuisine();
+    }, []);
+
     const isMobile = useIsMobile();
     return (
         <>
@@ -64,8 +79,8 @@ function Restaurants() {
             <Nav />
             <Banner />
             {!isMobile && <ServiceTabs orderType={orderType} setOrderType={setOrderType} />}
-            <CafeCategory />
-            {isMobile && <BottomNav />}
+            <CafeCategory cuisineList={cuisineList} />
+            {isMobile && <BottomNav orderType={orderType} setOrderType={setOrderType} />}
             <RestaurantList restaurants={RestaurantLists} />
         </>
     )

@@ -50,9 +50,16 @@ function CafeMenu() {
     }, []);
 
     const [hotSelling, setHotSelling] = useState([]);
-    const getPopularItems = () => {
-        
-    }
+    useEffect(() => {
+        if (resMenu) {
+            const getPopularItems = () => {
+                const get = resMenu?.flatMap((itm) => itm.menuList?.filter((res) => res.sticker === "hotSelling"));
+                setHotSelling(get);
+            };
+            getPopularItems();
+        }
+
+    }, [resMenu]);
 
     const increment = (id) => {
         setItems(items.map(item => item.id === id ? { ...item, quantity: item.quantity + 1 } : item));
@@ -71,9 +78,9 @@ function CafeMenu() {
                 <Header />
                 <Banner />
 
-                <CafeCategory />
-                <PopularItem />
-                <CafeItems />
+                {/* <CafeCategory /> */}
+                {hotSelling?.length > 0 && <PopularItem hotSelling={hotSelling} />}
+                <CafeItems resMenu={resMenu} />
 
                 <CartButton openClose={() => setCartVisible(true)} />
                 <CartPanel

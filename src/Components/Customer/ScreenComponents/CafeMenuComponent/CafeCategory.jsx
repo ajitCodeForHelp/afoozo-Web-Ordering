@@ -2,15 +2,15 @@ import React from "react";
 import caticon from "../../../../Assets/Cafe-category.jpg";
 import { Container } from 'react-bootstrap';
 
-function CafeCategory() {
-    const categories = [
-        { name: 'South Indian', icon: caticon },
-        { name: 'North Indian', icon: caticon },
-        { name: 'Chinese', icon: caticon },
-        { name: 'Sandwich', icon: caticon },
-        { name: 'Pizza', icon: caticon }, // Extra for scroll test
-        { name: 'Burger', icon: caticon } // Extra for scroll test
-    ];
+function CafeCategory({ cuisineList }) {
+    // const categories = [
+    //     { name: 'South Indian', icon: caticon },
+    //     { name: 'North Indian', icon: caticon },
+    //     { name: 'Chinese', icon: caticon },
+    //     { name: 'Sandwich', icon: caticon },
+    //     { name: 'Pizza', icon: caticon }, // Extra for scroll test
+    //     { name: 'Burger', icon: caticon } // Extra for scroll test
+    // ];
     return (
         <>
             <Container fluid className="py-3">
@@ -20,12 +20,12 @@ function CafeCategory() {
                 </div>
 
                 <div className="category-scroll px-2">
-                    {categories.map((cat, index) => (
+                    {cuisineList?.map((cat, index) => (
                         <div key={index} className="category-item text-center mx-2">
                             <div className="category-icon mb-2">
-                                <img src={cat.icon} alt={cat.name} />
+                                <img src={cat?.cuisineImageUrl} alt={index} />
                             </div>
-                            <div className="category-name small fw-semibold">{cat.name}</div>
+                            <div className="category-name small fw-semibold">{cat?.cuisineTitle}</div>
                         </div>
                     ))}
                 </div>
