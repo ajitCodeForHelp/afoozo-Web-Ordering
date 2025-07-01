@@ -1,20 +1,14 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { Navigate } from "react-router-dom";
 
-const AuthGate = () => {
-  const navigate = useNavigate();
+const AuthGate = ({ children }) => {
+    const authKey = localStorage.getItem("secretKey");
 
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
-
-    if (token) {
-        navigate("/login");
-    } else {
-        navigate("/home"); // Change to your actual home route
+    if (!authKey) {
+        return <Navigate to="/login" replace />;
     }
-  }, [navigate]);
 
-  return null; // no UI
+    return children;
 };
 
 export default AuthGate;

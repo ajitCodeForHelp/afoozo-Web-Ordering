@@ -41,20 +41,27 @@ function DraggableMap({ onLocationChange }) {
         mapRef.current = mapInstance;
     }, []);
 
-    const onMapIdle = useCallback(async () => {
-        if (mapRef.current) {
-            const center = mapRef.current.getCenter();
-            const newCoords = {
-                lat: center.lat(),
-                lng: center.lng(),
-            };
+   const onMapIdle = useCallback(async () => {
+    if (mapRef.current) {
+        const center = mapRef.current.getCenter();
+        const newCoords = {
+            lat: parseFloat(center.lat().toFixed(6)),
+            lng: parseFloat(center.lng().toFixed(6)),
+        };
+
+        // Only update if position has really changed
+        if (
+            newCoords.lat !== parseFloat(markerPosition.lat.toFixed(6)) ||
+            newCoords.lng !== parseFloat(markerPosition.lng.toFixed(6))
+        ) {
             setMarkerPosition(newCoords);
             if (onLocationChange) {
                 const address = await getAddressFromCoords(newCoords);
                 onLocationChange({ ...newCoords, address });
             }
         }
-    }, [onLocationChange]);
+    }
+}, [onLocationChange, markerPosition]);
 
     return isLoaded ? (
         <GoogleMap

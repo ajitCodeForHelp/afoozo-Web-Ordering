@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import banner from "../../../Assets/hero-bg.jpg";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
@@ -8,38 +8,21 @@ import useIsMobile from "../../../Utilities/IsMobile";
 import DeskBanner from "../DeskTopUi/DeskCommonComponent/DeskBanner";
 
 function Banner() {
-    const slides = [
-        {
-            title: "Gharelu Thali",
-            subtitle: "Subscription at 20% off",
-            buttonText: "Order Now",
-            image: banner, // Make sure the path is correct (public folder or import)
-        },
-        {
-            title: "Gharelu Thali",
-            subtitle: "Subscription at 20% off",
-            buttonText: "Order Now",
-            image: banner, // Make sure the path is correct (public folder or import)
-        },
-        {
-            title: "Gharelu Thali",
-            subtitle: "Subscription at 20% off",
-            buttonText: "Order Now",
-            image: banner, // Make sure the path is correct (public folder or import)
-        },
-        // Add more slides if needed
-    ];
 
-    const getItems = async (lat, lng) => {
-        // ${process.env.REACT_APP_BASE_URL}
-        const res = await fetch(`http://65.0.136.206:8080/v1/api/getAdBannerList/DashboardTop`)
-        const getRes = await res.json();
-        if (getRes.errorCode === 0) {
-            console.log(getRes, "gerRes");
+    const [slides, setSlides] = useState([]);
+    const getItems = async () => {
+        try {
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getAdBannerList/DashboardTop`)
+            const getRes = await res.json();
+            if (getRes.errorCode === 0) {
+                setSlides(getRes.responsePacket);
+            }
+        } catch (e) {
+            console.log(e, "chek your internet connection");
         }
     };
     useEffect(() => {
-            getItems();
+        getItems();
     }, []);
 
     const isMobile = useIsMobile();
@@ -54,15 +37,15 @@ function Banner() {
                         disableOnInteraction: false,
                     }}
                     modules={[Pagination, Autoplay]}
-                    className="mySwiper"
+                    className="mySwiper overflow-hidden"
                 >
                     {slides.map((slide, idx) => (
-                        <SwiperSlide key={idx}>
-                            <div
+                        slide.active && <SwiperSlide key={idx} className="rounded-xl overflow-hidden">
+                            {/* <div
                                 className="rounded-xl overflow-hidden relative d-flex align-items-center"
                                 style={{
                                     height: '250px',
-                                    backgroundImage: `url(${slide.image})`,
+                                    backgroundImage: `url(${slide.adImageUrlLarge})`,
                                     backgroundSize: 'cover',
                                     backgroundPosition: 'center',
                                 }}
@@ -74,12 +57,13 @@ function Banner() {
                                         {slide.buttonText}
                                     </button>
                                 </div>
-                            </div>
+                            </div> */}
+                            <img src={slide.adImageUrlLarge} alt={`Slide ${idx + 1}`} className="img-fluid slide-image w-100 rounded-xl" />
                         </SwiperSlide>
                     ))}
                 </Swiper>
             </div> :
-                <DeskBanner />
+                <DeskBanner images={slides} />
             }
         </>
     )

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../CommonComponent/Navbar";
 import Banner from "../CommonComponent/Banner";
 import CafeCategory from "../ScreenComponents/CafeMenuComponent/CafeCategory";
@@ -6,18 +6,53 @@ import PopularItem from "../ScreenComponents/CafeMenuComponent/PopularItem";
 import CafeItems from "../ScreenComponents/CafeMenuComponent/CafeItems";
 import CartButton from "../CommonComponent/CartButton";
 import CartPanel from "./CartPanel";
-import ServiceTabs from "../DeskTopUi/DeskCommonComponent/ServiceTab";
 import ScrollToTop from "../../../Utilities/ScrollToTop";
-import useIsMobile from "../../../Utilities/IsMobile";
-import BottomNav from "../CommonComponent/BottomNav";
+import { useParams } from "react-router-dom";
 
 function CafeMenu() {
     const [cartVisible, setCartVisible] = useState(false);
+    const { id } = useParams();
 
     const [items, setItems] = useState([
         { id: 1, name: 'Laksa Soup - Chicken', price: 525, quantity: 1, isVeg: false },
         { id: 2, name: 'Tom Kha Gai - Veg', price: 299, quantity: 1, isVeg: true },
     ]);
+
+    const [resMenu, setResMenu] = useState([]);
+
+    const getData = async () => {
+        try {
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getItemListWithCatSubCat`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    restaurantId: id,
+                    orderType: "Cafe",
+                    tableNumber: 0,
+                    length: -1,
+                    searchKey: "",
+                })
+            })
+            const getRes = await res.json();
+            if (getRes.errorCode === 0) {
+                setResMenu(getRes.responsePacket);
+            }
+        } catch (e) {
+            console.log(e, "error in getData");
+        }
+    };
+    useEffect(() => {
+        if (id) {
+            getData();
+        }
+    }, []);
+
+    const [hotSelling, setHotSelling] = useState([]);
+    const getPopularItems = () => {
+        
+    }
 
     const increment = (id) => {
         setItems(items.map(item => item.id === id ? { ...item, quantity: item.quantity + 1 } : item));
@@ -28,7 +63,6 @@ function CafeMenu() {
     };
 
     const editItem = (id) => alert(`Edit item ${id}`);
-    const isMobile = useIsMobile();
 
     return (
         <>
@@ -36,11 +70,11 @@ function CafeMenu() {
             <div className="" style={{ paddingBottom: "70px" }}>
                 <Header />
                 <Banner />
-                {!isMobile && <ServiceTabs />}
+
                 <CafeCategory />
                 <PopularItem />
                 <CafeItems />
-                {isMobile && <BottomNav />}
+
                 <CartButton openClose={() => setCartVisible(true)} />
                 <CartPanel
                     show={cartVisible}

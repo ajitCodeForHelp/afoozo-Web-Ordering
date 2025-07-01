@@ -169,15 +169,24 @@ select:focus {
 /* swiper */
 .mySwiper {
   border-radius: 20px;
+  height: 400px;
 }
 
 .deskSwiper {
   border-radius: 0px !important;
+  height: 400px;
 }
 
 @media (max-width: 768px) {
   .ft-res {
     font-size: 14px !important;
+  }
+
+  .res-title{
+      font-size: 14px !important;
+  }
+  .res-cuisines {
+    font-size: 10px !important;
   }
 
   .dis-none {
@@ -186,6 +195,10 @@ select:focus {
 
   .wallet-none {
     display: block !important;
+  }
+
+  .mySwiper {
+    height: 130px !important;
   }
 }
 

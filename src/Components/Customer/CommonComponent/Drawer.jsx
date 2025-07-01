@@ -23,6 +23,27 @@ export default function SidebarDrawer({ isOpen, onClose }) {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
   }, [isOpen]);
 
+  const [profileData, setProfileData] = useState([]);
+  const getData = async () => {
+    try {
+      const token = localStorage.getItem("secretKey");
+      const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/profileDetail`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const getRes = await res.json();
+      if (getRes.errorCode === 0) {
+        setProfileData(getRes.responsePacket);
+      }
+    } catch (r) {
+      console.log(r, "check your internet connection");
+    }
+  };
+  useEffect(()=>{
+
+  },[])
+
   const [showUpdateProfile, setShowUpdateProfile] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [showAbout, setShowAbout] = useState(false);

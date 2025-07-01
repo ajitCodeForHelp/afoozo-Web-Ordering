@@ -12,6 +12,7 @@ const AddAddressSection = ({ isOpen, onClose }) => {
     const mapRef = useRef(null);
     const [address, setAddress] = useState('Drag map to select location');
     const [searchedAddress, setSearchedAddress] = useState('');
+    console.log(address,"address");
     // const [selectedLocation, setSelectedLocation] = useState(null);
     const [drawerOpen, setDrawerOpen] = useState(false);
     // const { isLoaded } = useJsApiLoader({

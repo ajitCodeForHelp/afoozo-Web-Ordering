@@ -9,16 +9,25 @@ import AuthGate from "../Utilities/AuthGate";
 function Routing() {
 
     return (
-        // <LocationGate>
+        <LocationGate>
             <Routes>
-                <Route path="/" element={<AuthGate/>}/>
-                <Route path="/home" element={<Restaurants />} />
+                {/* <Route path="/" element={<AuthGate />} /> */}
+                <Route path="/"
+                    element={
+                        <AuthGate>
+                            <Restaurants />
+                        </AuthGate>
+                    } />
                 <Route path="/login" element={<Login />} />
-                <Route path="/cafeMenu" element={<CafeMenu />} />
+                <Route path="/cafeMenu/:id" element={
+                    <AuthGate>
+                        <CafeMenu />
+                    </AuthGate>
+                } />
 
                 {/* <Route path="/cafeMenu" element={<Home />} /> */}
             </Routes>
-        // </LocationGate>
+        </LocationGate>
     )
 }
 export default Routing;

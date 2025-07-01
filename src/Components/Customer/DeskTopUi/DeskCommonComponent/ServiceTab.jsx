@@ -7,14 +7,14 @@ import {
 } from "react-icons/fa";
 
 const tabs = [
-  { icon: <FaMotorcycle />, label: "Delivery" },
-  { icon: <FaShoppingBag />, label: "TakeAway" },
-  { icon: <FaUtensils />, label: "Dine In" },
-  { icon: "", label: "Work Cafe" },
-  { icon: "", label: "Check-In" },
+  { icon: <FaMotorcycle />, label: "Delivery", type: "HomeDelivery" },
+  { icon: <FaShoppingBag />, label: "TakeAway", type: "TakeAway" },
+  { icon: <FaUtensils />, label: "Dine In", type: "DineIn" },
+  { icon: "", label: "Work Cafe", type: "Cafe" },
+  { icon: "", label: "Check-In", type: "CheckIn" },
 ];
 
-const ServiceTabs = () => {
+const ServiceTabs = ({ orderType, setOrderType }) => {
   const containerRef = useRef();
 
   useEffect(() => {
@@ -27,7 +27,8 @@ const ServiceTabs = () => {
       {tabs.map((tab, index) => (
         <div
           key={index}
-          className={`tab-item ${index === 1 ? "active" : ""}`} // 1 is active for demo
+          className={`tab-item ${orderType === tab.type ? "active" : ""}`} // 1 is active for demo
+          onClick={() => setOrderType(tab.type)}
         >
           {tab.icon && <span className="tab-icon">{tab.icon}</span>}
           <span className="tab-label">{tab.label}</span>
