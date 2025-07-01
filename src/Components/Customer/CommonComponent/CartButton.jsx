@@ -2,6 +2,7 @@ import React from "react";
 import { FaShoppingCart } from "react-icons/fa";
 
 function CartButton({ openClose }) {
+   
     return (
         <>
             <div className="position-fixed bottom-0 end-0 me-4 mb-5 cart-btn-container" onClick={openClose}>

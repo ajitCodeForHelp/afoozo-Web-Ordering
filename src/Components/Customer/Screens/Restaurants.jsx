@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import CafeCategory from "../ScreenComponents/CafeMenuComponent/CafeCategory";
+import CafeCategory from "../ScreenComponents/RestaurantsComponent/CafeCategory";
 import RestaurantList from "../ScreenComponents/RestaurantsComponent/RestaurantsList";
 import Nav from "../ScreenComponents/RestaurantsComponent/Nav";
 import ScrollToTop from "../../../Utilities/ScrollToTop";
@@ -8,14 +8,16 @@ import { LocationContext } from "../../../Utilities/LocationContext";
 import ServiceTabs from "../DeskTopUi/DeskCommonComponent/ServiceTab";
 import BottomNav from "../CommonComponent/BottomNav";
 import useIsMobile from "../../../Utilities/IsMobile";
+import { useNavigate } from "react-router-dom";
 
 function Restaurants() {
     const location = useContext(LocationContext);
     const [RestaurantLists, setRestaurantLists] = useState([]);
-    // const [filterResList, setFilterResList] = useState([...RestaurantList]);
+    const [filterResList, setFilterResList] = useState([]);
     const [cuisineList, setCuisineList] = useState([]);
-    const [orderType, setOrderType] = useState("HomeDelivery");
+    const [orderType, setOrderType] = useState("Cafe");
 
+    const navigate = useNavigate();
     const getList = async (typeOrder) => {
         const token = localStorage.getItem("secretKey");
         const latitude = 23.8623 // 18.964340379970906 // Number(location?.latitude);
@@ -43,8 +45,12 @@ function Restaurants() {
 
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
-                setRestaurantLists(getRes.responsePacket);
-                // setFilterResList(getRes.responsePacket);
+                if (getRes?.responsePacket?.length === 1) {
+                    navigate(`cafeMenu/${getRes.responsePacket[0]?.restaurantUuid}`)
+                } else {
+                    setRestaurantLists(getRes.responsePacket);
+                    setFilterResList(getRes.responsePacket);
+                }
             }
 
         } catch (error) {
@@ -72,6 +78,18 @@ function Restaurants() {
         getCuisine();
     }, []);
 
+    const [selectedCuisine, setSelectedCuisine] = useState('');
+    const filterByCuisine = (cuisine) => {
+        setSelectedCuisine(cuisine);
+        const res = RestaurantLists?.filter((itm) => itm?.cuisineList?.some((item) => item === cuisine));
+        setFilterResList(res)
+    };
+    useEffect(() => {
+        if (!selectedCuisine) {
+            setFilterResList(RestaurantLists);
+            console.log("run run");
+        }
+    }, [selectedCuisine]);
     const isMobile = useIsMobile();
     return (
         <>
@@ -79,9 +97,9 @@ function Restaurants() {
             <Nav />
             <Banner />
             {!isMobile && <ServiceTabs orderType={orderType} setOrderType={setOrderType} />}
-            <CafeCategory cuisineList={cuisineList} />
+            <CafeCategory cuisineList={cuisineList} filterByCuisine={filterByCuisine} />
             {isMobile && <BottomNav orderType={orderType} setOrderType={setOrderType} />}
-            <RestaurantList restaurants={RestaurantLists} />
+            <RestaurantList restaurants={filterResList} selectedCuisine={selectedCuisine} setSelectedCuisine={setSelectedCuisine} />
         </>
     )
 }

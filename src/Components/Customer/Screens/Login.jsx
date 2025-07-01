@@ -8,8 +8,9 @@ const Login = () => {
     const [mobileNo, setMobileNo] = useState('');
     // mobileNumber
     const sendOtp = async () => {
+        const url = `${process.env.REACT_APP_BASE_URL}/v1/api/generateOtpForUser`;
         try {
-            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/generateOtpForUser`, {
+            const res = await fetch(url, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
@@ -26,7 +27,7 @@ const Login = () => {
             }
         } catch (e) {
             console.log(e, "error in login api");
-            alert(e,"error1");
+            alert(e.message, "error1");
         }
     };
 

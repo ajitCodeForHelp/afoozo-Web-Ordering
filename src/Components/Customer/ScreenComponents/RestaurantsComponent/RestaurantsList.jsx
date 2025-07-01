@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const RestaurantList = ({ restaurants }) => {
+const RestaurantList = ({ restaurants, selectedCuisine, setSelectedCuisine }) => {
   const formatToTwoDecimals = (num) => {
     return Number(num).toFixed(2);
   };
@@ -9,7 +9,7 @@ const RestaurantList = ({ restaurants }) => {
   return (
     <div className="p-3">
       <p className="text-muted small fw-semibold mb-3 text-warning">
-        Showing restaurants for :
+        Showing restaurants for :<br /> {selectedCuisine && <span className="text-warning bg-dark fw-semibold p-2 me-1 cursor-pointer rounded-2 ">{selectedCuisine}</span>} {selectedCuisine && <span className="fs-5 text-warning bg-dark p-1 rounded-2 px-2 cursor-pointer" onClick={() => setSelectedCuisine('')}>x</span>}
       </p>
       <div className="d-flex flex-column gap-3">
         {restaurants?.map((res, idx) => (

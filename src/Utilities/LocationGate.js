@@ -12,7 +12,7 @@ function LocationGate({ children }) {
     }
 
     navigator.permissions
-      .query({ name: 'geolocation' })
+      .query({ name: 'geolocation' }) 
       .then((result) => {
         if (result.state === 'granted') {
           setLocationAllowed(true);

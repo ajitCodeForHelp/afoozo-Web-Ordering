@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "../CommonComponent/Navbar";
 import Banner from "../CommonComponent/Banner";
-import CafeCategory from "../ScreenComponents/CafeMenuComponent/CafeCategory";
 import PopularItem from "../ScreenComponents/CafeMenuComponent/PopularItem";
 import CafeItems from "../ScreenComponents/CafeMenuComponent/CafeItems";
 import CartButton from "../CommonComponent/CartButton";
 import CartPanel from "./CartPanel";
 import ScrollToTop from "../../../Utilities/ScrollToTop";
 import { useParams } from "react-router-dom";
+import Categories from "../ScreenComponents/CafeMenuComponent/Categories";
 
 function CafeMenu() {
     const [cartVisible, setCartVisible] = useState(false);
@@ -19,6 +19,9 @@ function CafeMenu() {
     ]);
 
     const [resMenu, setResMenu] = useState([]);
+    const [activeCategory, setActiveCategory] = useState(resMenu[0]?.categoryUuid);
+    // const [filterVegNon, setFilterVegNon] = useState([]);
+    // const [itemCategories,setItemCategories] = useState([]);
 
     const getData = async () => {
         try {
@@ -38,6 +41,7 @@ function CafeMenu() {
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
                 setResMenu(getRes.responsePacket);
+                setActiveCategory(getRes.responsePacket[0]?.categoryUuid);
             }
         } catch (e) {
             console.log(e, "error in getData");
@@ -71,17 +75,46 @@ function CafeMenu() {
 
     const editItem = (id) => alert(`Edit item ${id}`);
 
+    const categoryRefs = useRef({});
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                for (const entry of entries) {
+                    if (entry.isIntersecting) {
+                        setActiveCategory(entry.target.getAttribute('data-id'));
+                        break;
+                    }
+                }
+            },
+            // { rootMargin: '-50% 0px -49% 0px', threshold: 0.1 }
+            { rootMargin: '-30% 0px -50% 0px', threshold: 0.3 }
+        );
+
+        Object.values(categoryRefs.current).forEach((ref) => {
+            if (ref) observer.observe(ref);
+        });
+
+        return () => observer.disconnect();
+    }, [resMenu]);
+
+    const scrollToCategory = (uuid) => {
+        const section = categoryRefs.current[uuid];
+        section?.scrollIntoView({ behavior: 'smooth', block: 'center', });
+        setActiveCategory(uuid);
+    };
+
     return (
         <>
             <ScrollToTop />
             <div className="" style={{ paddingBottom: "70px" }}>
                 <Header />
-                <Banner />
-
+                {/* <Banner /> */}
+                <Categories list={resMenu} activeCategory={activeCategory} scrollToCategory={scrollToCategory} />
                 {/* <CafeCategory /> */}
                 {hotSelling?.length > 0 && <PopularItem hotSelling={hotSelling} />}
-                <CafeItems resMenu={resMenu} />
+                <CafeItems resMenu={resMenu} categoryRefs={categoryRefs} />
 
+                {/* cartsection */}
                 <CartButton openClose={() => setCartVisible(true)} />
                 <CartPanel
                     show={cartVisible}
