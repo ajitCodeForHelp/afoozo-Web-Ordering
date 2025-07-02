@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Header from "../CommonComponent/Navbar";
 import Banner from "../CommonComponent/Banner";
 import PopularItem from "../ScreenComponents/CafeMenuComponent/PopularItem";
@@ -8,15 +8,13 @@ import CartPanel from "./CartPanel";
 import ScrollToTop from "../../../Utilities/ScrollToTop";
 import { useParams } from "react-router-dom";
 import Categories from "../ScreenComponents/CafeMenuComponent/Categories";
+import { CartContext, useCart } from "../../../Utilities/CartProvider";
 
 function CafeMenu() {
     const [cartVisible, setCartVisible] = useState(false);
     const { id } = useParams();
 
-    const [items, setItems] = useState([
-        { id: 1, name: 'Laksa Soup - Chicken', price: 525, quantity: 1, isVeg: false },
-        { id: 2, name: 'Tom Kha Gai - Veg', price: 299, quantity: 1, isVeg: true },
-    ]);
+    const [items, setItems] = useState([]);
 
     const [resMenu, setResMenu] = useState([]);
     const [activeCategory, setActiveCategory] = useState(resMenu[0]?.categoryUuid);
@@ -65,6 +63,27 @@ function CafeMenu() {
 
     }, [resMenu]);
 
+    const { cart, dispatch } = useCart();
+console.log(cart,"cart");
+    const addToCart = (product) => {
+        dispatch({ type: 'ADD_ITEM', payload: product });
+    };
+    const removeFromCart = (itemId) => {
+        dispatch({ type: "REMOVE_ITEM", payload: itemId });
+    };
+
+    const updateQuantity = (itemId, quantity) => {
+        if (quantity <= 0) {
+            removeFromCart(itemId);
+        } else {
+            dispatch({ type: "UPDATE_QUANTITY", payload: { uuid: itemId, quantity } });
+        }
+    };
+
+    // const addAddress = (uuid) => {
+    //     dispatch({ type: 'SET_ADDRESS', payload: uuid });
+    // };
+
     const increment = (id) => {
         setItems(items.map(item => item.id === id ? { ...item, quantity: item.quantity + 1 } : item));
     };
@@ -112,7 +131,15 @@ function CafeMenu() {
                 <Categories list={resMenu} activeCategory={activeCategory} scrollToCategory={scrollToCategory} />
                 {/* <CafeCategory /> */}
                 {hotSelling?.length > 0 && <PopularItem hotSelling={hotSelling} />}
-                <CafeItems resMenu={resMenu} categoryRefs={categoryRefs} />
+                <CafeItems
+                    resMenu={resMenu}
+                    categoryRefs={categoryRefs}
+                    cart={cart}
+                    dispatch={dispatch}
+                    addToCart={addToCart}
+                    removeFromCart={removeFromCart}
+                    updateQuantity={updateQuantity}
+                />
 
                 {/* cartsection */}
                 <CartButton openClose={() => setCartVisible(true)} />

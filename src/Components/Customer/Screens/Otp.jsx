@@ -37,7 +37,8 @@ const OtpScreen = ({ mobileNumber, resend }) => {
             });
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
-                localStorage.setItem("secretKey", getRes.responsePacket.secretKey)
+                localStorage.setItem("secretKey", getRes.responsePacket.secretKey);
+                localStorage.setItem("mobileNo", mobileNumber);
                 navigate("/");
             }
         } catch (e) {

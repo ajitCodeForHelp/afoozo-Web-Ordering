@@ -91,6 +91,7 @@ function Restaurants() {
         }
     }, [selectedCuisine]);
     const isMobile = useIsMobile();
+    
     return (
         <>
             <ScrollToTop />

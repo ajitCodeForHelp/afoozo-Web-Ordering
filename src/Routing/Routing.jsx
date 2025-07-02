@@ -5,29 +5,33 @@ import Restaurants from "../Components/Customer/Screens/Restaurants";
 import LocationGate from "../Utilities/LocationGate";
 import Login from "../Components/Customer/Screens/Login";
 import AuthGate from "../Utilities/AuthGate";
+import { CartProvider } from "../Utilities/CartProvider";
+
 
 function Routing() {
 
     return (
-        <LocationGate>
-            <Routes>
-                {/* <Route path="/" element={<AuthGate />} /> */}
-                <Route path="/"
-                    element={
+        <CartProvider>
+            <LocationGate>
+                <Routes>
+                    {/* <Route path="/" element={<AuthGate />} /> */}
+                    <Route path="/"
+                        element={
+                            <AuthGate>
+                                <Restaurants />
+                            </AuthGate>
+                        } />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/cafeMenu/:id" element={
                         <AuthGate>
-                            <Restaurants />
+                            <CafeMenu />
                         </AuthGate>
                     } />
-                <Route path="/login" element={<Login />} />
-                <Route path="/cafeMenu/:id" element={
-                    <AuthGate>
-                        <CafeMenu />
-                    </AuthGate>
-                } />
 
-                {/* <Route path="/cafeMenu" element={<Home />} /> */}
-            </Routes>
-        </LocationGate>
+                    {/* <Route path="/cafeMenu" element={<Home />} /> */}
+                </Routes>
+            </LocationGate>
+        </CartProvider>
     )
 }
 export default Routing;

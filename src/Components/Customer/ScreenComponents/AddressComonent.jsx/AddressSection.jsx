@@ -4,6 +4,35 @@ import { MdDeleteOutline } from "react-icons/md";
 import AddAddressSection from './AddAddressSection';
 
 const AddressDrawer = ({ show, onClose }) => {
+
+    const [addressList, setAddressList] = useState([]);
+
+    const getAddressList = async () => {
+        try {
+            const mobile = localStorage.getItem("mobileNo");
+            const key = localStorage.getItem("secretKey");
+            const basicAuth = btoa(`${mobile}:${key}`);
+
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getAddressList`, {
+                headers: {
+                    "Authorization": `Basic ${basicAuth}`,
+                }
+            });
+            const getRes = await res.json();
+            if (getRes.errorCode === 0) {
+                setAddressList(getRes.responsePacket);
+            }
+        } catch (e) {
+            console.log(e, "error in getAddress");
+        }
+    };
+
+    useEffect(() => {
+        if (show) {
+            getAddressList();
+        }
+    }, [show]);
+
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
     // Add Address Drawer 
@@ -30,30 +59,26 @@ const AddressDrawer = ({ show, onClose }) => {
                     <div className="py-3">
                         <h6 className='fw-semibold ps-3 address-bottom-border pb-3'>Saved Address</h6>
                         <div className="address-bottom-border mb-3">
-                            <button className="btn ps-3 btn-link text-success text-decoration-none fw-semibold p-0 pb-2" onClick={()=>setShowAddAddressSection(true)}>+ Add Address</button>
+                            <button className="btn ps-3 btn-link text-success text-decoration-none fw-semibold p-0 pb-2" onClick={() => setShowAddAddressSection(true)}>+ Add Address</button>
                         </div>
-                        <div className="mb-3 ps-3 address-bottom-border pb-3">
-                            <div className="fw-bold d-flex justify-content-between align-items-center">
-                                <span className='fw-bold'>Home</span>
-                                <span className='text-warning fs-5 pe-3' role='button'><MdDeleteOutline /></span>
-                            </div>
-                            <div className="text-muted">
-                                Kakad Industrial Estate, 32, Sitaram Keer Marg,<br />
-                                VSNL Colony, Mahim, Mumbai, Maharashtra 400016, India
-                            </div>
-                            {/* <button className="btn btn-sm btn-link text-danger p-0 mt-1">🗑</button> */}
-                        </div>
-                        <div className='ps-3'>
-                            <div className="fw-bold d-flex justify-content-between align-items-center">
-                                <span className='fw-bold'>Home</span>
-                                <span className='text-warning fs-5 pe-3' role='button'><MdDeleteOutline /></span>
-                            </div>
-                            <div className="text-muted">
-                                Kakad Industrial Estate, 32, Sitaram Keer Marg,<br />
-                                VSNL Colony, Mahim, Mumbai, Maharashtra 400016, India
-                            </div>
-                            {/* <button className="btn btn-sm btn-link text-danger p-0 mt-1">🗑</button> */}
-                        </div>
+                        {
+                            addressList?.map((itm) => {
+                                return (
+                                    <>
+                                        <div className="mb-3 ps-3 address-bottom-border pb-3">
+                                            <div className="fw-bold d-flex justify-content-between align-items-center">
+                                                <span className='fw-bold'>{itm.addressType}</span>
+                                                <span className='text-warning fs-5 pe-3' role='button'><MdDeleteOutline /></span>
+                                            </div>
+                                            <div className="text-muted">
+                                                {itm.addressLine1}<br />
+                                                {itm.addressLine2}
+                                            </div>
+                                        </div>
+                                    </>
+                                )
+                            })
+                        }
                     </div>
                 </div>
             </div>

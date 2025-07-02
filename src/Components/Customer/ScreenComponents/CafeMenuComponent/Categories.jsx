@@ -19,7 +19,7 @@ function Categories({ list, activeCategory, scrollToCategory }) {
 
     return (
         <>
-            <Container fluid className="py-3 sticky-top bg-white shadow-sm" style={{ top: topValue }}>
+            <Container fluid className="py-3 sticky-top bg-white shadow-sm" style={{ top: topValue, zIndex: "1000" }}>
                 <div className="d-flex justify-content-between align-items-center px-2 mb-3">
                     <h5 className="fw-bold mb-0">Categories</h5>
                     {/* <span className="text-warning fw-semibold view-all">View All</span> */}

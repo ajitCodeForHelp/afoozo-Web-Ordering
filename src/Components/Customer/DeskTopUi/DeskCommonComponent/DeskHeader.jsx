@@ -17,7 +17,7 @@ function DeskHeader() {
                     <span className="text-warning fw-bold fs-5">AFOOZO</span>
                 </div>
 
-                <div className="w-50">
+                {/* <div className="w-50">
                     <Dropdown>
                         <Dropdown.Toggle variant="light" className="w-100 text-start">
                             Pyramid Hisar
@@ -28,12 +28,12 @@ function DeskHeader() {
                             <Dropdown.Item>Pyramid Mumbai</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
-                </div>
+                </div> */}
 
                 <div className="d-flex gap-3 align-items-center">
-                    <button className="btn btn-link text-warning fw-semibold d-flex align-items-center gap-1 text-decoration-none">
+                    {/* <button className="btn btn-link text-warning fw-semibold d-flex align-items-center gap-1 text-decoration-none">
                         <FaLocationDot className="text-warning" /> Locations
-                    </button>
+                    </button> */}
                     <div className="wallet d-flex align-items-center rounded-pill px-3 py-1">
                         <div className="wallet-icon d-flex align-items-center justify-content-center text-white fw-bold them-color bg-light rounded-pill">
                             <FaWallet className='text-warning' />

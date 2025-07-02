@@ -12,6 +12,26 @@ import AddressDrawer from '../ScreenComponents/AddressComonent.jsx/AddressSectio
 
 const CartPanel = ({ show, onClose, items, increment, decrement, edit }) => {
 
+    const saveOrder = async () => {
+        try {
+            const mobile = localStorage.getItem("mobileNo");
+            const key = localStorage.getItem("secretKey");
+            const basicAuth = btoa(`${mobile}:${key}`)
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/saveOrder`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${basicAuth}`
+                },
+                body: JSON.stringify({
+                    
+                })
+            })
+        } catch (e) {
+            console.log(e, "error in save order");
+        }
+    }
+
     // appling promocode
     const [isPromoOpen, setPromoOpen] = useState(false);
     const [promoCode, setPromoCode] = useState('');
@@ -116,7 +136,7 @@ const CartPanel = ({ show, onClose, items, increment, decrement, edit }) => {
                 onAdd={handleAddInstruction}
             />
             <AddressDrawer show={showAddressDrawer} onClose={() => setShowAddressDrawer(false)} />
-           
+
         </>
     );
 };

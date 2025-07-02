@@ -34,7 +34,7 @@ export default function Header() {
   //     setIsMobile(true);
   //   }
   // }, []);
- const isMobile = useIsMobile();
+  const isMobile = useIsMobile();
 
   return (
     <>
@@ -128,7 +128,7 @@ export default function Header() {
                   top: '100%',
                   right: 0,
                   minWidth: "200px",
-                  zIndex: 1000,
+                  zIndex: 2000,
                 }}
               >
                 <li>
