@@ -29,6 +29,9 @@ function DeskHeader() {
                         </Dropdown.Menu>
                     </Dropdown>
                 </div> */}
+                <div className="w-50">
+                    <input type="text" className="border-0 rounded-5 py-2 bg-white w-100 px-4" placeholder="Search" />
+                </div>
 
                 <div className="d-flex gap-3 align-items-center">
                     {/* <button className="btn btn-link text-warning fw-semibold d-flex align-items-center gap-1 text-decoration-none">

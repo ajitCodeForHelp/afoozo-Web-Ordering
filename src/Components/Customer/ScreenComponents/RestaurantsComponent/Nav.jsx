@@ -112,12 +112,12 @@ function Nav() {
                     <button className="btn btn-link text-warning fw-semibold d-flex align-items-center gap-1 text-decoration-none" onClick={() => setShowAddressDrawer(true)}>
                         <FaLocationDot className="text-warning" />current address
                     </button>
-                    <div className="wallet d-flex align-items-center rounded-pill px-3 py-1">
+                    {/* <div className="wallet d-flex align-items-center rounded-pill px-3 py-1">
                         <div className="wallet-icon d-flex align-items-center justify-content-center text-white fw-bold them-color bg-light rounded-pill">
                             <FaWallet className='text-warning' />
                         </div>
                         <span className="wallet-amount ms-2">₹124.50</span>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <SidebarDrawer isOpen={showDrawer} onClose={() => setShowDrawer(!showDrawer)} />

@@ -22,7 +22,6 @@ function CartItems({ name, price, quantity, onIncrement, onDecrement, onEdit, is
                 </div>
 
                 <button className="btn edit-btn ms-2" onClick={onEdit}>
-                    {/* <i className="ri-pencil-line text-warning"></i> */}
                     <FaPencilAlt className="ri-pencil-line text-warning" />
                 </button>
             </div>

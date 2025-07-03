@@ -7,7 +7,7 @@ const BillingInfo = ({ bill, tax, packing, coin, total }) => {
 
       <div className="d-flex justify-content-between mb-2">
         <span className="text-primary text-decoration-underline">Restaurant Bill</span>
-        <span>₹ {bill.toFixed(2)}</span>
+        <span>₹ {bill?.toFixed(2)}</span>
       </div>
 
       <div className="d-flex justify-content-between mb-2 align-items-center">
@@ -15,24 +15,24 @@ const BillingInfo = ({ bill, tax, packing, coin, total }) => {
           Tax
           <span className="info-circle ms-1" title="This includes GST and service charges">i</span>
         </span>
-        <span>₹ {tax.toFixed(2)}</span>
+        <span>₹ {tax?.toFixed(2)}</span>
       </div>
 
       <div className="d-flex justify-content-between mb-2">
         <span className="text-muted">Packing Charges</span>
-        <span>₹ {packing.toFixed(2)}</span>
+        <span>₹ {packing?.toFixed(2)}</span>
       </div>
 
       <div className="d-flex justify-content-between mb-3">
-        <span className="text-muted">Pay by coin</span>
-        <span>₹ {coin.toFixed(2)}</span>
+        <span className="text-muted">Delivery Charges</span>
+        <span>₹ {coin?.toFixed(2)}</span>
       </div>
 
       <hr className="my-2" />
 
       <div className="d-flex justify-content-between fw-bold">
         <span>Total</span>
-        <span>₹ {total.toFixed(2)}</span>
+        <span>₹ {total?.toFixed(2)}</span>
       </div>
     </div>
   );

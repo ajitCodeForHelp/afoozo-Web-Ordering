@@ -6,20 +6,20 @@ import CafeItems from "../ScreenComponents/CafeMenuComponent/CafeItems";
 import CartButton from "../CommonComponent/CartButton";
 import CartPanel from "./CartPanel";
 import ScrollToTop from "../../../Utilities/ScrollToTop";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Categories from "../ScreenComponents/CafeMenuComponent/Categories";
 import { CartContext, useCart } from "../../../Utilities/CartProvider";
 
 function CafeMenu() {
     const [cartVisible, setCartVisible] = useState(false);
     const { id } = useParams();
+    const location = useLocation();
+    const { orderType } = location.state || {}
 
     const [items, setItems] = useState([]);
 
     const [resMenu, setResMenu] = useState([]);
     const [activeCategory, setActiveCategory] = useState(resMenu[0]?.categoryUuid);
-    // const [filterVegNon, setFilterVegNon] = useState([]);
-    // const [itemCategories,setItemCategories] = useState([]);
 
     const getData = async () => {
         try {
@@ -64,7 +64,82 @@ function CafeMenu() {
     }, [resMenu]);
 
     const { cart, dispatch } = useCart();
-console.log(cart,"cart");
+
+    // order detail
+    const [orderDetail, setOrderDetail] = useState([]);
+    const [orderRefId, setOrderRefId] = useState('');
+    const saveOrder = async () => {
+        try {
+            const mobile = localStorage.getItem('mobileNo');
+            const key = localStorage.getItem('secretKey');
+            const BasicAuth = btoa(`${mobile}:${key}`);
+
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/saveOrder`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `Basic ${BasicAuth}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    orderType: orderType,
+                    addressId: orderType === "HomeDelivery" || orderType === "TakeAway" ? 7592 : null,
+                    specialInstruction: "Please deliver ASAP",
+                    itemList: cart?.items?.map((itm) => ({
+                        itemId: itm.itemId,
+                        quantity: itm.quantity,
+                        specialInstruction: itm?.specialInstruction || "",
+                        customization: itm?.customization || []
+                    })),
+                    restaurantId: id,
+                })
+            });
+            const getRes = await res.json();
+            if (getRes.errorCode === 0) {
+                getOrderDetail(getRes.responsePacket);
+                setOrderRefId(getRes.responsePacket);
+            }
+        } catch (e) {
+            console.log(e, "error in saveOrder");
+        }
+    };
+    const getOrderDetail = async (orderReferenceId) => {
+        try {
+            const mobile = localStorage.getItem("mobileNo");
+            const key = localStorage.getItem("secretKey");
+            const BasicAuth = btoa(`${mobile}:${key}`)
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/orderDetail/${orderReferenceId}`, {
+                headers: {
+                    'Authorization': `Basic ${BasicAuth}`
+                }
+            })
+            const getRes = await res.json();
+            if (getRes.errorCode === 0) {
+                setOrderDetail(getRes.responsePacket);
+            }
+        } catch (e) {
+            console.log(e, "error in get Order detail");
+        }
+    };
+
+    const updateItemQuantity = async (orderItemId, operation) => {
+        try {
+            const mobile = localStorage.getItem('mobileNo');
+            const key = localStorage.getItem('secretKey');
+            const BasicAuth = btoa(`${mobile}:${key}`)
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/updateOrderItemQuantity/${orderRefId}/${orderItemId}/${operation}`, {
+                headers: {
+                    'Authorization': `Basic ${BasicAuth}`
+                }
+            });
+            const getRes = await res.json();
+            if (getRes.errorCode === 0) {
+                getOrderDetail(orderRefId);
+            }
+        } catch (e) {
+            console.log(e, "error in update quantity");
+        }
+    };
+
     const addToCart = (product) => {
         dispatch({ type: 'ADD_ITEM', payload: product });
     };
@@ -77,6 +152,7 @@ console.log(cart,"cart");
             removeFromCart(itemId);
         } else {
             dispatch({ type: "UPDATE_QUANTITY", payload: { uuid: itemId, quantity } });
+            console.log("localId", itemId, quantity);
         }
     };
 
@@ -84,12 +160,18 @@ console.log(cart,"cart");
     //     dispatch({ type: 'SET_ADDRESS', payload: uuid });
     // };
 
-    const increment = (id) => {
-        setItems(items.map(item => item.id === id ? { ...item, quantity: item.quantity + 1 } : item));
+    const increment = (id, quantity, localId) => {
+        // setItems(items.map(item => item.id === id ? { ...item, quantity: item.quantity + 1 } : item));
+        updateQuantity(localId, quantity)
+        updateItemQuantity(id, "add");
+        console.log(id, quantity, "modal", localId);
     };
 
-    const decrement = (id) => {
-        setItems(items.map(item => item.id === id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item));
+    const decrement = (id, quantity, localId) => {
+        // setItems(items.map(item => item.id === id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item));
+        updateQuantity(localId, quantity);
+
+        updateItemQuantity(id, "less");
     };
 
     const editItem = (id) => alert(`Edit item ${id}`);
@@ -122,6 +204,8 @@ console.log(cart,"cart");
         setActiveCategory(uuid);
     };
 
+   
+
     return (
         <>
             <ScrollToTop />
@@ -142,14 +226,19 @@ console.log(cart,"cart");
                 />
 
                 {/* cartsection */}
-                <CartButton openClose={() => setCartVisible(true)} />
+                <CartButton openClose={() => { setCartVisible(true); saveOrder() }} orderType={orderType} restaurantId={id} />
                 <CartPanel
                     show={cartVisible}
                     onClose={() => setCartVisible(false)}
                     items={items}
+                    orderDetail={orderDetail}
+                    orderRefId={orderRefId}
                     increment={increment}
                     decrement={decrement}
                     edit={editItem}
+                    saveOrder={saveOrder}
+                    dispatch={dispatch}
+                    orderType={orderType}
                 />
             </div>
         </>

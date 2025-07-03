@@ -20,7 +20,6 @@ const Login = () => {
                 })
             });
             const getRes = await res.json();
-            alert(getRes);
             if (getRes.errorCode === 0) {
                 setIsOtpSend(true);
                 alert("otp send successfully !");

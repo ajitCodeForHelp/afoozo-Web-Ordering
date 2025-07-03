@@ -15,7 +15,6 @@ const CafeItems = ({ resMenu, categoryRefs, addToCart, cart, dispatch, updateQua
                 {
                   itm?.menuList?.map((item, index) => {
                     const cartItem = cart?.items?.find((pro) => pro.uuid === item.uuid);
-                    console.log(cartItem,"cart",cart);
                     const quantity = cartItem?.quantity || 0;
 
                     return (
@@ -48,14 +47,14 @@ const CafeItems = ({ resMenu, categoryRefs, addToCart, cart, dispatch, updateQua
                               <div className="d-flex justify-content-between align-items-center p-1 px-3 rounded-4 text-warning bg-dark gap-2 fs-6">
                                 <span
                                   className="text-warning fs-5 cursor-pointer"
-                                  onClick={() => updateQuantity(item.uuid, quantity - 1)}
+                                  onClick={() => updateQuantity(item.itemId, quantity - 1)}
                                 >
                                   -
                                 </span>
                                 <span className="fs-5">{quantity}</span>
                                 <span
                                   className="text-warning fs-5 cursor-pointer"
-                                  onClick={() => updateQuantity(item.uuid, quantity + 1)}
+                                  onClick={() => updateQuantity(item.itemId, quantity + 1)}
                                 >
                                   +
                                 </span>

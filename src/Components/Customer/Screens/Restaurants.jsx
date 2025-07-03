@@ -9,6 +9,8 @@ import ServiceTabs from "../DeskTopUi/DeskCommonComponent/ServiceTab";
 import BottomNav from "../CommonComponent/BottomNav";
 import useIsMobile from "../../../Utilities/IsMobile";
 import { useNavigate } from "react-router-dom";
+import DineInScan from "../ScreenComponents/RestaurantsComponent/DineInScan";
+import QRCodeScanner from "../CommonComponent/QRCodeScanner";
 
 function Restaurants() {
     const location = useContext(LocationContext);
@@ -58,7 +60,7 @@ function Restaurants() {
         }
     };
     useEffect(() => {
-        if (location && orderType) {
+        if (location && orderType && orderType !== 'DineIn') {
             getList(orderType);
         }
     }, [location, orderType]);
@@ -91,16 +93,26 @@ function Restaurants() {
         }
     }, [selectedCuisine]);
     const isMobile = useIsMobile();
-    
+
+    const [scannedData, setScannedData] = useState(null);
+
+    const handleScanSuccess = (data) => {
+        setScannedData(data);
+        // Parse data or route user to menu page
+        console.log("Scanned:", data);
+    };
+
     return (
         <>
             <ScrollToTop />
             <Nav />
             <Banner />
             {!isMobile && <ServiceTabs orderType={orderType} setOrderType={setOrderType} />}
-            <CafeCategory cuisineList={cuisineList} filterByCuisine={filterByCuisine} />
+            {orderType !== "DineIn" && <CafeCategory cuisineList={cuisineList} filterByCuisine={filterByCuisine} />}
+            {orderType === "DineIn" && <DineInScan />}
             {isMobile && <BottomNav orderType={orderType} setOrderType={setOrderType} />}
-            <RestaurantList restaurants={filterResList} selectedCuisine={selectedCuisine} setSelectedCuisine={setSelectedCuisine} />
+            {orderType !== "DineIn" && <RestaurantList restaurants={filterResList} selectedCuisine={selectedCuisine} setSelectedCuisine={setSelectedCuisine} orderType={orderType} />}
+            {/* {orderType === "DineIn" && <QRCodeScanner onScanSuccess={handleScanSuccess}/>} */}
         </>
     )
 }

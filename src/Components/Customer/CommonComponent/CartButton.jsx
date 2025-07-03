@@ -1,9 +1,11 @@
-import React, { useContext } from "react";
+import React from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../../../Utilities/CartProvider";
 
 function CartButton({ openClose }) {
-    const { cart, dispatch } = useCart()
+    const { cart, dispatch } = useCart();
+
+
     return (
         <>
             <div className="position-fixed bottom-0 end-0 me-4 mb-5 cart-btn-container" onClick={openClose}>

@@ -17,7 +17,7 @@ a {
 input:focus {
   outline: none !important;
   box-shadow: none !important;
-  background: var(--white) !important;
+  /* background: var(--white) !important; */
 }
 
 select:focus {
@@ -182,9 +182,10 @@ select:focus {
     font-size: 14px !important;
   }
 
-  .res-title{
-      font-size: 14px !important;
+  .res-title {
+    font-size: 14px !important;
   }
+
   .res-cuisines {
     font-size: 10px !important;
   }
@@ -1196,4 +1197,34 @@ select:focus {
     margin: 0;
     max-width: none;
   }
+}
+
+/* dine in */
+.scan-order-page {
+  background-color: #ffffff;
+}
+
+.qr-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #f4f4f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scan-order-card {
+  width: 100%;
+  max-width: 400px;
+  background-color: white;
+  border-radius: 1.5rem;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 14px;
 }

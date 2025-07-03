@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const RestaurantList = ({ restaurants, selectedCuisine, setSelectedCuisine }) => {
+const RestaurantList = ({ restaurants, selectedCuisine, setSelectedCuisine, orderType }) => {
   const formatToTwoDecimals = (num) => {
     return Number(num).toFixed(2);
   };
@@ -13,7 +13,7 @@ const RestaurantList = ({ restaurants, selectedCuisine, setSelectedCuisine }) =>
       </p>
       <div className="d-flex flex-column gap-3">
         {restaurants?.map((res, idx) => (
-          <Link to={`/cafeMenu/${res.restaurantUuid}`}>
+          <Link to={`/cafeMenu/${res.restaurantUuid}`} state={{ orderType: orderType }}>
             <div
               key={idx}
               className="d-flex gap-3 p-2 rounded-3 shadow-sm align-items-start bg-white overflow-hidden"
@@ -49,7 +49,7 @@ const RestaurantList = ({ restaurants, selectedCuisine, setSelectedCuisine }) =>
           </Link>
         ))}
       </div>
-    </div>
+    </div >
   );
 };
 
