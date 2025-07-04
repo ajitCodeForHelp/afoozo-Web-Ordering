@@ -6,6 +6,7 @@ import LocationGate from "../Utilities/LocationGate";
 import Login from "../Components/Customer/Screens/Login";
 import AuthGate from "../Utilities/AuthGate";
 import { CartProvider } from "../Utilities/CartProvider";
+import DineInMenu from "../Components/Customer/Screens/DineInMenu";
 
 
 function Routing() {
@@ -25,6 +26,11 @@ function Routing() {
                     <Route path="/cafeMenu/:id" element={
                         <AuthGate>
                             <CafeMenu />
+                        </AuthGate>
+                    } />
+                    <Route path="/dineInMenu/:id" element={
+                        <AuthGate>
+                            <DineInMenu />
                         </AuthGate>
                     } />
 

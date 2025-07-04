@@ -94,12 +94,43 @@ function Restaurants() {
     }, [selectedCuisine]);
     const isMobile = useIsMobile();
 
-    const [scannedData, setScannedData] = useState(null);
+    const [showScanner, setShowScanner] = useState(false);
+    const getScanCode = async (qrCode) => {
+        try {
+            const mobile = localStorage.getItem("mobileNo");
+            const key = localStorage.getItem("secretKey");
+            const BasicAuth = btoa(`${mobile}:${key}`);
+
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/scanQrCode/${qrCode}`, {
+                headers: {
+                    'Authorization': `Basic ${BasicAuth}`
+                }
+            });
+            const getRes = await res.json();
+            if (getRes.errorCode === 0) {
+                navigate(`/dineInMenu/${getRes?.responsePacket?.restaurantUuid}`, { state: { resDetail: getRes.responsePacket, orderType: orderType } })
+            }
+        } catch (e) {
+            console.log(e, "error in scanQr api")
+        }
+    };
+
+    const extractQrCode = (url) => {
+        try {
+            const parsedUrl = new URL(url);
+            return parsedUrl.searchParams.keys().next().value; // gets the query key
+        } catch (e) {
+            console.error("Invalid QR URL:", e);
+            return null;
+        }
+    };
 
     const handleScanSuccess = (data) => {
-        setScannedData(data);
-        // Parse data or route user to menu page
-        console.log("Scanned:", data);
+        if (data) {
+            const tableCode = extractQrCode(data);
+            getScanCode(tableCode);
+            console.log("Scanned:", data, tableCode);
+        }
     };
 
     return (
@@ -109,10 +140,10 @@ function Restaurants() {
             <Banner />
             {!isMobile && <ServiceTabs orderType={orderType} setOrderType={setOrderType} />}
             {orderType !== "DineIn" && <CafeCategory cuisineList={cuisineList} filterByCuisine={filterByCuisine} />}
-            {orderType === "DineIn" && <DineInScan />}
+            {orderType === "DineIn" && <DineInScan showScanner={showScanner} setShowScanner={setShowScanner} />}
             {isMobile && <BottomNav orderType={orderType} setOrderType={setOrderType} />}
             {orderType !== "DineIn" && <RestaurantList restaurants={filterResList} selectedCuisine={selectedCuisine} setSelectedCuisine={setSelectedCuisine} orderType={orderType} />}
-            {/* {orderType === "DineIn" && <QRCodeScanner onScanSuccess={handleScanSuccess}/>} */}
+            {orderType === "DineIn" && showScanner && <QRCodeScanner onScanSuccess={handleScanSuccess} onClose={() => setShowScanner(false)} />}
         </>
     )
 }

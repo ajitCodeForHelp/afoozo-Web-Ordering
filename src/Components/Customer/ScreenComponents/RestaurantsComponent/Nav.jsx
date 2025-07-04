@@ -67,23 +67,23 @@ function Nav() {
         }
     };
 
-    useEffect(() => {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const { latitude, longitude } = position.coords;
+    // useEffect(() => {
+    //     navigator.geolocation.getCurrentPosition(
+    //         (position) => {
+    //             const { latitude, longitude } = position.coords;
 
-                fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`)
-                    .then(res => res.json())
-                    .then(data => {
-                        console.log("Location:", data);
-                        // saveCurrentAdd(data)
-                    });
-            },
-            (error) => {
-                console.error("Location error:", error);
-            }
-        );
-    }, []);
+    //             fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`)
+    //                 .then(res => res.json())
+    //                 .then(data => {
+    //                     console.log("Location:", data);
+    //                     // saveCurrentAdd(data)
+    //                 });
+    //         },
+    //         (error) => {
+    //             console.error("Location error:", error);
+    //         }
+    //     );
+    // }, []);
 
     return (
         <>

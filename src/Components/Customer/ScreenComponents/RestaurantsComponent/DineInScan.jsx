@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DineInScan = () => {
+const DineInScan = ({ showScanner, setShowScanner }) => {
   return (
     <div className="scan-order-page bg-white min-vh-100 d-flex flex-column ">
       {/* Header */}
@@ -22,7 +22,8 @@ const DineInScan = () => {
 
         <div className="scan-order-card p-4 rounded-4 shadow-sm">
           <h5 className="fw-bold">Scan and Order</h5>
-          <p className="text-muted small mb-1">You are seated at</p>
+          <p>Please Scan your QR Code on your table to place an Order</p> 
+          {/* <p className="text-muted small mb-1">You are seated at</p>
           <p className="text-muted small mb-1">Tata Guest House</p>
           <p className="text-muted small mb-1">house no 574, urban estate ph2, ludhiana</p>
           <p className="fw-semibold">Room No 01</p>
@@ -31,10 +32,10 @@ const DineInScan = () => {
             CONTINUE AND ORDER
           </button>
 
-          <div className="divider my-2">OR</div>
+          <div className="divider my-2">OR</div> */}
 
-          <button className="btn btn-dark w-100 rounded-pill py-2">
-            SCAN AGAIN
+          <button className="btn btn-dark w-100 rounded-pill py-2" onClick={()=>setShowScanner(true)}>
+            SCAN
           </button>
         </div>
       </div>

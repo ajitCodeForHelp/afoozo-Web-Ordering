@@ -1,19 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import Header from "../CommonComponent/Navbar";
 import PopularItem from "../ScreenComponents/CafeMenuComponent/PopularItem";
-import CafeItems from "../ScreenComponents/CafeMenuComponent/CafeItems";
 import CartButton from "../CommonComponent/CartButton";
 import CartPanel from "./CartPanel";
 import ScrollToTop from "../../../Utilities/ScrollToTop";
 import { useLocation, useParams } from "react-router-dom";
 import Categories from "../ScreenComponents/CafeMenuComponent/Categories";
 import { useCart } from "../../../Utilities/CartProvider";
+import MenuItemCard from "../ScreenComponents/DineInComponent/MenuItems";
 
-function CafeMenu() {
+function DineInMenu() {
     const [cartVisible, setCartVisible] = useState(false);
     const { id } = useParams();
     const location = useLocation();
-    const { orderType } = location.state || {}
+    const { resDetail, orderType } = location.state || {}
+
     const [items, setItems] = useState([]);
 
     const [resMenu, setResMenu] = useState([]);
@@ -21,6 +22,8 @@ function CafeMenu() {
 
     const getData = async () => {
         try {
+            const key = localStorage.getItem("secretKey");
+
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getItemListWithCatSubCat`, {
                 method: "POST",
                 headers: {
@@ -28,12 +31,12 @@ function CafeMenu() {
                 },
                 body: JSON.stringify({
                     restaurantId: id,
-                    orderType: "Cafe",
-                    tableNumber: 0,
+                    orderType: orderType,
+                    tableNumber: resDetail?.tableNumber,
                     length: -1,
                     searchKey: "",
                 })
-            })
+            });
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
                 setResMenu(getRes.responsePacket);
@@ -58,11 +61,9 @@ function CafeMenu() {
             };
             getPopularItems();
         }
-
     }, [resMenu]);
 
     const { cart, dispatch } = useCart();
-
     // order detail
     const [orderDetail, setOrderDetail] = useState([]);
     const [orderRefId, setOrderRefId] = useState('');
@@ -100,6 +101,7 @@ function CafeMenu() {
             console.log(e, "error in saveOrder");
         }
     };
+
     const getOrderDetail = async (orderReferenceId) => {
         try {
             const mobile = localStorage.getItem("mobileNo");
@@ -138,6 +140,10 @@ function CafeMenu() {
         }
     };
 
+    // const addToCart = (product) => {
+    //     dispatch({ type: 'ADD_ITEM', payload: product });
+    // };
+
     const addToCart = (item) => {
         const currentRestaurant = cart.restaurant;
 
@@ -161,6 +167,8 @@ function CafeMenu() {
             });
         }
     };
+
+
     const removeFromCart = (itemId) => {
         dispatch({ type: "REMOVE_ITEM", payload: itemId });
     };
@@ -188,7 +196,6 @@ function CafeMenu() {
     const decrement = (id, quantity, localId) => {
         // setItems(items.map(item => item.id === id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item));
         updateQuantity(localId, quantity);
-
         updateItemQuantity(id, "less");
     };
 
@@ -205,7 +212,6 @@ function CafeMenu() {
                     }
                 }
             },
-            // { rootMargin: '-50% 0px -49% 0px', threshold: 0.1 }
             { rootMargin: '-30% 0px -50% 0px', threshold: 0.3 }
         );
 
@@ -222,8 +228,6 @@ function CafeMenu() {
         setActiveCategory(uuid);
     };
 
-
-
     return (
         <>
             <ScrollToTop />
@@ -233,7 +237,7 @@ function CafeMenu() {
                 <Categories list={resMenu} activeCategory={activeCategory} scrollToCategory={scrollToCategory} />
                 {/* <CafeCategory /> */}
                 {hotSelling?.length > 0 && <PopularItem hotSelling={hotSelling} />}
-                <CafeItems
+                {/* <CafeItems
                     resMenu={resMenu}
                     categoryRefs={categoryRefs}
                     cart={cart}
@@ -241,10 +245,33 @@ function CafeMenu() {
                     addToCart={addToCart}
                     removeFromCart={removeFromCart}
                     updateQuantity={updateQuantity}
-                />
+                /> */}
+                {
+                    resMenu?.flatMap((itm, idx) => {
+                        return (
+                            <>
+                                <div ref={(el) => (categoryRefs.current[itm?.categoryUuid] = el)} data-id={itm?.categoryUuid} key={idx} className="pt-2">
+                                    <h5 className="text-warning px-4 py-2">{itm?.categoryName}</h5>
+                                </div>
+                                {
+                                    itm?.menuList?.map((item, index) => {
+                                        const cartItem = cart?.items?.find((pro) => pro.uuid === item.uuid);
+                                        const quantity = cartItem?.quantity || 0;
+
+                                        return (
+                                            <div className="px-4">
+                                                <MenuItemCard key={index} item={item} addToCart={addToCart} cart={cart} dispatch={dispatch} cartItem={cartItem} quantity={quantity} updateQuantity={updateQuantity} removeFromCart={removeFromCart} />
+                                            </div>
+                                        );
+                                    })
+                                }
+                            </>
+                        )
+                    })
+                }
 
                 {/* cartsection */}
-                <CartButton openClose={() => { setCartVisible(true); saveOrder() }} orderType={orderType} restaurantId={id} />
+                {cart.items.length > 0 && cart?.restaurant?.restaurantUuid === id && <CartButton openClose={() => { setCartVisible(true); saveOrder() }} orderType={orderType} restaurantId={id} />}
                 <CartPanel
                     show={cartVisible}
                     onClose={() => setCartVisible(false)}
@@ -262,4 +289,4 @@ function CafeMenu() {
         </>
     )
 }
-export default CafeMenu;
+export default DineInMenu;
