@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import logo from '../../../Assets/notification_icon.png'; // Replace with your logo path
 import OtpScreen from './Otp';
+import loginPic from "../../../Assets/loginPic.jpeg";
+import useIsMobile from '../../../Utilities/IsMobile';
 
 const Login = () => {
 
@@ -22,7 +24,7 @@ const Login = () => {
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
                 setIsOtpSend(true);
-                alert("otp send successfully !");
+                // alert("otp send successfully !");
             }
         } catch (e) {
             console.log(e, "error in login api");
@@ -37,43 +39,68 @@ const Login = () => {
             alert("enter Correct mobile number");
         }
     };
-
+    const isMobile = useIsMobile();
     return (
         <>
 
-            {!isOtpSend ? <div className="min-vh-100 d-flex flex-column bg-white">
-                <div className="flex-grow-1 d-flex justify-content-center align-items-center">
-                    <div className="text-center" style={{ width: '100%', maxWidth: 350 }}>
-                        <div className="bg-white rounded-4 shadow">
+            {!isOtpSend ?
+                (isMobile ?
+                    <div className="min-vh-100 d-flex flex-column bg-white">
+                        <div className="flex-grow-1 d-flex justify-content-center align-items-center">
+                            <div className="text-center" style={{ width: '100%', maxWidth: 350 }}>
+                                <div className="bg-white rounded-4 shadow">
+                                    <div className="p-4">
+                                        <img
+                                            src={logo}
+                                            alt="Logo"
+                                            className="mb-4"
+                                            style={{ width: '180px', height: '180px', objectFit: 'contain' }}
+                                        />
 
-                            {/* <div className="promo-header them-bg-black d-flex align-items-center justify-content-center mb-2" style={{ borderBottomRightRadius: 0, borderBottomLeftRadius: 0, borderTopLeftRadius: "10px", borderTopRightRadius: "10px" }}>
-                            <h5 className="text-warning m-auto">Login</h5>
-                            <span></span>
-                        </div> */}
-                            <div className="p-4">
-                                <img
-                                    src={logo}
-                                    alt="Logo"
-                                    className="mb-4"
-                                    style={{ width: '180px', height: '180px', objectFit: 'contain' }}
-                                />
-
-                                <input
-                                    type="text"
-                                    className="form-control mb-3 rounded-pill text-center "
-                                    placeholder="Mobile No."
+                                        <input
+                                            type="text"
+                                            className="form-control mb-3 rounded-pill text-center "
+                                            placeholder="Mobile No."
+                                            value={mobileNo}
+                                            onChange={(e) => setMobileNo(e.target.value)}
+                                            min={10}
+                                        />
+                                        <button className="btn btn-dark w-100 rounded-pill fw-bold text-warning" onClick={handleSendOtp}>
+                                            LOGIN
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    : <div className="container-fluid login-wrapper d-flex justify-content-center align-items-center">
+                        <div className="login-container d-flex">
+                            {/* Left Panel */}
+                            <div className="col-md-6 login-form d-flex flex-column justify-content-center align-items-start">
+                                <div className="logo mb-5">
+                                    <img src={logo} alt="logo" className="me-2" />
+                                    <span className="brand-name">Afoozo</span>
+                                </div>
+                                <input type="text" placeholder="Mobile No."
+                                    className="form-control z-2 input-field mb-4 rounded-5 shadow-sm p-3"
                                     value={mobileNo}
                                     onChange={(e) => setMobileNo(e.target.value)}
                                     min={10}
                                 />
-                                <button className="btn btn-dark w-100 rounded-pill fw-bold text-warning" onClick={handleSendOtp}>
-                                    LOGIN
-                                </button>
+                                <button className="btn login-btn rounded-5 bg-dark text-warning" onClick={handleSendOtp}>LOGIN</button>
+                            </div>
+                            <div className="col-md-6 login-image p-0 rounded-5 z-1">
+                                <img
+                                    src={loginPic}
+                                    alt="bowl food"
+                                    className="img-fluid h-100 w-100 object-fit-cover rounded-5"
+                                />
                             </div>
                         </div>
                     </div>
-                </div>
-            </div> : <OtpScreen mobileNumber={mobileNo} resend={handleSendOtp} />}
+                )
+                : <OtpScreen mobileNumber={mobileNo} resend={handleSendOtp} onBack={() => setIsOtpSend(false)} />}
+
         </>
     );
 };

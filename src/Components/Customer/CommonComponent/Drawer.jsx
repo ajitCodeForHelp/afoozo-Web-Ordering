@@ -16,6 +16,8 @@ import AboutAppPopup from "../ScreenComponents/DrawerPages/About";
 import TermsConditionsPopup from "../ScreenComponents/DrawerPages/Terms&conditions";
 import OrderHistory from "../ScreenComponents/DrawerPages/OrderHistory";
 import LiveOrders from "../ScreenComponents/DrawerPages/LiveOrder";
+import { useNavigate } from "react-router-dom";
+import useIsMobile from "../../../Utilities/IsMobile";
 
 export default function SidebarDrawer({ isOpen, onClose }) {
   useEffect(() => {
@@ -24,26 +26,33 @@ export default function SidebarDrawer({ isOpen, onClose }) {
   }, [isOpen]);
 
   const [profileData, setProfileData] = useState([]);
-  const getData = async () => {
-    try {
-      const token = localStorage.getItem("secretKey");
-      const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/profileDetail`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      const getRes = await res.json();
-      if (getRes.errorCode === 0) {
-        setProfileData(getRes.responsePacket);
-      }
-    } catch (r) {
-      console.log(r, "check your internet connection");
-    }
+  // const getData = async () => {
+  //   try {
+  //     const token = localStorage.getItem("secretKey");
+  //     const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/profileDetail`, {
+  //       headers: {
+  //         'Authorization': `Bearer ${token}`
+  //       }
+  //     });
+  //     const getRes = await res.json();
+  //     if (getRes.errorCode === 0) {
+  //       setProfileData(getRes.responsePacket);
+  //     }
+  //   } catch (r) {
+  //     console.log(r, "check your internet connection");
+  //   }
+  // };
+  // useEffect(()=>{
+
+  // },[])
+
+  const navigate = useNavigate();
+  const signOut = () => {
+    localStorage.removeItem("secretKey");
+    localStorage.removeItem("mobileNo");
+    navigate("/login");
   };
-  useEffect(()=>{
-
-  },[])
-
+  const isMobile = useIsMobile();
   const [showUpdateProfile, setShowUpdateProfile] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
@@ -60,7 +69,7 @@ export default function SidebarDrawer({ isOpen, onClose }) {
       ></div>
 
       {/* Drawer */}
-      <div className={`sidebar-drawer slide-right ${isOpen ? "open" : ""}`}>
+      <div style={{ paddingBottom: isMobile && "5rem" }} className={`sidebar-drawer slide-right ${isOpen ? "open" : ""}`}>
         <div className="sidebar-header d-flex justify-content-between align-items-center mb-1">
           <h4 className="logo text-warning mb-0">AFOOZO</h4>
           <button onClick={onClose} className="btn-close-icon">
@@ -101,7 +110,7 @@ export default function SidebarDrawer({ isOpen, onClose }) {
         </ul>
 
         <div className="logout-section">
-          <li><FiLogOut /> <span>Logout</span></li>
+          <li onClick={signOut}><FiLogOut /> <span>Logout</span></li>
         </div>
       </div>
 

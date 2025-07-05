@@ -72,35 +72,8 @@
 // export default PopularItem;
 
 import React from "react";
-import bur from "../../../../Assets/burgur.jpg";
 
 function PopularItem({resMenu}) {
-    const foodItems = [
-        {
-            name: "Cheeseburger Deluxe",
-            price: "₹8.99",
-            desc: "Juicy beef patty with melted cheese, fresh lettuce, tomato and special sauce.",
-            img: bur,
-        },
-        {
-            name: "Margherita Pizza",
-            price: "₹12.99",
-            desc: "Classic pizza with fresh basil, mozzarella, and tomato sauce.",
-            img: bur,
-        },
-        {
-            name: "Margherita Pizza",
-            price: "₹12.99",
-            desc: "Classic pizza with fresh basil, mozzarella, and tomato sauce.",
-            img: bur,
-        },
-        {
-            name: "Margherita Pizza",
-            price: "₹12.99",
-            desc: "Classic pizza with fresh basil, mozzarella, and tomato sauce.",
-            img: bur,
-        },
-    ];
 
     return (
         <div className="p-3">

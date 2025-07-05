@@ -1,5 +1,6 @@
 import React from "react";
 import { FaStar } from "react-icons/fa";
+import { RiDragMoveLine } from "react-icons/ri";
 
 const CafeItems = ({ resMenu, categoryRefs, addToCart, cart, dispatch, updateQuantity }) => {
   return (
@@ -8,7 +9,7 @@ const CafeItems = ({ resMenu, categoryRefs, addToCart, cart, dispatch, updateQua
         {resMenu?.flatMap((itm, idx) => {
           return (
             <>
-              <div className="">
+              <div className="d-flex flex-column justify-content-center gap-2">
                 <div ref={(el) => (categoryRefs.current[itm?.categoryUuid] = el)} data-id={itm?.categoryUuid} key={idx}>
                   <h5 className="text-warning">{itm?.categoryName}</h5>
                 </div>
@@ -20,15 +21,19 @@ const CafeItems = ({ resMenu, categoryRefs, addToCart, cart, dispatch, updateQua
                     return (
                       <div className="col-12" key={index}>
                         <div className="d-flex flex-column flex-sm-row align-items-sm-center shadow-sm bg-white p-3 rounded-4">
-                          <img
+
+                          {item?.itemImageUrl && <img
                             src={item?.itemImageUrl}
                             alt={item?.title}
                             className="rounded-4 mb-2 mb-sm-0"
                             style={{ width: 80, height: 80, objectFit: "cover" }}
-                          />
+                          />}
                           <div className="flex-grow-1 ms-sm-3">
                             <div className="d-flex justify-content-between flex-wrap">
-                              <h6 className="fw-bold mb-1">{item?.title}</h6>
+                              <h6 className="fw-bold mb-1">
+                                <span className={`vegNonVeg-icon fs-4 ${item?.vegNonVeg === "NonVeg" ? "text-danger" : "text-success"}`}><RiDragMoveLine /></span>
+                                {item?.title}
+                              </h6>
                               <span className="fw-bold text-warning">₹{item?.finalPrice}</span>
                             </div>
                             <div className="text-muted small mb-1">

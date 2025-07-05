@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
+import Loading from '../Components/Customer/CommonComponent/LoadingWait';
 
 function LocationGate({ children }) {
   const [locationAllowed, setLocationAllowed] = useState(null); // null = checking
@@ -12,7 +13,7 @@ function LocationGate({ children }) {
     }
 
     navigator.permissions
-      .query({ name: 'geolocation' }) 
+      .query({ name: 'geolocation' })
       .then((result) => {
         if (result.state === 'granted') {
           setLocationAllowed(true);
@@ -33,8 +34,9 @@ function LocationGate({ children }) {
   }, []);
 
   if (locationAllowed === null) {
-    return <div className="text-center mt-5">Requesting location access...</div>;
+    return <Loading />
   }
+  // return <div className="text-center mt-5">Requesting location access...</div>;
 
   if (locationAllowed === false) {
     return (

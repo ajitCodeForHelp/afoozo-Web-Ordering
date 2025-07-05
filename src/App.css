@@ -20,6 +20,12 @@ input:focus {
   /* background: var(--white) !important; */
 }
 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 select:focus {
   outline: none !important;
   box-shadow: none !important;
@@ -50,6 +56,100 @@ select:focus {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* login form */
+/* Login.css */
+.login-wrapper {
+  height: 100vh;
+  background: linear-gradient(to top left, #f7f7f7, #ffffff);
+}
+
+.login-container {
+  width: 900px;
+  max-width: 100%;
+  height: 500px;
+  background: #ffffff;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+
+.login-form {
+  background: white;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+  position: relative;
+  width: 40% !important;
+  padding: 3rem;
+  margin-right: -65px;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+.brand-name {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 500;
+}
+
+.input-field {
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-style: italic;
+  font-size: 15px;
+  width: 120% !important;
+  max-width: 350px;
+  background-color: #f8f8f8;
+  border: none;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.input-field:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #ddd;
+}
+
+.login-btn {
+  background: #0b0b0b;
+  color: white;
+  padding: 10px 40px;
+  border-radius: 25px;
+  font-style: italic;
+  font-weight: bold;
+  letter-spacing: 1px;
+  border: none;
+  max-width: 150px;
+  font-size: 14px;
+}
+
+.login-btn:hover {
+  background-color: #333;
+}
+
+.login-image {
+  width: 70% !important;
+}
+
+.login-image img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+
+.copyright-text {
+  font-size: 12px;
+  color: #777;
+  margin-top: 60px;
+}
+
+/* navbar */
 
 .nav-menu-btn {
   background-color: white;
@@ -268,7 +368,7 @@ select:focus {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
-  z-index: 1024;
+  z-index: 2024;
 }
 
 .drawer-backdrop.show {
@@ -286,7 +386,7 @@ select:focus {
   background: #fff;
   box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1);
   padding: 1.2rem;
-  z-index: 1025;
+  z-index: 2025;
   transition: left 0.3s ease;
   display: flex;
   flex-direction: column;
@@ -1086,6 +1186,10 @@ select:focus {
   object-fit: cover;
 }
 
+.modal {
+  z-index: 3000 !important;
+}
+
 /* Remove Bootstrap modal radius so it looks like a sheet on mobile */
 .profile-modal .modal-content {
   border: none;
@@ -1283,6 +1387,32 @@ select:focus {
   font-size: 14px;
 }
 
+@media (max-width: 768px) {
+  .qr-container {
+    border-radius: 0;
+    height: 100%;
+    max-width: 100%;
+    padding-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .qr-close-btn {
+    top: 16px;
+    right: 16px;
+    font-size: 28px;
+    color: #fff;
+    z-index: 2;
+  }
+
+  .qr-tip {
+    color: #fff;
+  }
+}
+
+/* qr ends here */
+
 
 /* menuCard */
 .menu-card-container {
@@ -1342,3 +1472,46 @@ select:focus {
 .vegNonVeg-icon {
   transform: rotate(45deg);
 }
+
+/* loading */
+.loading-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.loading-full {
+  height: 100vh;
+}
+
+.loading-content {
+  text-align: center;
+}
+
+.loading-spinner {
+  animation: spin 0.8s linear infinite;
+}
+
+.loading-sm {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.loading-md {
+  width: 3rem;
+  height: 3rem;
+}
+
+.loading-lg {
+  width: 4.5rem;
+  height: 4.5rem;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* loading ends here */

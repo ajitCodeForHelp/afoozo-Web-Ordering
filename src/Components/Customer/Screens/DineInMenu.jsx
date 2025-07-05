@@ -8,15 +8,13 @@ import { useLocation, useParams } from "react-router-dom";
 import Categories from "../ScreenComponents/CafeMenuComponent/Categories";
 import { useCart } from "../../../Utilities/CartProvider";
 import MenuItemCard from "../ScreenComponents/DineInComponent/MenuItems";
+import PopupModal from "../CommonComponent/Modals/PopUpModal";
 
 function DineInMenu() {
     const [cartVisible, setCartVisible] = useState(false);
     const { id } = useParams();
     const location = useLocation();
     const { resDetail, orderType } = location.state || {}
-
-    const [items, setItems] = useState([]);
-
     const [resMenu, setResMenu] = useState([]);
     const [activeCategory, setActiveCategory] = useState(resMenu[0]?.categoryUuid);
 
@@ -90,6 +88,7 @@ function DineInMenu() {
                         customization: itm?.customization || []
                     })),
                     restaurantId: id,
+                    tableNumber: resDetail?.tableNumber,
                 })
             });
             const getRes = await res.json();
@@ -143,23 +142,15 @@ function DineInMenu() {
     // const addToCart = (product) => {
     //     dispatch({ type: 'ADD_ITEM', payload: product });
     // };
-
+    const [modalVisible, setModalVisible] = useState(false);
+    const [message, setMessage] = useState("");
+    const [pendingItem, setPendingItem] = useState(null);
     const addToCart = (item) => {
         const currentRestaurant = cart.restaurant;
-
         if (cart.items.length > 0 && currentRestaurant?.restaurantUuid !== id) {
-            // Prompt user to clear cart
-            const confirmReset = window.confirm(
-                "You already have items from another restaurant. Clear the cart and add this item?"
-            );
-
-            if (confirmReset) {
-                dispatch({ type: 'CLEAR_CART' });
-                dispatch({
-                    type: 'ADD_ITEM',
-                    payload: { ...item, restaurant: { restaurantUuid: id } }
-                });
-            }
+            setPendingItem(item);
+            setMessage("You already have items from another restaurant. Clear the cart and add this item?");
+            setModalVisible(true);
         } else {
             dispatch({
                 type: 'ADD_ITEM',
@@ -167,6 +158,40 @@ function DineInMenu() {
             });
         }
     };
+
+    const handleConfirm = () => {
+        if (!pendingItem) return;
+        dispatch({ type: 'CLEAR_CART' });
+        dispatch({
+            type: 'ADD_ITEM',
+            payload: { ...pendingItem, restaurant: { restaurantUuid: id } }
+        });
+        setModalVisible(false);
+    };
+
+    // const addToCart = (item) => {
+    //     const currentRestaurant = cart.restaurant;
+
+    //     if (cart.items.length > 0 && currentRestaurant?.restaurantUuid !== id) {
+    //         // Prompt user to clear cart
+    //         const confirmReset = window.confirm(
+    //             "You already have items from another restaurant. Clear the cart and add this item?"
+    //         );
+
+    //         if (confirmReset) {
+    //             dispatch({ type: 'CLEAR_CART' });
+    //             dispatch({
+    //                 type: 'ADD_ITEM',
+    //                 payload: { ...item, restaurant: { restaurantUuid: id } }
+    //             });
+    //         }
+    //     } else {
+    //         dispatch({
+    //             type: 'ADD_ITEM',
+    //             payload: { ...item, restaurant: { restaurantUuid: id } }
+    //         });
+    //     }
+    // };
 
 
     const removeFromCart = (itemId) => {
@@ -250,21 +275,23 @@ function DineInMenu() {
                     resMenu?.flatMap((itm, idx) => {
                         return (
                             <>
-                                <div ref={(el) => (categoryRefs.current[itm?.categoryUuid] = el)} data-id={itm?.categoryUuid} key={idx} className="pt-2">
-                                    <h5 className="text-warning px-4 py-2">{itm?.categoryName}</h5>
-                                </div>
-                                {
-                                    itm?.menuList?.map((item, index) => {
-                                        const cartItem = cart?.items?.find((pro) => pro.uuid === item.uuid);
-                                        const quantity = cartItem?.quantity || 0;
+                                <div className="d-flex flex-column justify-content-center gap-2">
+                                    <div ref={(el) => (categoryRefs.current[itm?.categoryUuid] = el)} data-id={itm?.categoryUuid} key={idx} className="pt-2">
+                                        <h5 className="text-warning px-4 py-2">{itm?.categoryName}</h5>
+                                    </div>
+                                    {
+                                        itm?.menuList?.map((item, index) => {
+                                            const cartItem = cart?.items?.find((pro) => pro.uuid === item.uuid);
+                                            const quantity = cartItem?.quantity || 0;
 
-                                        return (
-                                            <div className="px-4">
-                                                <MenuItemCard key={index} item={item} addToCart={addToCart} cart={cart} dispatch={dispatch} cartItem={cartItem} quantity={quantity} updateQuantity={updateQuantity} removeFromCart={removeFromCart} />
-                                            </div>
-                                        );
-                                    })
-                                }
+                                            return (
+                                                <div className="px-4">
+                                                    <MenuItemCard key={index} item={item} addToCart={addToCart} cart={cart} dispatch={dispatch} cartItem={cartItem} quantity={quantity} updateQuantity={updateQuantity} removeFromCart={removeFromCart} />
+                                                </div>
+                                            );
+                                        })
+                                    }
+                                </div>
                             </>
                         )
                     })
@@ -275,7 +302,6 @@ function DineInMenu() {
                 <CartPanel
                     show={cartVisible}
                     onClose={() => setCartVisible(false)}
-                    items={items}
                     orderDetail={orderDetail}
                     orderRefId={orderRefId}
                     increment={increment}
@@ -286,6 +312,17 @@ function DineInMenu() {
                     orderType={orderType}
                 />
             </div>
+
+            <PopupModal
+                show={modalVisible}
+                onClose={() => setModalVisible(false)}
+                onConfirm={handleConfirm}
+                title="Confirm Action"
+                message={message}
+                confirmText="Yes"
+                cancelText="Cancel"
+                type="confirm" // or "message"
+            />
         </>
     )
 }

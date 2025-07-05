@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import otpImg from "../../../Assets/otpImg.jpg";
 
-const OtpScreen = ({ mobileNumber, resend }) => {
+const OtpScreen = ({ mobileNumber, resend,onBack }) => {
     const [otp, setOtp] = useState(['', '', '', '']);
     const [timer, setTimer] = useState(60);
     const [resendEnabled, setResendEnabled] = useState(false);
@@ -78,6 +79,9 @@ const OtpScreen = ({ mobileNumber, resend }) => {
                 setOtp(newOtp);
             }
         }
+        if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+            e.preventDefault(); // Prevent default action for ArrowUp and ArrowDown
+        }
     };
 
     // Resend OTP
@@ -90,17 +94,17 @@ const OtpScreen = ({ mobileNumber, resend }) => {
     return (
         <div className="min-vh-100 bg-white d-flex flex-column">
             {/* Header */}
-            <div className="d-flex align-items-center px-3 py-2 bg-black text-white">
-                <FaArrowLeft className="me-2" />
-                <h5 className="mb-0">OTP</h5>
+            <div className="d-flex align-items-center px-4 py-4 bg-black text-warning">
+                <FaArrowLeft className="me-2" onClick={onBack}/>
+                <h5 className="mb-0 text-warning fs-4">OTP</h5>
             </div>
 
             {/* Main Content */}
             <div className="d-flex flex-column align-items-center justify-content-center flex-grow-1 text-center px-3">
                 <img
-                    src="https://cdn-icons-png.flaticon.com/512/2956/2956854.png"
+                    src={otpImg}
                     alt="SMS"
-                    style={{ width: '120px', marginBottom: '20px' }}
+                    style={{ width: '250px', marginBottom: '20px' }}
                 />
 
                 <h5>Enter OTP</h5>
@@ -113,7 +117,7 @@ const OtpScreen = ({ mobileNumber, resend }) => {
                         <input
                             key={index}
                             id={`otp-${index}`}
-                            type="text"
+                            type="number"
                             className="form-control text-center fw-bold"
                             style={{ width: '45px', fontSize: '24px' }}
                             maxLength={1}

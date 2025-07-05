@@ -2,7 +2,7 @@ import React from 'react';
 
 const DineInScan = ({ showScanner, setShowScanner }) => {
   return (
-    <div className="scan-order-page bg-white min-vh-100 d-flex flex-column ">
+    <div className="scan-order-page bg-white d-flex flex-column ">
       {/* Header */}
       <div className="d-flex align-items-center justify-content-between px-3 py-3 border-bottom bg-black text-white">
         <i className="bi bi-arrow-left fs-4"></i>

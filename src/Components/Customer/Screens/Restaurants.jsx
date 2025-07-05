@@ -135,15 +135,17 @@ function Restaurants() {
 
     return (
         <>
-            <ScrollToTop />
-            <Nav />
-            <Banner />
-            {!isMobile && <ServiceTabs orderType={orderType} setOrderType={setOrderType} />}
-            {orderType !== "DineIn" && <CafeCategory cuisineList={cuisineList} filterByCuisine={filterByCuisine} />}
-            {orderType === "DineIn" && <DineInScan showScanner={showScanner} setShowScanner={setShowScanner} />}
-            {isMobile && <BottomNav orderType={orderType} setOrderType={setOrderType} />}
-            {orderType !== "DineIn" && <RestaurantList restaurants={filterResList} selectedCuisine={selectedCuisine} setSelectedCuisine={setSelectedCuisine} orderType={orderType} />}
-            {orderType === "DineIn" && showScanner && <QRCodeScanner onScanSuccess={handleScanSuccess} onClose={() => setShowScanner(false)} />}
+            <div className={`${isMobile && "pb-5"}`}>
+                <ScrollToTop />
+                <Nav />
+                <Banner />
+                {!isMobile && <ServiceTabs orderType={orderType} setOrderType={setOrderType} />}
+                {orderType !== "DineIn" && <CafeCategory cuisineList={cuisineList} filterByCuisine={filterByCuisine} />}
+                {orderType === "DineIn" && <DineInScan showScanner={showScanner} setShowScanner={setShowScanner} />}
+                {orderType !== "DineIn" && <RestaurantList restaurants={filterResList} selectedCuisine={selectedCuisine} setSelectedCuisine={setSelectedCuisine} orderType={orderType} />}
+                {orderType === "DineIn" && showScanner && <QRCodeScanner onScanSuccess={handleScanSuccess} onClose={() => setShowScanner(false)} />}
+                {isMobile && <BottomNav orderType={orderType} setOrderType={setOrderType} />}
+            </div>
         </>
     )
 }

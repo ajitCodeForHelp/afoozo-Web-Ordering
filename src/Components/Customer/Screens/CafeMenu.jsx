@@ -8,6 +8,7 @@ import ScrollToTop from "../../../Utilities/ScrollToTop";
 import { useLocation, useParams } from "react-router-dom";
 import Categories from "../ScreenComponents/CafeMenuComponent/Categories";
 import { useCart } from "../../../Utilities/CartProvider";
+import PopupModal from "../CommonComponent/Modals/PopUpModal";
 
 function CafeMenu() {
     const [cartVisible, setCartVisible] = useState(false);
@@ -138,22 +139,15 @@ function CafeMenu() {
         }
     };
 
+    const [modalVisible, setModalVisible] = useState(false);
+    const [message, setMessage] = useState("");
+    const [pendingItem, setPendingItem] = useState(null);
     const addToCart = (item) => {
         const currentRestaurant = cart.restaurant;
-
         if (cart.items.length > 0 && currentRestaurant?.restaurantUuid !== id) {
-            // Prompt user to clear cart
-            const confirmReset = window.confirm(
-                "You already have items from another restaurant. Clear the cart and add this item?"
-            );
-
-            if (confirmReset) {
-                dispatch({ type: 'CLEAR_CART' });
-                dispatch({
-                    type: 'ADD_ITEM',
-                    payload: { ...item, restaurant: { restaurantUuid: id } }
-                });
-            }
+            setPendingItem(item);
+            setMessage("You already have items from another restaurant. Clear the cart and add this item?");
+            setModalVisible(true);
         } else {
             dispatch({
                 type: 'ADD_ITEM',
@@ -161,6 +155,40 @@ function CafeMenu() {
             });
         }
     };
+
+    const handleConfirm = () => {
+        if (!pendingItem) return;
+        dispatch({ type: 'CLEAR_CART' });
+        dispatch({
+            type: 'ADD_ITEM',
+            payload: { ...pendingItem, restaurant: { restaurantUuid: id } }
+        });
+        setModalVisible(false);
+    };
+
+    // const addToCart = (item) => {
+    //     const currentRestaurant = cart.restaurant;
+
+    //     if (cart.items.length > 0 && currentRestaurant?.restaurantUuid !== id) {
+    //         // Prompt user to clear cart
+    //         const confirmReset = window.confirm(
+    //             "You already have items from another restaurant. Clear the cart and add this item?"
+    //         );
+
+    //         if (confirmReset) {
+    //             dispatch({ type: 'CLEAR_CART' });
+    //             dispatch({
+    //                 type: 'ADD_ITEM',
+    //                 payload: { ...item, restaurant: { restaurantUuid: id } }
+    //             });
+    //         }
+    //     } else {
+    //         dispatch({
+    //             type: 'ADD_ITEM',
+    //             payload: { ...item, restaurant: { restaurantUuid: id } }
+    //         });
+    //     }
+    // };
     const removeFromCart = (itemId) => {
         dispatch({ type: "REMOVE_ITEM", payload: itemId });
     };
@@ -182,13 +210,11 @@ function CafeMenu() {
         // setItems(items.map(item => item.id === id ? { ...item, quantity: item.quantity + 1 } : item));
         updateQuantity(localId, quantity)
         updateItemQuantity(id, "add");
-        console.log(id, quantity, "modal", localId);
     };
 
     const decrement = (id, quantity, localId) => {
         // setItems(items.map(item => item.id === id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item));
         updateQuantity(localId, quantity);
-
         updateItemQuantity(id, "less");
     };
 
@@ -222,8 +248,6 @@ function CafeMenu() {
         setActiveCategory(uuid);
     };
 
-
-
     return (
         <>
             <ScrollToTop />
@@ -244,7 +268,7 @@ function CafeMenu() {
                 />
 
                 {/* cartsection */}
-                <CartButton openClose={() => { setCartVisible(true); saveOrder() }} orderType={orderType} restaurantId={id} />
+                {cart.items.length > 0 && cart?.restaurant?.restaurantUuid === id && <CartButton openClose={() => { setCartVisible(true); saveOrder() }} orderType={orderType} restaurantId={id} />}
                 <CartPanel
                     show={cartVisible}
                     onClose={() => setCartVisible(false)}
@@ -259,6 +283,17 @@ function CafeMenu() {
                     orderType={orderType}
                 />
             </div>
+
+            <PopupModal
+                show={modalVisible}
+                onClose={() => setModalVisible(false)}
+                onConfirm={handleConfirm}
+                title="Confirm Action"
+                message={message}
+                confirmText="Yes"
+                cancelText="Cancel"
+                type="confirm" // or "message"
+            />
         </>
     )
 }

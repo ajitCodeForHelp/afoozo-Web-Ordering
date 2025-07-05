@@ -11,7 +11,7 @@ import CookingInstructionModal from '../CommonComponent/Modals/CookingInstructio
 import AddressDrawer from '../ScreenComponents/AddressComonent.jsx/AddressSection';
 import PaymentMode from '../ScreenComponents/CartComponent/PaymentModeList';
 
-const CartPanel = ({ show, onClose, items, increment, decrement, edit, orderDetail, orderRefId, saveOrder, dispatch, orderType }) => {
+const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefId, saveOrder, dispatch, orderType }) => {
 
     // appling promocode
     const [isPromoOpen, setPromoOpen] = useState(false);

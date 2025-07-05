@@ -62,7 +62,7 @@ const PaymentMode = ({ visible, onClose, orderType, orderTotal }) => {
                         payModeList.map((itm) => {
                             return (
                                 <>
-                                    <div className="d-flex justify-content-start">
+                                    <div className="d-flex justify-content-start m-1 p-3 shadow-sm fw-semibold cursor-pointer">
                                         <div className="">{itm}</div>
                                     </div>
                                 </>
