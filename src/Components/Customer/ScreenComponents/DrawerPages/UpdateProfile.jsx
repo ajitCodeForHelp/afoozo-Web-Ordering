@@ -7,14 +7,41 @@ import { HiArrowNarrowLeft } from "react-icons/hi";
 import pic from "../../../../Assets/profilePic.jpg";
 
 export default function ProfileUpdate({ show, onHide }) {
+
+    const mobile = localStorage.getItem('mobileNo');
     const [form, setForm] = useState({
-        name: 'Ajaj',
-        email: 'azazk7809@gmail.com',
-        phone: '8290780903',
-        birthday: '2003-12-09', // ISO for date inputs
-        anniversary: '1970-01-01',
-        gender: 'male',
+        fullName: '',
+        email: '',
+        mobileNumber: mobile,
+        dateOfBirth: '', // ISO for date inputs
+        anniversaryDate: '',
+        gender: '',
     });
+
+    const updateProfile = async () => {
+        try {
+            const mobile = localStorage.getItem("mobileNo");
+            const key = localStorage.getItem("secretKey");
+            const BasicAuth = btoa(`${mobile}:${key}`);
+
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/updateProfile`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `Basic ${BasicAuth}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(form)
+            })
+            const getRes = await res.json();
+            if (getRes.errorCode === 0) {
+                alert("update successfully !");
+                onHide();
+            }
+        } catch (e) {
+            console.log(e, "error in profileUpdate api");
+        }
+    };
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -23,9 +50,8 @@ export default function ProfileUpdate({ show, onHide }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // TODO: send form to API
-        console.log('Profile updated →', form);
-        onHide();
+        updateProfile();
+
     };
 
     return (
@@ -50,7 +76,7 @@ export default function ProfileUpdate({ show, onHide }) {
                         className="rounded-circle me-3 avatar-lg"
                     />
                     <div>
-                        <h6 className="mb-0 fw-bold">{form.name}</h6>
+                        <h6 className="mb-0 fw-bold">{form.fullName}</h6>
                         <small className="text-muted d-block">{form.email}</small>
                     </div>
                 </div>
@@ -61,10 +87,10 @@ export default function ProfileUpdate({ show, onHide }) {
                             <div className="form-floating mb-3 border-bottom">
                                 <input
                                     type="text"
-                                    name="name"
+                                    name="fullName"
                                     id="name"
                                     required
-                                    value={form.name}
+                                    value={form.fullName}
                                     onChange={handleChange}
                                     placeholder="Name"
                                     className="form-control border-0"
@@ -88,11 +114,12 @@ export default function ProfileUpdate({ show, onHide }) {
                             <div className="form-floating mb-3 border-bottom">
                                 <input
                                     type="tel"
-                                    name="phone"
+                                    name="mobileNumber"
                                     id="phone"
-                                    value={form.phone}
+                                    value={form.mobileNumber}
                                     onChange={handleChange}
                                     placeholder="Phone Number"
+                                    disabled={true}
                                     className="form-control border-0"
                                 />
                                 <label htmlFor="phone">Phone Number</label>
@@ -101,10 +128,14 @@ export default function ProfileUpdate({ show, onHide }) {
                             <div className="form-floating mb-3 border-bottom">
                                 <input
                                     type="date"
-                                    name="birthday"
+                                    name="dateOfBirth"
                                     id="birthday"
-                                    value={form.birthday}
-                                    onChange={handleChange}
+                                    // value={form.dateOfBirth}
+                                    onChange={(e) => {
+                                        const date = new Date(e.target.value);
+                                        const timestamp = date.getTime();
+                                        setForm({ ...form, dateOfBirth: timestamp });
+                                    }}
                                     placeholder="Birthday"
                                     className="form-control border-0"
                                 />
@@ -115,10 +146,14 @@ export default function ProfileUpdate({ show, onHide }) {
                             <div className="form-floating mb-3 border-bottom">
                                 <input
                                     type="date"
-                                    name="anniversary"
+                                    name="anniversaryDate"
                                     id="anniversary"
-                                    value={form.anniversary}
-                                    onChange={handleChange}
+                                    value={form.anniversaryDate}
+                                    onChange={(e) => {
+                                        const date = new Date(e.target.value);
+                                        const timestamp = date.getTime();
+                                        setForm({ ...form, anniversaryDate: timestamp });
+                                    }}
                                     placeholder="Anniversary"
                                     className="form-control border-0"
                                 />

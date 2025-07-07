@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   FiLogOut,
   FiClock,
@@ -7,6 +7,8 @@ import {
 } from "react-icons/fi";
 import { RiNotificationBadgeFill } from "react-icons/ri";
 import { FaChevronRight, FaInfoCircle } from "react-icons/fa";
+import { GiWallet } from "react-icons/gi";
+import { FaMoneyBillTrendUp, FaBuildingCircleCheck } from "react-icons/fa6";
 import { BsCartCheck } from "react-icons/bs";
 import { MdContentPaste } from "react-icons/md";
 import pic from "../../../Assets/profilePic.jpg";
@@ -18,6 +20,10 @@ import OrderHistory from "../ScreenComponents/DrawerPages/OrderHistory";
 import LiveOrders from "../ScreenComponents/DrawerPages/LiveOrder";
 import { useNavigate } from "react-router-dom";
 import useIsMobile from "../../../Utilities/IsMobile";
+import Wallet from "../ScreenComponents/DrawerPages/Wallet";
+import BillToOrders from "../ScreenComponents/DrawerPages/BillToOrders";
+import CheckInOut from "../ScreenComponents/DrawerPages/CheckInOut";
+import usePopupBackHandler from "../../../Utilities/UsePopupStack";
 
 export default function SidebarDrawer({ isOpen, onClose }) {
   useEffect(() => {
@@ -26,39 +32,91 @@ export default function SidebarDrawer({ isOpen, onClose }) {
   }, [isOpen]);
 
   const [profileData, setProfileData] = useState([]);
-  // const getData = async () => {
-  //   try {
-  //     const token = localStorage.getItem("secretKey");
-  //     const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/profileDetail`, {
-  //       headers: {
-  //         'Authorization': `Bearer ${token}`
-  //       }
-  //     });
-  //     const getRes = await res.json();
-  //     if (getRes.errorCode === 0) {
-  //       setProfileData(getRes.responsePacket);
-  //     }
-  //   } catch (r) {
-  //     console.log(r, "check your internet connection");
-  //   }
-  // };
-  // useEffect(()=>{
 
-  // },[])
+  const getData = async () => {
+    try {
+      const token = localStorage.getItem("secretKey");
+      const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/profileDetail`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const getRes = await res.json();
+      if (getRes.errorCode === 0) {
+        setProfileData(getRes.responsePacket);
+      }
+    } catch (r) {
+      console.log(r, "check your internet connection");
+    }
+  };
+  useEffect(() => {
+    if (isOpen) {
+      getData();
+    }
+  }, [isOpen])
 
   const navigate = useNavigate();
+
   const signOut = () => {
     localStorage.removeItem("secretKey");
     localStorage.removeItem("mobileNo");
     navigate("/login");
   };
   const isMobile = useIsMobile();
+
   const [showUpdateProfile, setShowUpdateProfile] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
   const [showTandC, setShowTandC] = useState(false);
   const [showHistoryOrder, setShowHistoryOrder] = useState(false);
   const [showLiveOrder, setShowLiveOrder] = useState(false);
+  const [showWallet, setShowWallet] = useState(false);
+  const [showBiLlOrders, setShowBillOrders] = useState(false);
+  const [showCheckInOut, setShowCheckInOut] = useState(false);
+
+const popupStack = useMemo(() => [
+  { id: "checkInOut", isOpen: showCheckInOut, onClose: () => setShowCheckInOut(false) },
+  { id: "billOrders", isOpen: showBiLlOrders, onClose: () => setShowBillOrders(false) },
+  { id: "wallet", isOpen: showWallet, onClose: () => setShowWallet(false) },
+  { id: "liveOrder", isOpen: showLiveOrder, onClose: () => setShowLiveOrder(false) },
+  { id: "historyOrder", isOpen: showHistoryOrder, onClose: () => setShowHistoryOrder(false) },
+  { id: "terms", isOpen: showTandC, onClose: () => setShowTandC(false) },
+  { id: "about", isOpen: showAbout, onClose: () => setShowAbout(false) },
+  { id: "notification", isOpen: showNotification, onClose: () => setShowNotification(false) },
+  { id: "updateProfile", isOpen: showUpdateProfile, onClose: () => setShowUpdateProfile(false) },
+  { id: "drawer", isOpen: isOpen, onClose }, // ✅ LAST to close
+], [
+  showCheckInOut,
+  showBiLlOrders,
+  showWallet,
+  showLiveOrder,
+  showHistoryOrder,
+  showTandC,
+  showAbout,
+  showNotification,
+  showUpdateProfile,
+  isOpen,
+]);
+  usePopupBackHandler(popupStack);
+
+  // useEffect(() => {
+  //   const handlePopState = () => {
+  //     if (isOpen) {
+  //       onClose();
+  //     }
+  //   };
+
+  //   if (isOpen) {
+  //     // Push new state only once when opening popup
+  //     window.history.pushState({ isDrawerOpen: true }, '');
+  //     window.addEventListener('popstate', handlePopState);
+  //   }
+
+  //   return () => {
+  //     // Remove listener only (don't call history.back here)
+  //     window.removeEventListener('popstate', handlePopState);
+  //   };
+  // }, [isOpen]);
 
   return (
     <>
@@ -103,10 +161,13 @@ export default function SidebarDrawer({ isOpen, onClose }) {
           {/* <li><FiHome /> <span>Home</span></li> */}
           <li onClick={() => setShowLiveOrder(true)}><BsCartCheck /> <span>Live Order</span></li>
           <li onClick={() => setShowHistoryOrder(true)}><FiClock /> <span>Order History</span></li>
+          <li onClick={() => setShowWallet(true)}><GiWallet /> <span>Wallet</span></li>
+          <li onClick={() => setShowBillOrders(true)}><FaMoneyBillTrendUp /> <span>Bill To Company Orders</span></li>
+          <li onClick={() => setShowCheckInOut(true)}><FaBuildingCircleCheck /> <span>Check -In</span></li>
           <li onClick={() => setShowNotification(true)}><RiNotificationBadgeFill /> <span>Notification</span></li>
           <li onClick={() => setShowAbout(true)}><FaInfoCircle /> <span>About</span></li>
           <li onClick={() => setShowTandC(true)}><MdContentPaste /> <span>Terms & Conditions</span></li>
-          <li><FiHeadphones /> <span>Help & Support</span></li>
+          <li><FiHeadphones /><span>Help & Support</span></li>
         </ul>
 
         <div className="logout-section">
@@ -120,6 +181,9 @@ export default function SidebarDrawer({ isOpen, onClose }) {
       <TermsConditionsPopup show={showTandC} onHide={() => setShowTandC(false)} />
       <OrderHistory show={showHistoryOrder} onHide={() => setShowHistoryOrder(false)} />
       <LiveOrders show={showLiveOrder} onHide={() => setShowLiveOrder(false)} />
+      <Wallet show={showWallet} onHide={() => setShowWallet(false)} />
+      <BillToOrders show={showBiLlOrders} onHide={() => setShowBillOrders(false)} />
+      <CheckInOut show={showCheckInOut} onHide={() => setShowCheckInOut(false)} />
     </>
   );
 }

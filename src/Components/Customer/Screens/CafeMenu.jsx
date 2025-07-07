@@ -29,7 +29,7 @@ function CafeMenu() {
                 },
                 body: JSON.stringify({
                     restaurantId: id,
-                    orderType: "Cafe",
+                    orderType: orderType,
                     tableNumber: 0,
                     length: -1,
                     searchKey: "",

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import CartItems from '../ScreenComponents/CartComponent/CartItems';
 import { ImCross } from "react-icons/im";
 import CookingInstruction from '../ScreenComponents/CartComponent/CookingInstrucation';
@@ -10,6 +10,8 @@ import PromoCodePannel from './PromoCodePannel';
 import CookingInstructionModal from '../CommonComponent/Modals/CookingInstructionModal';
 import AddressDrawer from '../ScreenComponents/AddressComonent.jsx/AddressSection';
 import PaymentMode from '../ScreenComponents/CartComponent/PaymentModeList';
+import usePopupBackHandler from '../../../Utilities/UsePopupStack';
+
 
 const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefId, saveOrder, dispatch, orderType }) => {
 
@@ -91,6 +93,17 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
         };
     }, [show, onClose, isPromoOpen, showCookingPopup, showAddressDrawer, showPaymentModeList]);
 
+
+    const popupStack = useMemo(() => [
+        { id: "paymentMode", isOpen: showPaymentModeList, onClose: () => setShowPaymentModeList(false) },
+        { id: "addressDrawer", isOpen: showAddressDrawer, onClose: () => setShowAddressDrawer(false) },
+        { id: "cookingPopup", isOpen: showCookingPopup, onClose: () => setShowCookingPopup(false) },
+        { id: "promoCode", isOpen: isPromoOpen, onClose: () => setPromoOpen(false) },
+        { id: "cartDrawer", isOpen: show, onClose },
+    ], [showPaymentModeList, showAddressDrawer, showCookingPopup, isPromoOpen, show]);
+
+    usePopupBackHandler(popupStack);
+
     return (
         <>
             <div className={`${show ? 'cart-blur-overlay' : ''}`}>
@@ -154,7 +167,7 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                 onAdd={handleAddInstruction}
             />
             <AddressDrawer show={showAddressDrawer} onClose={() => setShowAddressDrawer(false)} />
-            <PaymentMode visible={showPaymentModeList} onClose={() => setShowPaymentModeList(false)} orderType={orderType} orderTotal={orderDetail?.orderTotal}/>
+            <PaymentMode visible={showPaymentModeList} onClose={() => setShowPaymentModeList(false)} orderType={orderType} orderTotal={orderDetail?.orderTotal} />
         </>
     );
 };

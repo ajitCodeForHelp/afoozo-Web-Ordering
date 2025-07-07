@@ -18,7 +18,6 @@ function Restaurants() {
     const [filterResList, setFilterResList] = useState([]);
     const [cuisineList, setCuisineList] = useState([]);
     const [orderType, setOrderType] = useState("Cafe");
-
     const navigate = useNavigate();
     const getList = async (typeOrder) => {
         const token = localStorage.getItem("secretKey");
@@ -89,7 +88,6 @@ function Restaurants() {
     useEffect(() => {
         if (!selectedCuisine) {
             setFilterResList(RestaurantLists);
-            console.log("run run");
         }
     }, [selectedCuisine]);
     const isMobile = useIsMobile();

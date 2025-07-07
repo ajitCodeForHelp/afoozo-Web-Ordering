@@ -24,7 +24,6 @@ function Nav() {
                 }
             });
             const getRes = await res.json();
-            console.log(getRes);
         } catch (e) {
             console.log(e, "error in getAddre");
         }

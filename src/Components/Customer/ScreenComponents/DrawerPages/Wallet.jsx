@@ -1,0 +1,243 @@
+import React, { useEffect, useState } from "react";
+import { Modal } from 'react-bootstrap';
+import { HiArrowNarrowLeft } from "react-icons/hi";
+import { FaQrcode } from "react-icons/fa6";
+import { FaWallet } from "react-icons/fa";
+
+function Wallet({ show, onHide }) {
+    const quickAmounts = [2000, 5000, 10000];
+    const [activeTab, setActiveTab] = useState("add");
+    const today = new Date().toISOString().split("T")[0]; // "YYYY-MM-DD"
+    const [fromDate, setFromDate] = useState(today);
+    const [toDate, setToDate] = useState(today);
+    const [walletTransition, setWalletTransition] = useState([]);
+    const getWalletTransition = async (stDate, enDate) => {
+        try {
+            const mobile = localStorage.getItem('mobileNo');
+            const key = localStorage.getItem("secretKey");
+            const BasicAuth = btoa(`${mobile}:${key}`);
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getWalletTransactionListData/0/-1/${stDate}/${enDate}`, {
+                headers: {
+                    'Authorization': `Basic ${BasicAuth}`
+                }
+            });
+            const getRes = await res.json();
+            if (getRes.errorCode === 0) {
+                setWalletTransition(getRes.responsePacket);
+            }
+        } catch (e) {
+            console.log(e, "error in getWallet Transtion List Api");
+        }
+    };
+
+    const [startDate, setStartDate] = useState(today);
+    const [endDate, setEndDate] = useState(today);
+    const [coinTransition, setCoinTransition] = useState([]);
+    const getCoinTransition = async (stDate, enDate) => {
+        try {
+            const mobile = localStorage.getItem('mobileNo');
+            const key = localStorage.getItem("secretKey");
+            const BasicAuth = btoa(`${mobile}:${key}`);
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getCoinTransactionListData/0/-1/${stDate}/${enDate}`, {
+                headers: {
+                    'Authorization': `Basic ${BasicAuth}`
+                }
+            });
+            const getRes = await res.json();
+            if (getRes.errorCode === 0) {
+                setCoinTransition(getRes.responsePacket);
+            }
+        } catch (e) {
+            console.log(e, "error in coin Transtion List Api");
+        }
+    };
+
+    const handleGo = (transition) => {
+        if (transition === "coin" && startDate && endDate) {
+            getCoinTransition(startDate, endDate);
+        } else if (transition === "wallet" && fromDate && toDate) {
+            getWalletTransition(fromDate, toDate);
+        } else {
+            alert("select date first !");
+        };
+    };
+
+    const [balance, setBalance] = useState({});
+    const getBalance = async () => {
+        try {
+            const mobile = localStorage.getItem('mobileNo');
+            const key = localStorage.getItem("secretKey");
+            const BasicAuth = btoa(`${mobile}:${key}`);
+
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getCoinAndWalletBalance`, {
+                headers: {
+                    'Authorization': `Basic ${BasicAuth}`,
+                }
+            });
+            const getRes = await res.json();
+            if (getRes.errorCode === 0) {
+                setBalance(getRes.responsePacket);
+            }
+        } catch (e) {
+            console.log(e, "error in getBalance");
+        }
+    };
+    useEffect(() => {
+        if (show) {
+            getBalance();
+        };
+    }, [show]);
+
+    return (
+        <>
+            <Modal
+                show={show}
+                onHide={onHide}
+                centered
+                backdrop="static"
+                keyboard={false}
+                dialogClassName="profile-modal modal-dialog-scrollable modal-fullscreen-sm-down"
+            >
+                <div className="pb-4">
+                    <div className="promo-header sticky-top them-bg-black d-flex align-items-center justify-content-between">
+                        <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-warning" onClick={onHide} role="button" />
+                        <h5 className="text-warning m-auto">Wallet</h5>
+                        <span></span>
+                    </div>
+
+                    <div className="wallet-card bg-white rounded-4 shadow mx-3 p-3 d-flex align-items-center justify-content-between">
+                        <div>
+                            <p className="text-secondary mb-1 small">Wallet balance</p>
+                            <h5 className="text-dark fw-bold">₹{balance?.walletBalance}</h5>
+                        </div>
+                        <div>
+                            <p className="text-secondary mb-1 small">Coin balance</p>
+                            <h5 className="text-dark fw-bold">₹{balance?.coinBalance}</h5>
+                        </div>
+                        <div>
+                            <FaQrcode size={28} className="text-dark" />
+                        </div>
+                    </div>
+
+                    <div className="wallet-tabs d-flex justify-content-around border-bottom bg-white">
+                        <button
+                            className={`wallet-tab-btn ${activeTab === "add" ? "active" : ""}`}
+                            onClick={() => setActiveTab("add")}
+                        >
+                            ADD ₹
+                        </button>
+                        <button
+                            className={`wallet-tab-btn ${activeTab === "wallet" ? "active" : ""}`}
+                            onClick={() => setActiveTab("wallet")}
+                        >
+                            WALLET HISTORY ₹
+                        </button>
+                        <button
+                            className={`wallet-tab-btn ${activeTab === "coin" ? "active" : ""}`}
+                            onClick={() => setActiveTab("coin")}
+                        >
+                            COIN HISTORY ₹
+                        </button>
+                    </div>
+
+                    {activeTab === "add" && <div className="wallet-add-box shadow rounded-4 mx-3 p-3 mt-3 bg-white">
+                        <div className="d-flex align-items-center mb-3">
+                            <FaWallet className="me-2 text-dark" />
+                            <h6 className="mb-0 fw-bold">Add ₹ To Your Wallet</h6>
+                        </div>
+
+                        <input
+                            type="number"
+                            placeholder="Enter Amount"
+                            // value={amount}
+                            // onChange={(e) => setAmount(e.target.value)}
+                            className="form-control add-amount-input mb-3"
+                        />
+
+                        <div className="quick-amounts d-flex justify-content-between mb-4">
+                            {quickAmounts.map((amt) => (
+                                <button
+                                    key={amt}
+                                    className="btn btn-outline-dark quick-btn"
+                                // onClick={() => handleQuickAmount(amt)}
+                                >
+                                    +{amt}
+                                </button>
+                            ))}
+                        </div>
+
+                        <button className="btn btn-dark text-warning w-100 rounded-pill fw-bold py-2">
+                            ADD SECURELY
+                        </button>
+                    </div>}
+                    {
+                        activeTab === "wallet" &&
+                        <div className="wallet-date-filter bg-white mx-3 p-3 mt-3 rounded-4 d-flex align-items-center justify-content-between gap-2 flex-wrap">
+
+                            <div className="date-box d-flex align-items-center">
+                                <input
+                                    type="date"
+                                    value={fromDate}
+                                    onChange={(e) => setFromDate(e.target.value)}
+                                    className="date-input"
+                                />
+                                {/* <span className="calendar-emoji ms-2">📅</span> */}
+                            </div>
+
+                            <div className="date-box d-flex align-items-center ">
+                                <input
+                                    type="date"
+                                    value={toDate}
+                                    onChange={(e) => setToDate(e.target.value)}
+                                    className="date-input"
+                                />
+                                {/* <span className="calendar-emoji ms-2">📅</span> */}
+                            </div>
+
+                            <button
+                                className="btn go-btn bg-dark text-warning fw-bold ms-md-3 mt-2"
+                                onClick={() => handleGo("wallet")}
+                            >
+                                GO
+                            </button>
+                        </div>
+                    }
+                    {
+                        activeTab === "coin" &&
+                        <div className="wallet-date-filter bg-white mx-3 p-3 mt-3 rounded-4 d-flex align-items-center justify-content-between gap-2 flex-wrap">
+
+                            <div className="date-box d-flex align-items-center">
+                                <input
+                                    type="date"
+                                    value={startDate}
+                                    onChange={(e) => setStartDate(e.target.value)}
+                                    className="date-input"
+                                />
+                                {/* <span className="calendar-emoji ms-2">📅</span> */}
+                            </div>
+
+                            <div className="date-box d-flex align-items-center ">
+                                <input
+                                    type="date"
+                                    value={endDate}
+                                    onChange={(e) => setEndDate(e.target.value)}
+                                    className="date-input"
+                                />
+                                {/* <span className="calendar-emoji ms-2">📅</span> */}
+                            </div>
+
+                            <button
+                                className="btn go-btn bg-dark text-warning fw-bold ms-md-3 mt-2"
+                                onClick={() => handleGo("coin")}
+                            >
+                                GO
+                            </button>
+                        </div>
+                    }
+
+                </div>
+            </Modal>
+        </>
+    )
+};
+export default Wallet;
