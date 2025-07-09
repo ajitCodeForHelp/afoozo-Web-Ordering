@@ -26,7 +26,9 @@ export default function DetailedNotificationPopup({ show, onHide }) {
         }
     };
     useEffect(() => {
-        getList();
+        if (show) {
+            getList();
+        }
     }, [show]);
 
     function getFormattedDate(timestamp) {

@@ -11,9 +11,11 @@ import CookingInstructionModal from '../CommonComponent/Modals/CookingInstructio
 import AddressDrawer from '../ScreenComponents/AddressComonent.jsx/AddressSection';
 import PaymentMode from '../ScreenComponents/CartComponent/PaymentModeList';
 import usePopupBackHandler from '../../../Utilities/UsePopupStack';
+import Loading from '../CommonComponent/LoadingWait';
+import { useLocation } from 'react-router-dom';
 
 
-const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefId, saveOrder, dispatch, orderType }) => {
+const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefId, saveOrder, dispatch, orderType, isLoading, isSmallLoading }) => {
 
     // appling promocode
     const [isPromoOpen, setPromoOpen] = useState(false);
@@ -71,6 +73,101 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
 
     // Payment
     const [showPaymentModeList, setShowPaymentModeList] = useState(false);
+    const [selectPaymentType, setSelectPaymentType] = useState('');
+    const getLastPaymentMode = async () => {
+        try {
+            const mobile = localStorage.getItem("mobileNo");
+            const key = localStorage.getItem('secretKey');
+            const BasicAuth = btoa(`${mobile}:${key}`);
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getLastPaymentMode_v1`, {
+                headers: {
+                    'Authorization': `Basic ${BasicAuth}`
+                }
+            });
+            const getRes = await res.json();
+            if (getRes.errorCode === 0) {
+                setSelectPaymentType(getRes.responsePacket?.lastPaymentMode);
+            }
+        } catch (e) {
+            console.log(e, "error in getLastPayment mode");
+        }
+    };
+
+    // balance
+    const location = useLocation();
+    const pathName = location.pathname;
+    console.log(window.location.href, "window.location.href")
+
+    const generateOrder = async () => {
+        try {
+            const mobile = localStorage.getItem("mobileNo");
+            const key = localStorage.getItem("secretKey");
+            const BasicAuth = btoa(`${mobile}:${key}`);
+
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/cashFree/createOrder`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `Basic ${BasicAuth}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    orderId: orderRefId,
+                    totalAmount: orderDetail?.orderTotal
+                })
+            });
+            const getRes = await res.json();
+            if (getRes.errorCode === 0) {
+                const payment_session_id = getRes.responsePacket.payment_session_id;
+                // const cashfree = new window.Cashfree(getRes.responsePacket.payment_session_id);
+                if (!window.Cashfree) {
+                    alert("Cashfree SDK not loaded yet");
+                    return;
+                }
+
+                const cashfree = window.Cashfree({ mode: "sandbox" }); // or "sandbox" production
+
+                const checkoutOptions = {
+                    paymentSessionId: payment_session_id, // must be dynamic and valid
+                    redirectTarget: "_self", // or "_blank"
+                    returnUrl: `${window.location.origin}/orderTrack`
+                };
+                cashfree.checkout(checkoutOptions);
+            }
+        } catch (e) {
+            console.log(e, "error in generate order");
+        }
+    };
+    // const generateOrder = async () => {
+    //     try {
+    //         const mobile = localStorage.getItem("mobileNo");
+    //         const key = localStorage.getItem("secretKey");
+    //         const BasicAuth = btoa(`${mobile}:${key}`);
+
+    //         const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/updatePaymentRequestForCashFreeV2`, {
+    //             method: "POST",
+    //             headers: {
+    //                 'Authorization': `Basic ${BasicAuth}`,
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify({
+    //                 orderId: orderRefId, 
+    //                 referenceId: orderRefId, 
+    //                 txStatus: "SUCCESS", 
+    //                 paymentGateway: "CashFree", 
+    //                 mobileNumber: mobile, 
+    //                 orderAmount: orderDetail?.orderTotal
+    //             })
+    //         });
+    //         const getRes = await res.json();
+    //         console.log(getRes, "getRes");
+    //         if (getRes.errorCode === 0) {
+
+    //         }
+    //     } catch (e) {
+    //         console.log(e, "error in generate order");
+    //     }
+    // };
+
 
     // Address Drawer
     const [showAddressDrawer, setShowAddressDrawer] = useState(false);
@@ -93,6 +190,12 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
         };
     }, [show, onClose, isPromoOpen, showCookingPopup, showAddressDrawer, showPaymentModeList]);
 
+    // api calls
+    useEffect(() => {
+        if (show) {
+            getLastPaymentMode();
+        }
+    }, [show]);
 
     const popupStack = useMemo(() => [
         { id: "paymentMode", isOpen: showPaymentModeList, onClose: () => setShowPaymentModeList(false) },
@@ -113,17 +216,18 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                         <h5 className="m-auto">Checkout</h5>
                     </div>
 
-                    <div className="cart-body p-3" style={{ paddingBottom: "60px !important" }}>
+                    {isLoading ? <Loading /> : <div className="cart-body p-3" style={{ paddingBottom: "60px !important" }}>
                         {orderDetail?.itemList?.map((item) => (
                             <CartItems
                                 key={item.orderItemId}
+                                id={item.orderItemId}
                                 name={item.title}
                                 price={item.finalPrice}
                                 quantity={item.quantity}
                                 isVeg={item.vegNonVeg}
                                 onIncrement={() => increment(item.orderItemId, item.quantity + 1, item.itemId)}
                                 onDecrement={() => decrement(item.orderItemId, item.quantity - 1, item.itemId)}
-                                // edit(item.id)
+                                isSmallLoading={isSmallLoading}
                                 onEdit={() => { setShowCookingPopup(true); setGetItemIdForCook({ localId: item.itemId, id: item.orderItemId }) }}
                             />
                         ))}
@@ -139,17 +243,25 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                             coin={orderDetail?.deliveryFee}
                             total={orderDetail?.orderTotal}
                         />
-                        {(orderDetail?.orderType === "HomeDelivery" || orderDetail?.orderType === "TakeAway") && <DeliveryAddressBox
-                            address={`301 Kakad Industrial Area, Kakad Industrial Estate,\n32 Sitaram Keer Marg, VSNL Colony,\nMahim, Mumbai, Maharashtra 400016, India`}
-                            onChange={() => setShowAddressDrawer(true)}
-                        />}
+                        {(orderDetail?.orderType === "HomeDelivery" || orderDetail?.orderType === "TakeAway") &&
+                            <DeliveryAddressBox
+                                address={`301 Kakad Industrial Area, Kakad Industrial Estate,\n32 Sitaram Keer Marg, VSNL Colony,\nMahim, Mumbai, Maharashtra 400016, India`}
+                                onChange={() => setShowAddressDrawer(true)}
+                            />}
                         <PaymentSection
                             walletChecked={isWalletUsed}
                             onWalletChange={(e) => setIsWalletUsed(e.target.checked)}
                             walletAmount={0.0}
                             onAddPayment={() => setShowPaymentModeList(true)}
+                            selectPaymentType={selectPaymentType}
                         />
-                    </div>
+                        {
+                            selectPaymentType && <div className="d-flex justify-content-evenly gap-2 fixed-bottom pb-3 bg-white pt-2 shadow-sm">
+                                <button className='border-0 px-3 py-2 bg-dark text-warning'>Delivery Later</button>
+                                <button className='border-0 px-3 py-2 bg-dark text-warning' onClick={generateOrder}>Deliver Now</button>
+                            </div>
+                        }
+                    </div>}
                 </div>
             </div>
 
@@ -167,7 +279,14 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                 onAdd={handleAddInstruction}
             />
             <AddressDrawer show={showAddressDrawer} onClose={() => setShowAddressDrawer(false)} />
-            <PaymentMode visible={showPaymentModeList} onClose={() => setShowPaymentModeList(false)} orderType={orderType} orderTotal={orderDetail?.orderTotal} />
+            <PaymentMode
+                visible={showPaymentModeList}
+                onClose={() => setShowPaymentModeList(false)}
+                orderType={orderType}
+                orderTotal={orderDetail?.orderTotal}
+                selectPaymentType={selectPaymentType}
+                setSelectPaymentType={setSelectPaymentType}
+            />
         </>
     );
 };

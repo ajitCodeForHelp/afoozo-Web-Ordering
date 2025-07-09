@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { HiArrowNarrowLeft } from "react-icons/hi";
 
-const PaymentMode = ({ visible, onClose, orderType, orderTotal }) => {
+const PaymentMode = ({ visible, onClose, orderType, orderTotal, selectPaymentType, setSelectPaymentType }) => {
     const promoRef = useRef(null);
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -62,7 +62,7 @@ const PaymentMode = ({ visible, onClose, orderType, orderTotal }) => {
                         payModeList.map((itm) => {
                             return (
                                 <>
-                                    <div className="d-flex justify-content-start m-1 p-3 shadow-sm fw-semibold cursor-pointer">
+                                    <div className="d-flex justify-content-start m-1 p-3 shadow-sm fw-semibold cursor-pointer" onClick={()=>{setSelectPaymentType(itm); onClose()}}>
                                         <div className="">{itm}</div>
                                     </div>
                                 </>

@@ -20,8 +20,6 @@ function DineInMenu() {
 
     const getData = async () => {
         try {
-            const key = localStorage.getItem("secretKey");
-
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getItemListWithCatSubCat`, {
                 method: "POST",
                 headers: {
@@ -258,19 +256,9 @@ function DineInMenu() {
             <ScrollToTop />
             <div className="" style={{ paddingBottom: "70px" }}>
                 <Header />
-                {/* <Banner /> */}
                 <Categories list={resMenu} activeCategory={activeCategory} scrollToCategory={scrollToCategory} />
-                {/* <CafeCategory /> */}
                 {hotSelling?.length > 0 && <PopularItem hotSelling={hotSelling} />}
-                {/* <CafeItems
-                    resMenu={resMenu}
-                    categoryRefs={categoryRefs}
-                    cart={cart}
-                    dispatch={dispatch}
-                    addToCart={addToCart}
-                    removeFromCart={removeFromCart}
-                    updateQuantity={updateQuantity}
-                /> */}
+               
                 {
                     resMenu?.flatMap((itm, idx) => {
                         return (
@@ -297,7 +285,6 @@ function DineInMenu() {
                     })
                 }
 
-                {/* cartsection */}
                 {cart.items.length > 0 && cart?.restaurant?.restaurantUuid === id && <CartButton openClose={() => { setCartVisible(true); saveOrder() }} orderType={orderType} restaurantId={id} />}
                 <CartPanel
                     show={cartVisible}

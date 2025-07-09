@@ -7,6 +7,7 @@ import Login from "../Components/Customer/Screens/Login";
 import AuthGate from "../Utilities/AuthGate";
 import { CartProvider } from "../Utilities/CartProvider";
 import DineInMenu from "../Components/Customer/Screens/DineInMenu";
+import OrderTrack from "../Components/Customer/Screens/OrderTrack";
 
 
 function Routing() {
@@ -31,6 +32,11 @@ function Routing() {
                     <Route path="/dineInMenu/:id" element={
                         <AuthGate>
                             <DineInMenu />
+                        </AuthGate>
+                    } />
+                    <Route path="/orderTrack" element={
+                        <AuthGate>
+                            <OrderTrack />
                         </AuthGate>
                     } />
 

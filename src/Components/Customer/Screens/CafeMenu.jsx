@@ -9,13 +9,15 @@ import { useLocation, useParams } from "react-router-dom";
 import Categories from "../ScreenComponents/CafeMenuComponent/Categories";
 import { useCart } from "../../../Utilities/CartProvider";
 import PopupModal from "../CommonComponent/Modals/PopUpModal";
+import MessagePopup from "../CommonComponent/Modals/MessagePopup";
 
 function CafeMenu() {
     const [cartVisible, setCartVisible] = useState(false);
     const { id } = useParams();
     const location = useLocation();
     const { orderType } = location.state || {}
-    const [items, setItems] = useState([]);
+
+    console.log(orderType, "orderType");
 
     const [resMenu, setResMenu] = useState([]);
     const [activeCategory, setActiveCategory] = useState(resMenu[0]?.categoryUuid);
@@ -62,17 +64,20 @@ function CafeMenu() {
 
     }, [resMenu]);
 
-    const { cart, dispatch } = useCart();
+    // message popup
+    const [showMessagePopup, setShowMessagePopup] = useState(false);
 
+    const { cart, dispatch } = useCart();
     // order detail
     const [orderDetail, setOrderDetail] = useState([]);
     const [orderRefId, setOrderRefId] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const saveOrder = async () => {
         try {
             const mobile = localStorage.getItem('mobileNo');
             const key = localStorage.getItem('secretKey');
             const BasicAuth = btoa(`${mobile}:${key}`);
-
+            setIsLoading(true);
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/saveOrder`, {
                 method: "POST",
                 headers: {
@@ -96,12 +101,21 @@ function CafeMenu() {
             if (getRes.errorCode === 0) {
                 getOrderDetail(getRes.responsePacket);
                 setOrderRefId(getRes.responsePacket);
+                localStorage.setItem("orderRefId", getRes.responsePacket)
+            } else {
+                setShowMessagePopup(true);
+                setMessage(getRes.message);
             }
         } catch (e) {
             console.log(e, "error in saveOrder");
+        } finally {
+            setIsLoading(false);
         }
     };
-    const getOrderDetail = async (orderReferenceId) => {
+    const getOrderDetail = async (orderReferenceId, noLoading) => {
+        if (!noLoading) {
+            setIsLoading(true);
+        }
         try {
             const mobile = localStorage.getItem("mobileNo");
             const key = localStorage.getItem("secretKey");
@@ -117,11 +131,17 @@ function CafeMenu() {
             }
         } catch (e) {
             console.log(e, "error in get Order detail");
+        } finally {
+            setIsLoading(false);
         }
     };
 
+    const [isSmallLoading, setIsSmallLoading] = useState({});
+
     const updateItemQuantity = async (orderItemId, operation) => {
         try {
+            setIsSmallLoading((prev) => ({ ...prev, [`${orderItemId}-${operation}`]: true }));
+
             const mobile = localStorage.getItem('mobileNo');
             const key = localStorage.getItem('secretKey');
             const BasicAuth = btoa(`${mobile}:${key}`)
@@ -132,10 +152,12 @@ function CafeMenu() {
             });
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
-                getOrderDetail(orderRefId);
+                getOrderDetail(orderRefId, "noLoading");
             }
         } catch (e) {
             console.log(e, "error in update quantity");
+        } finally {
+            setIsSmallLoading((prev) => ({ ...prev, [`${orderItemId}-${operation}`]: false }));
         }
     };
 
@@ -143,6 +165,9 @@ function CafeMenu() {
     const [message, setMessage] = useState("");
     const [pendingItem, setPendingItem] = useState(null);
     const addToCart = (item) => {
+        if (navigator.vibrate) {
+            navigator.vibrate(100); // Vibrates the device for 100 milliseconds
+        }
         const currentRestaurant = cart.restaurant;
         if (cart.items.length > 0 && currentRestaurant?.restaurantUuid !== id) {
             setPendingItem(item);
@@ -166,34 +191,14 @@ function CafeMenu() {
         setModalVisible(false);
     };
 
-    // const addToCart = (item) => {
-    //     const currentRestaurant = cart.restaurant;
-
-    //     if (cart.items.length > 0 && currentRestaurant?.restaurantUuid !== id) {
-    //         // Prompt user to clear cart
-    //         const confirmReset = window.confirm(
-    //             "You already have items from another restaurant. Clear the cart and add this item?"
-    //         );
-
-    //         if (confirmReset) {
-    //             dispatch({ type: 'CLEAR_CART' });
-    //             dispatch({
-    //                 type: 'ADD_ITEM',
-    //                 payload: { ...item, restaurant: { restaurantUuid: id } }
-    //             });
-    //         }
-    //     } else {
-    //         dispatch({
-    //             type: 'ADD_ITEM',
-    //             payload: { ...item, restaurant: { restaurantUuid: id } }
-    //         });
-    //     }
-    // };
     const removeFromCart = (itemId) => {
         dispatch({ type: "REMOVE_ITEM", payload: itemId });
     };
 
     const updateQuantity = (itemId, quantity) => {
+        if (navigator.vibrate) {
+            navigator.vibrate(100); // Vibrates the device for 100 milliseconds
+        }
         if (quantity <= 0) {
             removeFromCart(itemId);
         } else {
@@ -202,20 +207,20 @@ function CafeMenu() {
         }
     };
 
-    // const addAddress = (uuid) => {
-    //     dispatch({ type: 'SET_ADDRESS', payload: uuid });
-    // };
-
     const increment = (id, quantity, localId) => {
-        // setItems(items.map(item => item.id === id ? { ...item, quantity: item.quantity + 1 } : item));
         updateQuantity(localId, quantity)
         updateItemQuantity(id, "add");
+        if (navigator.vibrate) {
+            navigator.vibrate(100); // Vibrates the device for 100 milliseconds
+        }
     };
 
     const decrement = (id, quantity, localId) => {
-        // setItems(items.map(item => item.id === id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item));
         updateQuantity(localId, quantity);
         updateItemQuantity(id, "less");
+        if (navigator.vibrate) {
+            navigator.vibrate(100); // Vibrates the device for 100 milliseconds
+        }
     };
 
     const editItem = (id) => alert(`Edit item ${id}`);
@@ -272,7 +277,6 @@ function CafeMenu() {
                 <CartPanel
                     show={cartVisible}
                     onClose={() => setCartVisible(false)}
-                    items={items}
                     orderDetail={orderDetail}
                     orderRefId={orderRefId}
                     increment={increment}
@@ -281,6 +285,8 @@ function CafeMenu() {
                     saveOrder={saveOrder}
                     dispatch={dispatch}
                     orderType={orderType}
+                    isLoading={isLoading}
+                    isSmallLoading={isSmallLoading}
                 />
             </div>
 
@@ -294,6 +300,8 @@ function CafeMenu() {
                 cancelText="Cancel"
                 type="confirm" // or "message"
             />
+
+            <MessagePopup show={showMessagePopup} title="Afoozo" onClose={() => setShowMessagePopup(false)} message={message} />
         </>
     )
 }
