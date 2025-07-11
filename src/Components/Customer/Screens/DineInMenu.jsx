@@ -9,6 +9,7 @@ import Categories from "../ScreenComponents/CafeMenuComponent/Categories";
 import { useCart } from "../../../Utilities/CartProvider";
 import MenuItemCard from "../ScreenComponents/DineInComponent/MenuItems";
 import PopupModal from "../CommonComponent/Modals/PopUpModal";
+import MessagePopup from "../CommonComponent/Modals/MessagePopup";
 
 function DineInMenu() {
     const [cartVisible, setCartVisible] = useState(false);
@@ -59,16 +60,20 @@ function DineInMenu() {
         }
     }, [resMenu]);
 
+    // message popup
+    const [showMessagePopup, setShowMessagePopup] = useState(false);
+
     const { cart, dispatch } = useCart();
     // order detail
     const [orderDetail, setOrderDetail] = useState([]);
     const [orderRefId, setOrderRefId] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const saveOrder = async () => {
         try {
             const mobile = localStorage.getItem('mobileNo');
             const key = localStorage.getItem('secretKey');
             const BasicAuth = btoa(`${mobile}:${key}`);
-
+            setIsLoading(true);
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/saveOrder`, {
                 method: "POST",
                 headers: {
@@ -93,13 +98,22 @@ function DineInMenu() {
             if (getRes.errorCode === 0) {
                 getOrderDetail(getRes.responsePacket);
                 setOrderRefId(getRes.responsePacket);
+                localStorage.setItem("orderRefId", getRes.responsePacket)
+            } else {
+                setShowMessagePopup(true);
+                setMessage(getRes.message);
             }
         } catch (e) {
             console.log(e, "error in saveOrder");
+        } finally {
+            setIsLoading(false);
         }
     };
 
-    const getOrderDetail = async (orderReferenceId) => {
+    const getOrderDetail = async (orderReferenceId, noLoading) => {
+        if (!noLoading) {
+            setIsLoading(true);
+        }
         try {
             const mobile = localStorage.getItem("mobileNo");
             const key = localStorage.getItem("secretKey");
@@ -115,11 +129,17 @@ function DineInMenu() {
             }
         } catch (e) {
             console.log(e, "error in get Order detail");
+        } finally {
+            setIsLoading(false);
         }
     };
 
+    const [isSmallLoading, setIsSmallLoading] = useState({});
+
     const updateItemQuantity = async (orderItemId, operation) => {
         try {
+            setIsSmallLoading((prev) => ({ ...prev, [`${orderItemId}-${operation}`]: true }));
+
             const mobile = localStorage.getItem('mobileNo');
             const key = localStorage.getItem('secretKey');
             const BasicAuth = btoa(`${mobile}:${key}`)
@@ -134,6 +154,8 @@ function DineInMenu() {
             }
         } catch (e) {
             console.log(e, "error in update quantity");
+        } finally {
+            setIsSmallLoading((prev) => ({ ...prev, [`${orderItemId}-${operation}`]: false }));
         }
     };
 
@@ -144,6 +166,9 @@ function DineInMenu() {
     const [message, setMessage] = useState("");
     const [pendingItem, setPendingItem] = useState(null);
     const addToCart = (item) => {
+        if (navigator.vibrate) {
+            navigator.vibrate(100); // Vibrates the device for 100 milliseconds
+        }
         const currentRestaurant = cart.restaurant;
         if (cart.items.length > 0 && currentRestaurant?.restaurantUuid !== id) {
             setPendingItem(item);
@@ -197,6 +222,9 @@ function DineInMenu() {
     };
 
     const updateQuantity = (itemId, quantity) => {
+        if (navigator.vibrate) {
+            navigator.vibrate(100); // Vibrates the device for 100 milliseconds
+        }
         if (quantity <= 0) {
             removeFromCart(itemId);
         } else {
@@ -210,13 +238,18 @@ function DineInMenu() {
     // };
 
     const increment = (id, quantity, localId) => {
+        if (navigator.vibrate) {
+            navigator.vibrate(100); // Vibrates the device for 100 milliseconds
+        }
         // setItems(items.map(item => item.id === id ? { ...item, quantity: item.quantity + 1 } : item));
         updateQuantity(localId, quantity)
         updateItemQuantity(id, "add");
-        console.log(id, quantity, "modal", localId);
     };
 
     const decrement = (id, quantity, localId) => {
+        if (navigator.vibrate) {
+            navigator.vibrate(100); // Vibrates the device for 100 milliseconds
+        }
         // setItems(items.map(item => item.id === id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item));
         updateQuantity(localId, quantity);
         updateItemQuantity(id, "less");
@@ -258,7 +291,7 @@ function DineInMenu() {
                 <Header />
                 <Categories list={resMenu} activeCategory={activeCategory} scrollToCategory={scrollToCategory} />
                 {hotSelling?.length > 0 && <PopularItem hotSelling={hotSelling} />}
-               
+
                 {
                     resMenu?.flatMap((itm, idx) => {
                         return (
@@ -274,7 +307,14 @@ function DineInMenu() {
 
                                             return (
                                                 <div className="px-4">
-                                                    <MenuItemCard key={index} item={item} addToCart={addToCart} cart={cart} dispatch={dispatch} cartItem={cartItem} quantity={quantity} updateQuantity={updateQuantity} removeFromCart={removeFromCart} />
+                                                    <MenuItemCard
+                                                        key={index}
+                                                        item={item}
+                                                        addToCart={addToCart}
+                                                        quantity={quantity}
+                                                        updateQuantity={updateQuantity}
+                                                        removeFromCart={removeFromCart}
+                                                    />
                                                 </div>
                                             );
                                         })
@@ -297,6 +337,8 @@ function DineInMenu() {
                     saveOrder={saveOrder}
                     dispatch={dispatch}
                     orderType={orderType}
+                    isLoading={isLoading}
+                    isSmallLoading={isSmallLoading}
                 />
             </div>
 
@@ -310,6 +352,7 @@ function DineInMenu() {
                 cancelText="Cancel"
                 type="confirm" // or "message"
             />
+            <MessagePopup show={showMessagePopup} title="Afoozo" onClose={() => setShowMessagePopup(false)} message={message} />
         </>
     )
 }

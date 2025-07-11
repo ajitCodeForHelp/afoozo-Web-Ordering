@@ -3,7 +3,7 @@ import { FaStar, FaMinus, FaPlus, FaPen } from "react-icons/fa";
 import { Button } from "react-bootstrap";
 import { RiDragMoveLine } from "react-icons/ri";
 
-const MenuItemCard = ({ item, addToCart, quantity, cart, dispatch, cartItem, removeFromCart, updateQuantity }) => {
+const MenuItemCard = ({ item, addToCart, quantity, updateQuantity }) => {
 
     return (
         <div className="card shadow-sm my-2 menu-card-container">

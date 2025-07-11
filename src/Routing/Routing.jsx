@@ -16,7 +16,6 @@ function Routing() {
         <CartProvider>
             <LocationGate>
                 <Routes>
-                    {/* <Route path="/" element={<AuthGate />} /> */}
                     <Route path="/"
                         element={
                             <AuthGate>

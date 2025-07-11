@@ -18,7 +18,7 @@ const PaymentSection = ({ walletChecked, onWalletChange, walletAmount, onAddPaym
         </div>
 
         <div className="text-muted mb-3">
-          Available wallet amount : ₹{walletAmount.toFixed(2)}
+          Available wallet amount : ₹{walletAmount?.toFixed(2)}
         </div>
 
         <div className="fw-bold mb-2">Payment Mode</div>

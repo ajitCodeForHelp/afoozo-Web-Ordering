@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import CartItems from '../ScreenComponents/CartComponent/CartItems';
 import { ImCross } from "react-icons/im";
 import CookingInstruction from '../ScreenComponents/CartComponent/CookingInstrucation';
@@ -12,10 +12,12 @@ import AddressDrawer from '../ScreenComponents/AddressComonent.jsx/AddressSectio
 import PaymentMode from '../ScreenComponents/CartComponent/PaymentModeList';
 import usePopupBackHandler from '../../../Utilities/UsePopupStack';
 import Loading from '../CommonComponent/LoadingWait';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefId, saveOrder, dispatch, orderType, isLoading, isSmallLoading }) => {
+
+    const navigate = useNavigate();
 
     // appling promocode
     const [isPromoOpen, setPromoOpen] = useState(false);
@@ -86,17 +88,23 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
             });
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
-                setSelectPaymentType(getRes.responsePacket?.lastPaymentMode);
+                const response = JSON.parse(getRes.responsePacket);
+                setSelectPaymentType(response?.lastPaymentType);
             }
         } catch (e) {
             console.log(e, "error in getLastPayment mode");
         }
     };
+    useEffect(() => {
+        if (selectPaymentType) {
+            localStorage.setItem("paymentType", selectPaymentType);
+        }
+    }, [selectPaymentType]);
+
+    // cod
+
 
     // balance
-    const location = useLocation();
-    const pathName = location.pathname;
-    console.log(window.location.href, "window.location.href")
 
     const generateOrder = async () => {
         try {
@@ -137,37 +145,27 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
             console.log(e, "error in generate order");
         }
     };
-    // const generateOrder = async () => {
-    //     try {
-    //         const mobile = localStorage.getItem("mobileNo");
-    //         const key = localStorage.getItem("secretKey");
-    //         const BasicAuth = btoa(`${mobile}:${key}`);
 
-    //         const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/updatePaymentRequestForCashFreeV2`, {
-    //             method: "POST",
-    //             headers: {
-    //                 'Authorization': `Basic ${BasicAuth}`,
-    //                 'Content-Type': 'application/json'
-    //             },
-    //             body: JSON.stringify({
-    //                 orderId: orderRefId, 
-    //                 referenceId: orderRefId, 
-    //                 txStatus: "SUCCESS", 
-    //                 paymentGateway: "CashFree", 
-    //                 mobileNumber: mobile, 
-    //                 orderAmount: orderDetail?.orderTotal
-    //             })
-    //         });
-    //         const getRes = await res.json();
-    //         console.log(getRes, "getRes");
-    //         if (getRes.errorCode === 0) {
+    const [balance, setBalance] = useState({});
+    const getBalance = async () => {
+        try {
+            const mobile = localStorage.getItem('mobileNo');
+            const key = localStorage.getItem("secretKey");
+            const BasicAuth = btoa(`${mobile}:${key}`);
 
-    //         }
-    //     } catch (e) {
-    //         console.log(e, "error in generate order");
-    //     }
-    // };
-
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getCoinAndWalletBalance`, {
+                headers: {
+                    'Authorization': `Basic ${BasicAuth}`,
+                }
+            });
+            const getRes = await res.json();
+            if (getRes.errorCode === 0) {
+                setBalance(getRes.responsePacket);
+            }
+        } catch (e) {
+            console.log(e, "error in getBalance");
+        }
+    };
 
     // Address Drawer
     const [showAddressDrawer, setShowAddressDrawer] = useState(false);
@@ -194,17 +192,17 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
     useEffect(() => {
         if (show) {
             getLastPaymentMode();
+            getBalance();
         }
     }, [show]);
 
-    const popupStack = useMemo(() => [
+    const popupStack = [
         { id: "paymentMode", isOpen: showPaymentModeList, onClose: () => setShowPaymentModeList(false) },
         { id: "addressDrawer", isOpen: showAddressDrawer, onClose: () => setShowAddressDrawer(false) },
         { id: "cookingPopup", isOpen: showCookingPopup, onClose: () => setShowCookingPopup(false) },
         { id: "promoCode", isOpen: isPromoOpen, onClose: () => setPromoOpen(false) },
         { id: "cartDrawer", isOpen: show, onClose },
-    ], [showPaymentModeList, showAddressDrawer, showCookingPopup, isPromoOpen, show]);
-
+    ];
     usePopupBackHandler(popupStack);
 
     return (
@@ -250,8 +248,8 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                             />}
                         <PaymentSection
                             walletChecked={isWalletUsed}
-                            onWalletChange={(e) => setIsWalletUsed(e.target.checked)}
-                            walletAmount={0.0}
+                            onWalletChange={(e) => { setIsWalletUsed(e.target.checked); }}
+                            walletAmount={Number(balance?.walletBalance)}
                             onAddPayment={() => setShowPaymentModeList(true)}
                             selectPaymentType={selectPaymentType}
                         />
@@ -267,7 +265,7 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
 
             <PromoCodePannel
                 visible={isPromoOpen}
-                onClose={() => setPromoOpen(false)}
+                onClose={() => { setPromoOpen(false); }}
                 onApply={handlePromoApply}
                 code={promoCode}
                 setCode={setPromoCode}
@@ -275,13 +273,13 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
 
             <CookingInstructionModal
                 show={showCookingPopup}
-                onClose={() => setShowCookingPopup(false)}
+                onClose={() => { setShowCookingPopup(false); }}
                 onAdd={handleAddInstruction}
             />
-            <AddressDrawer show={showAddressDrawer} onClose={() => setShowAddressDrawer(false)} />
+            <AddressDrawer show={showAddressDrawer} onClose={() => { setShowAddressDrawer(false); }} />
             <PaymentMode
                 visible={showPaymentModeList}
-                onClose={() => setShowPaymentModeList(false)}
+                onClose={() => { setShowPaymentModeList(false); }}
                 orderType={orderType}
                 orderTotal={orderDetail?.orderTotal}
                 selectPaymentType={selectPaymentType}

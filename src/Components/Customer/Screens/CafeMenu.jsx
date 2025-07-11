@@ -5,19 +5,20 @@ import CafeItems from "../ScreenComponents/CafeMenuComponent/CafeItems";
 import CartButton from "../CommonComponent/CartButton";
 import CartPanel from "./CartPanel";
 import ScrollToTop from "../../../Utilities/ScrollToTop";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Categories from "../ScreenComponents/CafeMenuComponent/Categories";
 import { useCart } from "../../../Utilities/CartProvider";
 import PopupModal from "../CommonComponent/Modals/PopUpModal";
 import MessagePopup from "../CommonComponent/Modals/MessagePopup";
+import useIsMobile from "../../../Utilities/IsMobile";
 
 function CafeMenu() {
+    const navigate = useNavigate();
+
     const [cartVisible, setCartVisible] = useState(false);
     const { id } = useParams();
     const location = useLocation();
     const { orderType } = location.state || {}
-
-    console.log(orderType, "orderType");
 
     const [resMenu, setResMenu] = useState([]);
     const [activeCategory, setActiveCategory] = useState(resMenu[0]?.categoryUuid);
@@ -101,7 +102,6 @@ function CafeMenu() {
             if (getRes.errorCode === 0) {
                 getOrderDetail(getRes.responsePacket);
                 setOrderRefId(getRes.responsePacket);
-                localStorage.setItem("orderRefId", getRes.responsePacket)
             } else {
                 setShowMessagePopup(true);
                 setMessage(getRes.message);
@@ -128,7 +128,13 @@ function CafeMenu() {
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
                 setOrderDetail(getRes.responsePacket);
-            }
+                const orderData = {
+                    orderId: getRes.responsePacket?.orderRefId,
+                    orderTotal: getRes?.responsePacket.orderTotal,
+                    specialInstruction: getRes.responsePacket.specialInstruction,
+                };
+                localStorage.setItem("orderData", JSON.stringify(orderData));
+            };
         } catch (e) {
             console.log(e, "error in get Order detail");
         } finally {
@@ -252,6 +258,7 @@ function CafeMenu() {
         section?.scrollIntoView({ behavior: 'smooth', block: 'center', });
         setActiveCategory(uuid);
     };
+    const isMobile = useIsMobile();
 
     return (
         <>
@@ -276,7 +283,7 @@ function CafeMenu() {
                 {cart.items.length > 0 && cart?.restaurant?.restaurantUuid === id && <CartButton openClose={() => { setCartVisible(true); saveOrder() }} orderType={orderType} restaurantId={id} />}
                 <CartPanel
                     show={cartVisible}
-                    onClose={() => setCartVisible(false)}
+                    onClose={() => { setCartVisible(false)}}
                     orderDetail={orderDetail}
                     orderRefId={orderRefId}
                     increment={increment}

@@ -24,6 +24,7 @@ import Wallet from "../ScreenComponents/DrawerPages/Wallet";
 import BillToOrders from "../ScreenComponents/DrawerPages/BillToOrders";
 import CheckInOut from "../ScreenComponents/DrawerPages/CheckInOut";
 import usePopupBackHandler from "../../../Utilities/UsePopupStack";
+import OrderDetailSection from "../ScreenComponents/DrawerPages/OrderDetailSection";
 
 export default function SidebarDrawer({ isOpen, onClose }) {
   useEffect(() => {
@@ -73,30 +74,33 @@ export default function SidebarDrawer({ isOpen, onClose }) {
   const [showWallet, setShowWallet] = useState(false);
   const [showBiLlOrders, setShowBillOrders] = useState(false);
   const [showCheckInOut, setShowCheckInOut] = useState(false);
+  const [showOrderDetail, setShowOrderDetail] = useState(false);
 
-const popupStack = useMemo(() => [
-  { id: "checkInOut", isOpen: showCheckInOut, onClose: () => setShowCheckInOut(false) },
-  { id: "billOrders", isOpen: showBiLlOrders, onClose: () => setShowBillOrders(false) },
-  { id: "wallet", isOpen: showWallet, onClose: () => setShowWallet(false) },
-  { id: "liveOrder", isOpen: showLiveOrder, onClose: () => setShowLiveOrder(false) },
-  { id: "historyOrder", isOpen: showHistoryOrder, onClose: () => setShowHistoryOrder(false) },
-  { id: "terms", isOpen: showTandC, onClose: () => setShowTandC(false) },
-  { id: "about", isOpen: showAbout, onClose: () => setShowAbout(false) },
-  { id: "notification", isOpen: showNotification, onClose: () => setShowNotification(false) },
-  { id: "updateProfile", isOpen: showUpdateProfile, onClose: () => setShowUpdateProfile(false) },
-  { id: "drawer", isOpen: isOpen, onClose }, // ✅ LAST to close
-], [
-  showCheckInOut,
-  showBiLlOrders,
-  showWallet,
-  showLiveOrder,
-  showHistoryOrder,
-  showTandC,
-  showAbout,
-  showNotification,
-  showUpdateProfile,
-  isOpen,
-]);
+  const popupStack = useMemo(() => [
+    { id: "checkInOut", isOpen: showCheckInOut, onClose: () => setShowCheckInOut(false) },
+    { id: "billOrders", isOpen: showBiLlOrders, onClose: () => setShowBillOrders(false) },
+    { id: "wallet", isOpen: showWallet, onClose: () => setShowWallet(false) },
+    { id: "liveOrder", isOpen: showLiveOrder, onClose: () => setShowLiveOrder(false) },
+    { id: "historyOrder", isOpen: showHistoryOrder, onClose: () => setShowHistoryOrder(false) },
+    { id: "orderDetails", isOpen: showOrderDetail, onClose: () => setShowOrderDetail(false) },
+    { id: "terms", isOpen: showTandC, onClose: () => setShowTandC(false) },
+    { id: "about", isOpen: showAbout, onClose: () => setShowAbout(false) },
+    { id: "notification", isOpen: showNotification, onClose: () => setShowNotification(false) },
+    { id: "updateProfile", isOpen: showUpdateProfile, onClose: () => setShowUpdateProfile(false) },
+    { id: "drawer", isOpen: isOpen, onClose }, // ✅ LAST to close
+  ], [
+    showCheckInOut,
+    showBiLlOrders,
+    showWallet,
+    showLiveOrder,
+    showHistoryOrder,
+    showTandC,
+    showAbout,
+    showNotification,
+    showUpdateProfile,
+    showOrderDetail,
+    isOpen,
+  ]);
   usePopupBackHandler(popupStack);
 
   // useEffect(() => {
@@ -117,6 +121,8 @@ const popupStack = useMemo(() => [
   //     window.removeEventListener('popstate', handlePopState);
   //   };
   // }, [isOpen]);
+
+  const [orderId, setOrderId] = useState('');
 
   return (
     <>
@@ -179,8 +185,9 @@ const popupStack = useMemo(() => [
       <DetailedNotificationPopup show={showNotification} onHide={() => setShowNotification(false)} />
       <AboutAppPopup show={showAbout} onHide={() => setShowAbout(false)} />
       <TermsConditionsPopup show={showTandC} onHide={() => setShowTandC(false)} />
-      <OrderHistory show={showHistoryOrder} onHide={() => setShowHistoryOrder(false)} />
-      <LiveOrders show={showLiveOrder} onHide={() => setShowLiveOrder(false)} />
+      <OrderHistory show={showHistoryOrder} onHide={() => setShowHistoryOrder(false)} setShowOrderDetail={setShowOrderDetail} setOrderId={setOrderId} />
+      <OrderDetailSection show={showOrderDetail} onHide={setShowOrderDetail} orderId={orderId} />
+      <LiveOrders show={showLiveOrder} onHide={() => setShowLiveOrder(false)} setShowOrderDetail={setShowOrderDetail} setOrderId={setOrderId} />
       <Wallet show={showWallet} onHide={() => setShowWallet(false)} />
       <BillToOrders show={showBiLlOrders} onHide={() => setShowBillOrders(false)} />
       <CheckInOut show={showCheckInOut} onHide={() => setShowCheckInOut(false)} />

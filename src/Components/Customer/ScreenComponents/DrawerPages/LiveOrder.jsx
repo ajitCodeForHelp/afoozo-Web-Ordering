@@ -1,14 +1,61 @@
 // ------------------------------
 // DetailedNotificationPopup.jsx
 // ------------------------------
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { HiArrowNarrowLeft } from "react-icons/hi";
-import { LuClock3 } from "react-icons/lu";
-import { FaRegCalendarAlt } from "react-icons/fa";
-import item from "../../../../Assets/rice.avif";
+import Loading from '../../CommonComponent/LoadingWait';
 
-export default function LiveOrders({ show, onHide }) {
+export default function LiveOrders({ show, onHide, setShowOrderDetail, setOrderId }) {
+    const [list, setList] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const getList = async () => {
+        try {
+            setIsLoading(true);
+            const mobile = localStorage.getItem("mobileNo");
+            const key = localStorage.getItem("secretKey");
+            const BasicAuth = btoa(`${mobile}:${key}`);
+
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getOrderList/All/Live/0/-1`, {
+                headers: {
+                    'Authorization': `Basic ${BasicAuth}`
+                }
+            });
+            const getRes = await res.json();
+            if (getRes.errorCode === 0) {
+                setList(getRes.responsePacket);
+            }
+        } catch (e) {
+            console.log(e, "error in getList");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    useEffect(() => {
+        if (show) {
+            getList();
+        }
+    }, [show]);
+
+    function formatTimestamp(timestamp) {
+        const date = new Date(timestamp);
+
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        const month = months[date.getMonth()];
+        const day = String(date.getDate()).padStart(2, '0');
+
+        let hours = date.getHours();
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+
+        const ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12 || 12; // Convert to 12-hour format
+
+        return `${month} ${day} ${hours}:${minutes} ${ampm}`;
+    };
+
+
     return (
         <Modal
             show={show}
@@ -18,40 +65,40 @@ export default function LiveOrders({ show, onHide }) {
             keyboard={false}
             dialogClassName="detailed-notification-modal modal-fullscreen-sm-down"
         >
-            <div className="">
+            <div className="bg-white">
                 <div className="promo-header sticky-top them-bg-black d-flex align-items-center justify-content-between">
                     <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-warning" onClick={onHide} role="button" />
                     <h5 className="text-warning m-auto">Order History</h5>
                     <span></span>
                 </div>
+                {
+                    isLoading ? <Loading /> : list?.map((itm) => {
+                        return (
+                            <>
+                                <div className="card shadow-sm p-3 m-3 rounded-4" style={{ maxWidth: 500 }} onClick={() => { setShowOrderDetail(true); setOrderId(itm?.orderReferenceId) }}>
+                                    <div className="d-flex justify-content-between align-items-start">
+                                        <div className="pe-2">
+                                            <h6 className="fw-bold mb-1">{itm?.restaurantName}</h6>
+                                            <div className="text-muted small two-line-ellipsis">{itm?.deliveryAddress}</div>
+                                        </div>
+                                        {
+                                            itm?.orderType === "HomeDelivery" && <span>🛵</span> ||
+                                            itm?.orderType === "TakeAway" && <span>🧺</span> ||
+                                            itm?.orderType === "Cafe" && <span>☕</span>
+                                        }
+                                    </div>
 
-                <div className="card shadow-sm border-0">
-                    <div className="card-body">
-                        {/* <h6 className="fw-bold mb-2">Welcome</h6>
-                        <p className="text-muted small mb-3">
-                            Dear John, Welcome to Afoozo Smart Restaurant App, You have got Rs 100.00 as Welcome Bonus. Enjoy..!!
-                        </p> */}
-                        <div className="d-flex justify-content-between align-items-center mb-2">
-                            <div className="w-25 rounded-circle">
-                                <img src={item} alt="item" className='w-100 rounded-circle' />
-                            </div>
-                            <p className='fw-semibold mb-0'>Dal Makhani Rice Bowl</p>
-                            <div className="">2</div>
-                            <div className="">460.00</div>
-                        </div>
+                                    <div className="fw-semibold mt-2">₹{Number(itm?.orderTotal).toFixed(2)}</div>
 
-                        <div className="d-flex justify-content-start align-items-center gap-4">
-                            <div className="d-flex align-items-center gap-2">
-                                <LuClock3 size={16} className="text-muted" />
-                                <span className="small fw-medium text-dark">10:08 am</span>
-                            </div>
-                            <div className="d-flex align-items-center gap-2">
-                                <FaRegCalendarAlt size={16} className="text-muted" />
-                                <span className="small fw-medium text-dark">12 Jun, 2025</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                    <hr className="my-2" />
+
+                                    <div className="text-dark fw-bold small">{itm?.orderItemText}</div>
+                                    <div className="text-muted small mt-1">{formatTimestamp(itm?.orderDateTime)}</div>
+                                </div>
+                            </>
+                        )
+                    })
+                }
             </div>
         </Modal>
     );
