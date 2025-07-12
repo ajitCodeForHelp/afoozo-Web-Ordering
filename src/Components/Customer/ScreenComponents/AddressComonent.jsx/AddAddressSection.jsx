@@ -20,7 +20,37 @@ const AddAddressSection = ({ isOpen, onClose }) => {
     // });
 
     // if (!isLoaded) return <p>Loading Map Scripts...</p>;
+    const [addressType,setAddressType] = useState('');
+    const [addressLine1,setAddressLine1] = useState('');
+    const [addressLine2,setAddressLine2] = useState('');
     
+    const addNewAddress=async()=>{
+        try {
+            const mobile = localStorage.getItem("mobileNo");
+            const key = localStorage.getItem("secretKey");
+            const BasicAuth = btoa(`${mobile}:${key}`);
+
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/saveAddress`,{
+                method:"POST",
+                headers:{
+                    'Authorization':`Basic ${BasicAuth}`,
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify({
+addressLine1:"",
+addressLine2:"",
+addressType:"",
+
+                })
+            });
+            const getRes = await res.json();
+            if(getRes.errorCode === 0){
+
+            }
+        } catch (e) {
+            console.log(e,"error in adding address");
+        }
+    };
 
     return (
         <>

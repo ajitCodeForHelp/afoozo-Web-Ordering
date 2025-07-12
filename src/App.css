@@ -1590,6 +1590,11 @@ select:focus {
   padding: 8px 24px;
 }
 
+.wallet-trans-list {
+  overflow-y: scroll;
+  height: 50vh;
+}
+
 /* wallet ends  */
 
 /* oreder progress */

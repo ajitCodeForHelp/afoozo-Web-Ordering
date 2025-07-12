@@ -19,14 +19,17 @@ function DraggableMap({ onLocationChange }) {
                 `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.REACT_APP_GOOGLE_MAP_KEY}`
             );
             const data = await response.json();
+            console.log(data, "data");
             if (data.status === 'OK') {
                 return data.results[0]?.formatted_address || 'Address not found';
             } else {
+                // alert(data,"datat");
                 return 'Failed to get address';
             }
         } catch (error) {
-            console.error('Geocoding error:', error);
-            return 'Error fetching address';
+            console.log('error in address google', error);
+            // return 'Error fetching address';
+            alert(error, "error");
         }
     };
 
@@ -41,27 +44,27 @@ function DraggableMap({ onLocationChange }) {
         mapRef.current = mapInstance;
     }, []);
 
-   const onMapIdle = useCallback(async () => {
-    if (mapRef.current) {
-        const center = mapRef.current.getCenter();
-        const newCoords = {
-            lat: parseFloat(center.lat().toFixed(6)),
-            lng: parseFloat(center.lng().toFixed(6)),
-        };
+    const onMapIdle = useCallback(async () => {
+        if (mapRef.current) {
+            const center = mapRef.current.getCenter();
+            const newCoords = {
+                lat: parseFloat(center.lat().toFixed(6)),
+                lng: parseFloat(center.lng().toFixed(6)),
+            };
 
-        // Only update if position has really changed
-        if (
-            newCoords.lat !== parseFloat(markerPosition.lat.toFixed(6)) ||
-            newCoords.lng !== parseFloat(markerPosition.lng.toFixed(6))
-        ) {
-            setMarkerPosition(newCoords);
-            if (onLocationChange) {
-                const address = await getAddressFromCoords(newCoords);
-                onLocationChange({ ...newCoords, address });
+            // Only update if position has really changed
+            if (
+                newCoords.lat !== parseFloat(markerPosition.lat.toFixed(6)) ||
+                newCoords.lng !== parseFloat(markerPosition.lng.toFixed(6))
+            ) {
+                setMarkerPosition(newCoords);
+                if (onLocationChange) {
+                    const address = await getAddressFromCoords(newCoords);
+                    onLocationChange({ ...newCoords, address });
+                }
             }
         }
-    }
-}, [onLocationChange, markerPosition]);
+    }, [onLocationChange, markerPosition]);
 
     return isLoaded ? (
         <GoogleMap

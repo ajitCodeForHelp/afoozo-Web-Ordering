@@ -3,6 +3,8 @@ import { Modal } from 'react-bootstrap';
 import { HiArrowNarrowLeft } from "react-icons/hi";
 import { FaQrcode } from "react-icons/fa6";
 import { FaWallet } from "react-icons/fa";
+import { BsClock } from "react-icons/bs";
+import { BsCalendarEvent } from "react-icons/bs";
 
 function Wallet({ show, onHide }) {
     const quickAmounts = [2000, 5000, 10000];
@@ -52,11 +54,14 @@ function Wallet({ show, onHide }) {
         }
     };
 
+    function dateToTimestamp(dateStr) {
+        return new Date(dateStr).getTime();
+    }
     const handleGo = (transition) => {
         if (transition === "coin" && startDate && endDate) {
-            getCoinTransition(startDate, endDate);
+            getCoinTransition(dateToTimestamp(startDate), dateToTimestamp(endDate));
         } else if (transition === "wallet" && fromDate && toDate) {
-            getWalletTransition(fromDate, toDate);
+            getWalletTransition(dateToTimestamp(fromDate), dateToTimestamp(toDate));
         } else {
             alert("select date first !");
         };
@@ -87,6 +92,23 @@ function Wallet({ show, onHide }) {
             getBalance();
         };
     }, [show]);
+
+    function formatTime(timestamp) {
+        const date = new Date(timestamp);
+        let hours = date.getHours();
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const ampm = hours >= 12 ? "pm" : "am";
+        hours = hours % 12 || 12; // convert to 12-hour format
+        return `${String(hours).padStart(2, "0")}:${minutes} ${ampm}`;
+    };
+
+    function formatDate(timestamp) {
+        const date = new Date(timestamp);
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+        return `${day}-${month}-${year}`;
+    };
 
     return (
         <>
@@ -172,67 +194,154 @@ function Wallet({ show, onHide }) {
                     </div>}
                     {
                         activeTab === "wallet" &&
-                        <div className="wallet-date-filter bg-white mx-3 p-3 mt-3 rounded-4 d-flex align-items-center justify-content-between gap-2 flex-wrap">
+                        <>
+                            <div className="wallet-date-filter bg-white mx-3 p-3 mt-3 rounded-4 d-flex align-items-center justify-content-between gap-2 flex-wrap">
 
-                            <div className="date-box d-flex align-items-center">
-                                <input
-                                    type="date"
-                                    value={fromDate}
-                                    onChange={(e) => setFromDate(e.target.value)}
-                                    className="date-input"
-                                />
-                                {/* <span className="calendar-emoji ms-2">📅</span> */}
+                                <div className="date-box d-flex align-items-center">
+                                    <input
+                                        type="date"
+                                        value={fromDate}
+                                        onChange={(e) => setFromDate(e.target.value)}
+                                        className="date-input"
+                                    />
+                                    {/* <span className="calendar-emoji ms-2">📅</span> */}
+                                </div>
+
+                                <div className="date-box d-flex align-items-center ">
+                                    <input
+                                        type="date"
+                                        value={toDate}
+                                        onChange={(e) => setToDate(e.target.value)}
+                                        className="date-input"
+                                    />
+                                    {/* <span className="calendar-emoji ms-2">📅</span> */}
+                                </div>
+
+                                <button
+                                    className="btn go-btn bg-dark text-warning fw-bold ms-md-3 mt-2"
+                                    onClick={() => handleGo("wallet")}
+                                >
+                                    GO
+                                </button>
                             </div>
+                            <div className="wallet-trans-list">
+                                {
+                                    walletTransition?.map((itm) => {
+                                        return (
+                                            <>
+                                                <div className="card shadow-sm p-3 m-3 rounded-4" style={{ maxWidth: 500 }}>
+                                                    <div className="mb-2">
+                                                        <h6 className="fw-bold mb-1">{itm?.transactionReferenceId}</h6>
+                                                        <div className="text-muted small">
+                                                            {/* 59.0 has been paid for Order ID{" "}
+                                                        <span className="text-primary">ORD-0000406254</span> in{" "}
+                                                        <span className="text-primary">Ginger Agartala</span> */}
+                                                            {itm?.remark}
+                                                        </div>
+                                                    </div>
 
-                            <div className="date-box d-flex align-items-center ">
-                                <input
-                                    type="date"
-                                    value={toDate}
-                                    onChange={(e) => setToDate(e.target.value)}
-                                    className="date-input"
-                                />
-                                {/* <span className="calendar-emoji ms-2">📅</span> */}
+                                                    <div className="d-flex justify-content-between mb-2">
+                                                        <div className="text-dark small">
+                                                            <strong>Type:</strong> {itm?.transactionType}
+                                                        </div>
+                                                        <div className="text-dark small">
+                                                            <strong>Amount:</strong> ₹{itm?.transactionAmount}
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="d-flex justify-content-between align-items-center text-muted small mt-2">
+                                                        <div className="d-flex align-items-center">
+                                                            <BsClock className="me-1" />
+                                                            {formatTime(itm?.createdAtTimeStamp)}
+                                                        </div>
+                                                        <div className="d-flex align-items-center">
+                                                            <BsCalendarEvent className="me-1" />
+                                                            {formatDate(itm?.createdAtTimeStamp)}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        )
+                                    })
+                                }
                             </div>
-
-                            <button
-                                className="btn go-btn bg-dark text-warning fw-bold ms-md-3 mt-2"
-                                onClick={() => handleGo("wallet")}
-                            >
-                                GO
-                            </button>
-                        </div>
+                        </>
                     }
+
                     {
                         activeTab === "coin" &&
-                        <div className="wallet-date-filter bg-white mx-3 p-3 mt-3 rounded-4 d-flex align-items-center justify-content-between gap-2 flex-wrap">
+                        <>
+                            <div className="wallet-date-filter bg-white mx-3 p-3 mt-3 rounded-4 d-flex align-items-center justify-content-between gap-2 flex-wrap">
 
-                            <div className="date-box d-flex align-items-center">
-                                <input
-                                    type="date"
-                                    value={startDate}
-                                    onChange={(e) => setStartDate(e.target.value)}
-                                    className="date-input"
-                                />
-                                {/* <span className="calendar-emoji ms-2">📅</span> */}
+                                <div className="date-box d-flex align-items-center">
+                                    <input
+                                        type="date"
+                                        value={startDate}
+                                        onChange={(e) => setStartDate(e.target.value)}
+                                        className="date-input"
+                                    />
+                                    {/* <span className="calendar-emoji ms-2">📅</span> */}
+                                </div>
+
+                                <div className="date-box d-flex align-items-center ">
+                                    <input
+                                        type="date"
+                                        value={endDate}
+                                        onChange={(e) => setEndDate(e.target.value)}
+                                        className="date-input"
+                                    />
+                                    {/* <span className="calendar-emoji ms-2">📅</span> */}
+                                </div>
+
+                                <button
+                                    className="btn go-btn bg-dark text-warning fw-bold ms-md-3 mt-2"
+                                    onClick={() => handleGo("coin")}
+                                >
+                                    GO
+                                </button>
                             </div>
+                            <div className="wallet-trans-list">
+                                {
+                                    coinTransition?.map((itm) => {
+                                        return (
+                                            <>
+                                                <div className="card shadow-sm p-3 m-3 rounded-4" style={{ maxWidth: 500 }}>
+                                                    <div className="mb-2">
+                                                        <h6 className="fw-bold mb-1">{itm?.transactionReferenceId}</h6>
+                                                        <div className="text-muted small">
+                                                            {/* 59.0 has been paid for Order ID{" "}
+                                                        <span className="text-primary">ORD-0000406254</span> in{" "}
+                                                        <span className="text-primary">Ginger Agartala</span> */}
+                                                            {itm?.remark}
+                                                        </div>
+                                                    </div>
 
-                            <div className="date-box d-flex align-items-center ">
-                                <input
-                                    type="date"
-                                    value={endDate}
-                                    onChange={(e) => setEndDate(e.target.value)}
-                                    className="date-input"
-                                />
-                                {/* <span className="calendar-emoji ms-2">📅</span> */}
+                                                    <div className="d-flex justify-content-between mb-2">
+                                                        <div className="text-dark small">
+                                                            <strong>Type:</strong> {itm?.transactionType}
+                                                        </div>
+                                                        <div className="text-dark small">
+                                                            <strong>Amount:</strong> ₹{itm?.transactionAmount}
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="d-flex justify-content-between align-items-center text-muted small mt-2">
+                                                        <div className="d-flex align-items-center">
+                                                            <BsClock className="me-1" />
+                                                            {formatTime(itm?.createdAtTimeStamp)}
+                                                        </div>
+                                                        <div className="d-flex align-items-center">
+                                                            <BsCalendarEvent className="me-1" />
+                                                            {formatDate(itm?.createdAtTimeStamp)}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        )
+                                    })
+                                }
                             </div>
-
-                            <button
-                                className="btn go-btn bg-dark text-warning fw-bold ms-md-3 mt-2"
-                                onClick={() => handleGo("coin")}
-                            >
-                                GO
-                            </button>
-                        </div>
+                        </>
                     }
 
                 </div>

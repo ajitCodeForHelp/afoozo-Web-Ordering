@@ -47,17 +47,17 @@ function Restaurants() {
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
                 if (getRes?.responsePacket?.length === 1) {
-                    navigate(`cafeMenu/${getRes.responsePacket[0]?.restaurantUuid}`)
+                    navigate(`/cafeMenu/${getRes.responsePacket[0]?.restaurantUuid}`, { state: { resDetail: getRes.responsePacket[0], orderType: orderType } })
                 } else {
                     setRestaurantLists(getRes.responsePacket);
                     setFilterResList(getRes.responsePacket);
                 }
             }
-
         } catch (error) {
             console.error("Fetch failed:", error);
         }
     };
+    
     useEffect(() => {
         if (location && orderType && orderType !== 'DineIn') {
             getList(orderType);
