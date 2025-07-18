@@ -9,7 +9,7 @@ function DeskHeader() {
     const [showDrawer, setShowDrawer] = useState(false);
     return (
         <>
-            <div className="d-flex justify-content-between align-items-center px-4 py-4 sticky-top" style={{ backgroundColor: '#181818' }}>
+            <div className="d-flex justify-content-between align-items-center p-3 sticky-top" style={{ backgroundColor: '#181818' }}>
                 <div className="d-flex align-items-center gap-2">
                     <button className="bg-transparent border-0 fs-2 text-warning" style={{ marginTop: "-10px" }} onClick={() => setShowDrawer(!showDrawer)} type="button">
                         <span className=""><RxHamburgerMenu /></span>

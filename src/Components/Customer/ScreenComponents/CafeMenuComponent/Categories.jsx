@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 function Categories({ list, activeCategory, scrollToCategory }) {
 
-    const topValue = window.innerWidth < 768 ? '70px' : '87px';
+    const topValue = window.innerWidth < 768 ? '70px' : '72px';
 
     const navigate = useNavigate();
 
@@ -29,7 +29,7 @@ function Categories({ list, activeCategory, scrollToCategory }) {
                     <h5 className="fw-bold mb-0 text-center text-warning fs-5" style={{ flex: 1 }}>Categories</h5>
                 </div>
 
-                <div className="category-scroll px-2"
+                {/* <div className="category-scroll px-2"
                     ref={containerRef}
                     style={{ scrollBehavior: "smooth", whiteSpace: "nowrap" }}
                 >
@@ -39,10 +39,20 @@ function Categories({ list, activeCategory, scrollToCategory }) {
                             onClick={() => scrollToCategory(cat.categoryUuid)}
                             ref={(el) => (itemRefs.current[cat.categoryUuid] = el)}
                         >
-                            {/* <div className="category-icon mb-2">
+                            <div className="category-icon mb-2">
                                 <img src={cat?.cuisineImageUrl} alt={index} />
-                            </div> */}
+                            </div>
                             <div className="category-name fw-semibold">{cat?.categoryName}</div>
+                        </div>
+                    ))}
+                </div> */}
+                <div className="category-scroll px-2">
+                    {list?.map((cat, index) => (
+                        <div key={index} className="category-item text-center mx-2" onClick={() => scrollToCategory(cat.categoryUuid)}>
+                            <div className="category-icon mb-2">
+                                <img src={cat?.menuList[0].catImageUrl} alt={index} />
+                            </div>
+                            <div className="category-name small fw-semibold">{cat?.categoryName}</div>
                         </div>
                     ))}
                 </div>

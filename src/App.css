@@ -933,7 +933,7 @@ select:focus {
 /* src/components/StickyCategoryTabs.css */
 .tabs-wrapper {
   position: sticky;
-  top: 85px;
+  top: 72px;
   background: #f4f4f4;
   display: flex;
   overflow-x: auto;
@@ -1207,9 +1207,9 @@ select:focus {
 
 /* Make radio circles match screenshot a bit closer */
 .form-check-input:checked {
-  background-color: #f5b64c;
+  background-color: #f5b64c !important;
   /* golden‑yellow accent */
-  border-color: #f5b64c;
+  border-color: #f5b64c !important;
 }
 
 /* Ensure full‑screen mobile modal always scrolls */

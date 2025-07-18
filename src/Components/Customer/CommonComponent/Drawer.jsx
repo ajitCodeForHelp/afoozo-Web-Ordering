@@ -186,7 +186,7 @@ export default function SidebarDrawer({ isOpen, onClose }) {
       <AboutAppPopup show={showAbout} onHide={() => setShowAbout(false)} />
       <TermsConditionsPopup show={showTandC} onHide={() => setShowTandC(false)} />
       <OrderHistory show={showHistoryOrder} onHide={() => setShowHistoryOrder(false)} setShowOrderDetail={setShowOrderDetail} setOrderId={setOrderId} />
-      <OrderDetailSection show={showOrderDetail} onHide={setShowOrderDetail} orderId={orderId} />
+      <OrderDetailSection show={showOrderDetail} onHide={()=>setShowOrderDetail(false)} orderId={orderId} />
       <LiveOrders show={showLiveOrder} onHide={() => setShowLiveOrder(false)} setShowOrderDetail={setShowOrderDetail} setOrderId={setOrderId} />
       <Wallet show={showWallet} onHide={() => setShowWallet(false)} />
       <BillToOrders show={showBiLlOrders} onHide={() => setShowBillOrders(false)} />

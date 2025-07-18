@@ -40,14 +40,16 @@ function Restaurants() {
                     length: -1,
                     searchKey: "",
                     startCount: 0,
-                    orderType: typeOrder,
-                }),
+                    orderType: typeOrder
+                })
             });
 
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
                 if (getRes?.responsePacket?.length === 1) {
                     navigate(`/cafeMenu/${getRes.responsePacket[0]?.restaurantUuid}`, { state: { resDetail: getRes.responsePacket[0], orderType: orderType } })
+                } else if (getRes?.responsePacket?.length <= 0 && orderType !== "HomeDelivery") {
+                    getList("HomeDelivery")
                 } else {
                     setRestaurantLists(getRes.responsePacket);
                     setFilterResList(getRes.responsePacket);
@@ -57,7 +59,7 @@ function Restaurants() {
             console.error("Fetch failed:", error);
         }
     };
-    
+
     useEffect(() => {
         if (location && orderType && orderType !== 'DineIn') {
             getList(orderType);
@@ -76,8 +78,10 @@ function Restaurants() {
         }
     };
     useEffect(() => {
-        getCuisine();
-    }, []);
+        if (orderType === "HomeDelivery") {
+            getCuisine();
+        }
+    }, [orderType]);
 
     const [selectedCuisine, setSelectedCuisine] = useState('');
     const filterByCuisine = (cuisine) => {
@@ -138,7 +142,7 @@ function Restaurants() {
                 <Nav />
                 <Banner />
                 {!isMobile && <ServiceTabs orderType={orderType} setOrderType={setOrderType} />}
-                {orderType !== "DineIn" && <CafeCategory cuisineList={cuisineList} filterByCuisine={filterByCuisine} />}
+                {orderType === "HomeDelivery" && <CafeCategory cuisineList={cuisineList} filterByCuisine={filterByCuisine} />}
                 {orderType === "DineIn" && <DineInScan showScanner={showScanner} setShowScanner={setShowScanner} />}
                 {orderType !== "DineIn" && <RestaurantList restaurants={filterResList} selectedCuisine={selectedCuisine} setSelectedCuisine={setSelectedCuisine} orderType={orderType} />}
                 {orderType === "DineIn" && showScanner && <QRCodeScanner onScanSuccess={handleScanSuccess} onClose={() => setShowScanner(false)} />}

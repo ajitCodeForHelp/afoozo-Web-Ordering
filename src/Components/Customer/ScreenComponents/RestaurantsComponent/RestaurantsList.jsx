@@ -20,8 +20,7 @@ const RestaurantList = ({ restaurants, selectedCuisine, setSelectedCuisine, orde
               style={{
                 border: "1px solid #eee",
                 minHeight: "100px",
-              }}
-            >
+              }}>
               <img
                 src={res.restaurantBannerUrl}
                 alt={res.title}
