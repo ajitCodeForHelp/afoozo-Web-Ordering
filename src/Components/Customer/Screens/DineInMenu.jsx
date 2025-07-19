@@ -10,6 +10,7 @@ import { useCart } from "../../../Utilities/CartProvider";
 import MenuItemCard from "../ScreenComponents/DineInComponent/MenuItems";
 import PopupModal from "../CommonComponent/Modals/PopUpModal";
 import MessagePopup from "../CommonComponent/Modals/MessagePopup";
+import ItemCustomPopup from "../CommonComponent/Modals/ItemCustomPopup";
 
 function DineInMenu() {
     const [cartVisible, setCartVisible] = useState(false);
@@ -64,6 +65,17 @@ function DineInMenu() {
     const [showMessagePopup, setShowMessagePopup] = useState(false);
 
     const { cart, dispatch } = useCart();
+
+    const [showItemCustom, setShowItemCustom] = useState(false);
+    const [customData, setCustomData] = useState({});
+    const customizable = (item) => {
+        if (navigator.vibrate) {
+            navigator.vibrate(100); // Vibrates the device for 100 milliseconds
+        }
+        setCustomData(item);
+        setShowItemCustom(true);
+    };
+
     // order detail
     const [orderDetail, setOrderDetail] = useState([]);
     const [orderRefId, setOrderRefId] = useState('');
@@ -314,6 +326,7 @@ function DineInMenu() {
                                                         quantity={quantity}
                                                         updateQuantity={updateQuantity}
                                                         removeFromCart={removeFromCart}
+                                                        customizable={customizable}
                                                     />
                                                 </div>
                                             );
@@ -353,6 +366,7 @@ function DineInMenu() {
                 type="confirm" // or "message"
             />
             <MessagePopup show={showMessagePopup} title="Afoozo" onClose={() => setShowMessagePopup(false)} message={message} />
+            <ItemCustomPopup show={showItemCustom} onClose={() => setShowItemCustom(false)} data={customData} />
         </>
     )
 }

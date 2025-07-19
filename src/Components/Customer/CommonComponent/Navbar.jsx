@@ -116,40 +116,41 @@ export default function Header() {
           </div>
           <div className="col-auto mt-md-0">
             <div className="dropdown" ref={dropdownRef}>
-              <button className="btn btn-danger d-flex align-items-center gap-1 rounded-pill px-3 py-2 them-bg-black text-warning border-dark" onClick={() => setShowDrop(!showDrop)} type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <button className="btn btn-danger d-flex align-items-center gap-1 rounded-pill px-3 py-2 them-bg-black text-warning border-dark" onClick={() => setShowDrop(!showDrop)} type="button">
                 <IoFilterSharp />
                 <span className='dis-none'>Filters</span>
               </button>
 
-              {showDrop && <ul className="dropdown-menu dropdown-menu-end p-3 shadow"
-                style={{
-                  display: 'block',
-                  position: 'absolute',
-                  top: '100%',
-                  right: 0,
-                  minWidth: "200px",
-                  zIndex: 2000,
-                }}
-              >
-                <li>
-                  <div className="form-check">
-                    <input className="form-check-input" type="checkbox" id="vegetarian" />
-                    <label className="form-check-label" for="vegetarian">Vegetarian</label>
-                  </div>
-                </li>
-                <li>
-                  <div className="form-check">
-                    <input className="form-check-input" type="checkbox" id="nonVegetarian" />
-                    <label className="form-check-label" for="nonVegetarian">Non-Vegetarian</label>
-                  </div>
-                </li>
-                <li>
-                  <div className="form-check">
-                    <input className="form-check-input" type="checkbox" id="allergens" />
-                    <label className="form-check-label" for="allergens">Contains Allergens</label>
-                  </div>
-                </li>
-              </ul>}
+              {showDrop &&
+                <ul className="dropdown-menu dropdown-menu-end p-3 shadow"
+                  style={{
+                    display: 'block',
+                    position: 'absolute',
+                    top: '100%',
+                    right: 0,
+                    minWidth: "200px",
+                    zIndex: 2000,
+                  }}
+                >
+                  <li>
+                    <div className="form-check">
+                      <input className="form-check-input" type="checkbox" id="vegetarian" />
+                      <label className="form-check-label" for="vegetarian">Vegetarian</label>
+                    </div>
+                  </li>
+                  <li>
+                    <div className="form-check">
+                      <input className="form-check-input" type="checkbox" id="nonVegetarian" />
+                      <label className="form-check-label" for="nonVegetarian">Non-Vegetarian</label>
+                    </div>
+                  </li>
+                  <li>
+                    <div className="form-check">
+                      <input className="form-check-input" type="checkbox" id="allergens" />
+                      <label className="form-check-label" for="allergens">Contains Allergens</label>
+                    </div>
+                  </li>
+                </ul>}
             </div>
           </div>
         </div>

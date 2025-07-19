@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { Dropdown } from 'react-bootstrap';
-import { FaLocationDot } from "react-icons/fa6";
 import SidebarDrawer from "../../CommonComponent/Drawer";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { FaWallet } from "react-icons/fa";

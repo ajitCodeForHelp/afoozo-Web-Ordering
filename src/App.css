@@ -1712,3 +1712,83 @@ select:focus {
     font-size: 10px;
   }
 }
+
+/* customizable item popup  */
+
+/* Bottom popup styling for mobile */
+/* Overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1040;
+}
+.popup-overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Popup Base */
+.popup-box {
+  position: fixed;
+  width: 100%;
+  background: white;
+  transition: all 0.3s ease;
+  z-index: 1050;
+  border-radius: 12px 12px 0 0;
+  max-height: 90vh;
+  overflow: hidden;
+  visibility: hidden;
+  transform: translateY(100%);
+}
+
+/* Mobile Style: Bottom Popup */
+@media (max-width: 768px) {
+  .popup-box.show {
+    bottom: 0;
+    left: 0;
+    transform: translateY(0);
+     visibility: visible;
+  }
+}
+
+/* Desktop Style: Centered Modal */
+@media (min-width: 769px) {
+  .popup-box {
+    width: 500px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    border-radius: 12px;
+     visibility: hidden;
+  }
+  .popup-box.show {
+    transform: translate(-50%, -50%) scale(1);
+        visibility: visible;
+  }
+}
+
+/* Scrollable content */
+.popup-content {
+  padding: 1rem;
+  height: 100%;
+  overflow-y: auto;
+  padding-bottom: 70px;
+}
+
+/* Fixed bottom bar */
+.bottom-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 1rem;
+  background: white;
+  border-top: 1px solid #ddd;
+}

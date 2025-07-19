@@ -1,7 +1,7 @@
 import React from "react";
 import { FaPencilAlt } from "react-icons/fa";
 
-function CartItems({ id, name, price, quantity, onIncrement, onDecrement, onEdit, isVeg, isSmallLoading }) {
+function CartItems({ id, name, price, quantity, onIncrement, onDecrement, onEdit, isVeg, isSmallLoading, instruction }) {
 
     return (
         <div className={`checkout-card d-flex justify-content-between p-3 mb-3 shadow-sm rounded gap-2`}>
@@ -22,7 +22,7 @@ function CartItems({ id, name, price, quantity, onIncrement, onDecrement, onEdit
                 <div className="fw-bold text-end text-nowrap">
                     ₹{(price * quantity).toFixed(2)}
                 </div>
-
+                {instruction && <p className="m-0">{instruction}</p>}
                 <button className="btn edit-btn ms-2" onClick={onEdit}>
                     <FaPencilAlt className="ri-pencil-line text-warning" />
                 </button>

@@ -2,7 +2,7 @@ import React from "react";
 import { FaStar } from "react-icons/fa";
 import { RiDragMoveLine } from "react-icons/ri";
 
-const CafeItems = ({ resMenu, categoryRefs, addToCart, cart, dispatch, updateQuantity }) => {
+const CafeItems = ({ resMenu, categoryRefs, addToCart, cart, updateQuantity, customizable }) => {
   return (
     <div className="p-3">
       <div className="row gy-3">
@@ -41,9 +41,12 @@ const CafeItems = ({ resMenu, categoryRefs, addToCart, cart, dispatch, updateQua
                                 ? item?.description?.slice(0, 60) + "..."
                                 : item?.description}
                             </div>
-                            <div className="d-flex align-items-center">
-                              <FaStar className="text-warning me-1" />
-                              <small className="me-2">{item?.rating}</small>
+                            <div className="d-flex align-items-center justify-content-between">
+                              <div className="">
+                                <FaStar className="text-warning me-1" />
+                                <small className="me-2">{item?.rating}</small>
+                              </div>
+                              {item?.customization?.length > 0 && <div className=""><p className="m-0 text-muted">customizable</p></div>}
                             </div>
                           </div>
 
@@ -67,23 +70,23 @@ const CafeItems = ({ resMenu, categoryRefs, addToCart, cart, dispatch, updateQua
                             ) : (
                               <button
                                 className="btn btn-danger text-warning them-bg-black border-dark px-4 py-1 rounded-pill"
-                                onClick={() => addToCart(item)}
+                                onClick={() => { item?.customization?.length > 0 ? customizable(item) : addToCart(item)}}
                               >
-                                Add
-                              </button>
+                            Add
+                          </button>
                             )}
-                          </div>
                         </div>
                       </div>
-                    );
+                      </div>
+              );
                   })
                 }
-              </div >
+            </div >
             </>
-          )
+      )
         }
         )}
-      </div>
+    </div>
     </div >
   );
 };

@@ -3,7 +3,7 @@ import { FaStar, FaMinus, FaPlus, FaPen } from "react-icons/fa";
 import { Button } from "react-bootstrap";
 import { RiDragMoveLine } from "react-icons/ri";
 
-const MenuItemCard = ({ item, addToCart, quantity, updateQuantity }) => {
+const MenuItemCard = ({ item, addToCart, quantity, updateQuantity, customizable }) => {
 
     return (
         <div className="card shadow-sm my-2 menu-card-container">
@@ -14,10 +14,13 @@ const MenuItemCard = ({ item, addToCart, quantity, updateQuantity }) => {
                         <h6 className="mb-1 menu-dish-name">{item?.title}</h6>
                         <div className="text-muted small menu-price-rating">
                             ₹{item?.finalPrice.toFixed(2)}{" "}
-                            {item?.rating > 0 && <span className="text-warning ms-3 menu-rating">
-                                <FaStar className="me-1 text-warning menu-star-icon" />
-                                {item?.rating}
-                            </span>}
+                            {item?.rating > 0 &&
+                                <span className="text-warning ms-3 menu-rating">
+                                    <FaStar className="me-1 text-warning menu-star-icon" />
+                                    {item?.rating}
+                                </span>
+                            }
+                            {item?.customization?.length > 0 && <div className=""><p className="m-0 text-muted">customizable</p></div>}
                         </div>
                     </div>
                 </div>
@@ -50,7 +53,7 @@ const MenuItemCard = ({ item, addToCart, quantity, updateQuantity }) => {
                             <Button variant="light" size="sm" className="me-2 menu-edit-btn text-warning">
                                 <FaPen />
                             </Button>
-                            <Button variant="warning" onClick={() => addToCart(item)} className="menu-add-now-btn ms-md-auto mt-2 mt-md-0 rounded-5 text-warning bg-dark border-0">
+                            <Button variant="warning" onClick={() => { item?.customization?.length > 0 ? customizable(item) : addToCart(item) }} className="menu-add-now-btn ms-md-auto mt-2 mt-md-0 rounded-5 text-warning bg-dark border-0">
                                 Add Now
                             </Button>
                         </div>

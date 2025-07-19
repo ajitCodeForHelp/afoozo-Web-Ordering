@@ -226,6 +226,7 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                                 onIncrement={() => increment(item.orderItemId, item.quantity + 1, item.itemId)}
                                 onDecrement={() => decrement(item.orderItemId, item.quantity - 1, item.itemId)}
                                 isSmallLoading={isSmallLoading}
+                                instruction={item?.specialInstruction}
                                 onEdit={() => { setShowCookingPopup(true); setGetItemIdForCook({ localId: item.itemId, id: item.orderItemId }) }}
                             />
                         ))}

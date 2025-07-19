@@ -11,6 +11,7 @@ import { useCart } from "../../../Utilities/CartProvider";
 import PopupModal from "../CommonComponent/Modals/PopUpModal";
 import MessagePopup from "../CommonComponent/Modals/MessagePopup";
 import useIsMobile from "../../../Utilities/IsMobile";
+import ItemCustomPopup from "../CommonComponent/Modals/ItemCustomPopup";
 
 function CafeMenu() {
     const navigate = useNavigate();
@@ -167,6 +168,16 @@ function CafeMenu() {
         }
     };
 
+    const [showItemCustom, setShowItemCustom] = useState(false);
+    const [customData, setCustomData] = useState({});
+    const customizable = (item) => {
+        if (navigator.vibrate) {
+            navigator.vibrate(100); // Vibrates the device for 100 milliseconds
+        }
+        setCustomData(item);
+        setShowItemCustom(true);
+    };
+
     const [modalVisible, setModalVisible] = useState(false);
     const [message, setMessage] = useState("");
     const [pendingItem, setPendingItem] = useState(null);
@@ -277,13 +288,14 @@ function CafeMenu() {
                     addToCart={addToCart}
                     removeFromCart={removeFromCart}
                     updateQuantity={updateQuantity}
+                    customizable={customizable}
                 />
 
                 {/* cartsection */}
                 {cart.items.length > 0 && cart?.restaurant?.restaurantUuid === id && <CartButton openClose={() => { setCartVisible(true); saveOrder() }} orderType={orderType} restaurantId={id} />}
                 <CartPanel
                     show={cartVisible}
-                    onClose={() => { setCartVisible(false)}}
+                    onClose={() => { setCartVisible(false) }}
                     orderDetail={orderDetail}
                     orderRefId={orderRefId}
                     increment={increment}
@@ -309,6 +321,7 @@ function CafeMenu() {
             />
 
             <MessagePopup show={showMessagePopup} title="Afoozo" onClose={() => setShowMessagePopup(false)} message={message} />
+            <ItemCustomPopup show={showItemCustom} onClose={() => setShowItemCustom(false)} data={customData} />
         </>
     )
 }

@@ -11,23 +11,27 @@ import useIsMobile from "../../../Utilities/IsMobile";
 import { useNavigate } from "react-router-dom";
 import DineInScan from "../ScreenComponents/RestaurantsComponent/DineInScan";
 import QRCodeScanner from "../CommonComponent/QRCodeScanner";
+import Loading from "../CommonComponent/LoadingWait";
 
 function Restaurants() {
     const location = useContext(LocationContext);
     const [RestaurantLists, setRestaurantLists] = useState([]);
     const [filterResList, setFilterResList] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
     const [cuisineList, setCuisineList] = useState([]);
     const [orderType, setOrderType] = useState("Cafe");
     const navigate = useNavigate();
     const getList = async (typeOrder) => {
         const token = localStorage.getItem("secretKey");
-        const latitude = 23.8623 // 18.964340379970906 // Number(location?.latitude);
-        const longitude = 91.2825 //72.80848659347991 // Number(location?.longitude);
+        const latitude = 19.032626310834413 // 18.964340379970906 // Number(location?.latitude);
+        const longitude = 72.84266162663698 //72.80848659347991 // Number(location?.longitude);
         if (!latitude || !longitude || !token) {
             console.error("Missing location or token");
             return;
         }
         try {
+            setIsLoading(true);
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/restaurantList`, {
                 method: "POST",
                 headers: {
@@ -47,9 +51,9 @@ function Restaurants() {
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
                 if (getRes?.responsePacket?.length === 1) {
-                    navigate(`/cafeMenu/${getRes.responsePacket[0]?.restaurantUuid}`, { state: { resDetail: getRes.responsePacket[0], orderType: orderType } })
+                    navigate(`/cafeMenu/${getRes.responsePacket[0]?.restaurantUuid}`, { state: { resDetail: getRes.responsePacket[0], orderType: orderType } });
                 } else if (getRes?.responsePacket?.length <= 0 && orderType !== "HomeDelivery") {
-                    getList("HomeDelivery")
+                    getList("HomeDelivery");
                 } else {
                     setRestaurantLists(getRes.responsePacket);
                     setFilterResList(getRes.responsePacket);
@@ -57,14 +61,16 @@ function Restaurants() {
             }
         } catch (error) {
             console.error("Fetch failed:", error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     useEffect(() => {
-        if (location && orderType && orderType !== 'DineIn') {
+        if (orderType && orderType !== 'DineIn') {
             getList(orderType);
         }
-    }, [location, orderType]);
+    }, [orderType]);
 
     const getCuisine = async () => {
         try {
@@ -144,7 +150,7 @@ function Restaurants() {
                 {!isMobile && <ServiceTabs orderType={orderType} setOrderType={setOrderType} />}
                 {orderType === "HomeDelivery" && <CafeCategory cuisineList={cuisineList} filterByCuisine={filterByCuisine} />}
                 {orderType === "DineIn" && <DineInScan showScanner={showScanner} setShowScanner={setShowScanner} />}
-                {orderType !== "DineIn" && <RestaurantList restaurants={filterResList} selectedCuisine={selectedCuisine} setSelectedCuisine={setSelectedCuisine} orderType={orderType} />}
+                {isLoading ? <Loading fullScreen={false} /> : orderType !== "DineIn" && <RestaurantList restaurants={filterResList} selectedCuisine={selectedCuisine} setSelectedCuisine={setSelectedCuisine} orderType={orderType} />}
                 {orderType === "DineIn" && showScanner && <QRCodeScanner onScanSuccess={handleScanSuccess} onClose={() => setShowScanner(false)} />}
                 {isMobile && <BottomNav orderType={orderType} setOrderType={setOrderType} />}
             </div>
