@@ -63,7 +63,7 @@ export default function ProfileUpdate({ show, onHide }) {
             keyboard={false}
             dialogClassName="profile-modal modal-dialog-scrollable modal-fullscreen-sm-down"
         >
-            <div className="">
+            <div className="" style={{ paddingBottom: "74px" }}>
                 <div className="promo-header sticky-top them-bg-black d-flex align-items-center justify-content-between">
                     <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-warning" onClick={onHide} role="button" />
                     <h5 className="text-warning m-auto">Profile</h5>
@@ -82,8 +82,8 @@ export default function ProfileUpdate({ show, onHide }) {
                 </div>
 
                 <form onSubmit={handleSubmit}>
-                    <div className="card shadow-sm border-0 mb-4">
-                        <div className="card-body p-3">
+                    <div className="card shadow-sm border-0 ">
+                        <div className="card-body p-3 overflow-auto h-65">
                             <div className="form-floating mb-3 border-bottom">
                                 <input
                                     type="text"

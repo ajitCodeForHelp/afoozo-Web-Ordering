@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import CafeCategory from "../ScreenComponents/RestaurantsComponent/CafeCategory";
 import RestaurantList from "../ScreenComponents/RestaurantsComponent/RestaurantsList";
 import Nav from "../ScreenComponents/RestaurantsComponent/Nav";
@@ -20,12 +20,13 @@ function Restaurants() {
     const [isLoading, setIsLoading] = useState(false);
 
     const [cuisineList, setCuisineList] = useState([]);
+    const hasRedirected = useRef(false);
     const [orderType, setOrderType] = useState("Cafe");
     const navigate = useNavigate();
     const getList = async (typeOrder) => {
         const token = localStorage.getItem("secretKey");
-        const latitude = 19.032626310834413 // 18.964340379970906 // Number(location?.latitude);
-        const longitude = 72.84266162663698 //72.80848659347991 // Number(location?.longitude);
+        const latitude = 19.032626310834413 // Number(location?.latitude);19.032626310834413  //23.8623  //
+        const longitude = 72.84266162663698 // Number(location?.longitude); 72.84266162663698 //91.2825 //
         if (!latitude || !longitude || !token) {
             console.error("Missing location or token");
             return;
@@ -50,7 +51,8 @@ function Restaurants() {
 
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
-                if (getRes?.responsePacket?.length === 1) {
+                if (getRes?.responsePacket?.length === 1 && !sessionStorage.getItem("hasRedirected")) {
+                    sessionStorage.setItem("hasRedirected", "true");
                     navigate(`/cafeMenu/${getRes.responsePacket[0]?.restaurantUuid}`, { state: { resDetail: getRes.responsePacket[0], orderType: orderType } });
                 } else if (getRes?.responsePacket?.length <= 0 && orderType !== "HomeDelivery") {
                     getList("HomeDelivery");
@@ -69,6 +71,9 @@ function Restaurants() {
     useEffect(() => {
         if (orderType && orderType !== 'DineIn') {
             getList(orderType);
+        }
+        if (orderType !== "Cafe") {
+            sessionStorage.removeItem("hasRedirected")
         }
     }, [orderType]);
 

@@ -3,7 +3,7 @@ import React from 'react';
 const PaymentSection = ({ walletChecked, onWalletChange, walletAmount, onAddPayment, selectPaymentType }) => {
   return (
     <>
-      <div className="payment-section p-3 rounded shadow-sm bg-white mb-5 ">
+      <div className="payment-section p-3 rounded shadow-sm bg-white mb-5">
         <div className="form-check mb-2">
           <input
             className="form-check-input"

@@ -68,7 +68,7 @@ export default function LiveOrders({ show, onHide, setShowOrderDetail, setOrderI
             <div className="bg-white">
                 <div className="promo-header sticky-top them-bg-black d-flex align-items-center justify-content-between">
                     <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-warning" onClick={onHide} role="button" />
-                    <h5 className="text-warning m-auto">Order History</h5>
+                    <h5 className="text-warning m-auto">Live Orders</h5>
                     <span></span>
                 </div>
                 {

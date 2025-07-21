@@ -68,38 +68,38 @@ export default function OrderHistory({ show, onHide, setShowOrderDetail, setOrde
             <div className="bg-white">
                 <div className="promo-header sticky-top them-bg-black d-flex align-items-center justify-content-between">
                     <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-warning" onClick={onHide} role="button" />
-                    <h5 className="text-warning m-auto">Order History</h5>
+                    <h5 className="text-warning m-auto">Orders History</h5>
                     <span></span>
                 </div>
                 {
-                    isLoading ? <Loading /> : 
-                    list?.length > 0 ?
-                     list?.map((itm) => {
-                        return (
-                            <>
-                                <div className="card shadow-sm p-3 m-3 rounded-4" style={{ maxWidth: 500 }} onClick={() => { setShowOrderDetail(true); setOrderId(itm?.orderReferenceId) }}>
-                                    <div className="d-flex justify-content-between align-items-start">
-                                        <div className="pe-2">
-                                            <h6 className="fw-bold mb-1">{itm?.restaurantName}</h6>
-                                            <div className="text-muted small two-line-ellipsis">{itm?.deliveryAddress}</div>
+                    isLoading ? <Loading /> :
+                        list?.length > 0 ?
+                            list?.map((itm) => {
+                                return (
+                                    <>
+                                        <div className="card shadow-sm p-3 m-3 rounded-4" style={{ maxWidth: 500 }} onClick={() => { setShowOrderDetail(true); setOrderId(itm?.orderReferenceId) }}>
+                                            <div className="d-flex justify-content-between align-items-start">
+                                                <div className="pe-2">
+                                                    <h6 className="fw-bold mb-1">{itm?.restaurantName}</h6>
+                                                    <div className="text-muted small two-line-ellipsis">{itm?.deliveryAddress}</div>
+                                                </div>
+                                                {
+                                                    itm?.orderType === "HomeDelivery" && <span>🛵</span> ||
+                                                    itm?.orderType === "TakeAway" && <span>🧺</span> ||
+                                                    itm?.orderType === "Cafe" && <span>☕</span>
+                                                }
+                                            </div>
+
+                                            <div className="fw-semibold mt-2">₹{Number(itm?.orderTotal).toFixed(2)}</div>
+
+                                            <hr className="my-2" />
+
+                                            <div className="text-dark fw-bold small">{itm?.orderItemText}</div>
+                                            <div className="text-muted small mt-1">{formatTimestamp(itm?.orderDateTime)}</div>
                                         </div>
-                                        {
-                                            itm?.orderType === "HomeDelivery" && <span>🛵</span> ||
-                                            itm?.orderType === "TakeAway" && <span>🧺</span> ||
-                                            itm?.orderType === "Cafe" && <span>☕</span>
-                                        }
-                                    </div>
-
-                                    <div className="fw-semibold mt-2">₹{Number(itm?.orderTotal).toFixed(2)}</div>
-
-                                    <hr className="my-2" />
-
-                                    <div className="text-dark fw-bold small">{itm?.orderItemText}</div>
-                                    <div className="text-muted small mt-1">{formatTimestamp(itm?.orderDateTime)}</div>
-                                </div>
-                            </>
-                        )
-                    }) : <p>No data available</p>
+                                    </>
+                                )
+                            }) : <p>No data available</p>
                 }
             </div>
         </Modal>

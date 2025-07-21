@@ -22,39 +22,29 @@ const ItemCustomPopup = ({ show, onClose, data }) => {
             {/* Modal Box */}
             <div className={`popup-box ${show ? 'show' : ''}`}>
                 <div className="popup-content">
-                    <h5 className="fw-bold">{data?.title}</h5>
+                    <h5 className="fw-bold p-3 bg-dark text-warning">{data?.title}</h5>
 
-                    {customOption?.map((itm) => {
-                        return (
-                            <div className="mb-3">
-                                <div className="fw-semibold">{itm?.title}</div>
-                                {
-                                    itm?.customizationOptions?.map((item) => {
-                                        return (
-                                            <>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" id={item?.id} type="radio" name={itm?.title} />
-                                                    <label className="form-check-label">{item?.name} ( {Number(item?.price).toFixed(2)} )</label>
-                                                </div>
-                                            </>
-                                        )
-                                    })
-                                }
-                            </div>
-                        )
-                    })}
-
-                    {/* <div className="mb-3">
-                        <div className="fw-semibold">Gharelu Veg Gravy</div>
-                        <div className="form-check">
-                            <input className="form-check-input" type="radio" name="gravy" />
-                            <label className="form-check-label">Veg Makhanwala ( +₹0.00 )</label>
-                        </div>
-                        <div className="form-check">
-                            <input className="form-check-input" type="radio" name="gravy" defaultChecked />
-                            <label className="form-check-label">Veg Kolhapuri ( +₹0.00 )</label>
-                        </div>
-                    </div> */}
+                    <div className="overflow-auto hv-60">
+                        {customOption?.map((itm) => {
+                            return (
+                                <div className="mb-3 px-3">
+                                    <div className="fw-semibold">{itm?.title}</div>
+                                    {
+                                        itm?.customizationOptions?.map((item) => {
+                                            return (
+                                                <>
+                                                    <div className="form-check">
+                                                        <input className="form-check-input" id={item?.id} type="radio" name={itm?.title} />
+                                                        <label className="form-check-label">{item?.name} ( {Number(item?.price).toFixed(2)} )</label>
+                                                    </div>
+                                                </>
+                                            )
+                                        })
+                                    }
+                                </div>
+                            )
+                        })}
+                    </div>
 
                     <div className="bottom-bar d-flex justify-content-between align-items-center">
                         <div className="fw-bold">Item Total ₹210.00</div>

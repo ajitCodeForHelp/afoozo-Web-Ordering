@@ -133,7 +133,7 @@ export default function SidebarDrawer({ isOpen, onClose }) {
       ></div>
 
       {/* Drawer */}
-      <div style={{ paddingBottom: isMobile && "5rem" }} className={`sidebar-drawer slide-right ${isOpen ? "open" : ""}`}>
+      <div style={{ paddingBottom: isMobile && "4.5rem" }} className={`sidebar-drawer slide-right ${isOpen ? "open" : ""}`}>
         <div className="sidebar-header d-flex justify-content-between align-items-center mb-1">
           <h4 className="logo text-warning mb-0">AFOOZO</h4>
           <button onClick={onClose} className="btn-close-icon">

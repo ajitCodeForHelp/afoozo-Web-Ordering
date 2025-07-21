@@ -53,7 +53,7 @@ function Categories({ list, activeCategory, scrollToCategory }) {
                             ref={(el) => (itemRefs.current[cat.categoryUuid] = el)}
                         >
                             <div className="category-icon mb-2">
-                                <img src={cat?.menuList[0].catImageUrl} alt={index} />
+                                <img src={cat?.catImageUrl} alt={index} />
                             </div>
                             <div className="category-name small fw-semibold">{cat?.categoryName}</div>
                         </div>

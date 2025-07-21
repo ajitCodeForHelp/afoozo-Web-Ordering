@@ -13,6 +13,7 @@ import PaymentMode from '../ScreenComponents/CartComponent/PaymentModeList';
 import usePopupBackHandler from '../../../Utilities/UsePopupStack';
 import Loading from '../CommonComponent/LoadingWait';
 import { useNavigate } from 'react-router-dom';
+import useIsMobile from '../../../Utilities/IsMobile';
 
 
 const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefId, saveOrder, dispatch, orderType, isLoading, isSmallLoading }) => {
@@ -205,6 +206,8 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
     ];
     usePopupBackHandler(popupStack);
 
+    const isMobile = useIsMobile();
+
     return (
         <>
             <div className={`${show ? 'cart-blur-overlay' : ''}`}>
@@ -214,7 +217,7 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                         <h5 className="m-auto">Checkout</h5>
                     </div>
 
-                    {isLoading ? <Loading /> : <div className="cart-body p-3" style={{ paddingBottom: "60px !important" }}>
+                    {isLoading ? <Loading /> : <div className="cart-body px-3 pt-3" style={{ paddingBottom: isMobile && "70px" }}>
                         {orderDetail?.itemList?.map((item) => (
                             <CartItems
                                 key={item.orderItemId}
