@@ -1,14 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { IoMdStar } from "react-icons/io";
+import useIsMobile from "../../../../Utilities/IsMobile";
 
 const RestaurantList = ({ restaurants, selectedCuisine, setSelectedCuisine, orderType }) => {
   const formatToTwoDecimals = (num) => {
     return Number(num).toFixed(2);
   };
+  const isMobile = useIsMobile();
 
   return (
     <div className="p-3">
-      <p className="text-muted small fw-semibold mb-3 text-warning">
+      <p className="text small fw-semibold mb-3 text-warning">
         Showing restaurants for :<br /> {selectedCuisine && <span className="text-warning bg-dark fw-semibold p-2 me-1 cursor-pointer rounded-2 ">{selectedCuisine}</span>} {selectedCuisine && <span className="fs-5 text-warning bg-dark p-1 rounded-2 px-2 cursor-pointer" onClick={() => setSelectedCuisine('')}>x</span>}
       </p>
       <div className="d-flex flex-column gap-3">
@@ -32,16 +35,16 @@ const RestaurantList = ({ restaurants, selectedCuisine, setSelectedCuisine, orde
                 }}
               />
               <div className="flex-grow-1">
-                <h6 className="fw-bold mb-1 text-warning res-title">{res.title}</h6>
+                <h6 className="fw-bold mb-1 text-dark res-title">{res.title}</h6>
                 <div className="d-flex align-items-center gap-2 flex-nowrap overflow-hidden">
                   {res?.cuisineList?.slice(0, 3).map((itm) => <p className="text-muted small mb-1 w-auto res-cuisines">{itm},</p>)}
                 </div>
-                <div className="d-flex align-items-center flex-wrap gap-2">
+                <div className={`d-flex ${isMobile ? "flex-column justify-content-center align-items-start" : "flex-row align-items-center"} flex-wrap ${!isMobile && "gap-2"}`}>
                   <span className="text-success fw-semibold small res-cuisines">{res.open ? "Open" : "Close"}</span>
-                  {/* <span className="text-muted small">{res.time}</span> */}
-                  <span className="text-warning small fw-bold d-flex align-items-center gap-1 res-title">
-                    ⭐ {formatToTwoDecimals(res.rating)}
-                  </span>
+                  {res?.estimatedTimeArrival && <span className="text-muted small res-cuisines">{res?.estimatedTimeArrival} min</span>}
+                  {res.rating > 0 && <span className="text-warning small fw-bold d-flex align-items-center gap-1 res-title">
+                    <IoMdStar size={16} /> {formatToTwoDecimals(res.rating)}
+                  </span>}
                 </div>
               </div>
             </div>

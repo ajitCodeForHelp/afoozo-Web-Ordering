@@ -14,7 +14,7 @@ import usePopupBackHandler from '../../../Utilities/UsePopupStack';
 import Loading from '../CommonComponent/LoadingWait';
 import { useNavigate } from 'react-router-dom';
 import useIsMobile from '../../../Utilities/IsMobile';
-
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefId, saveOrder, dispatch, orderType, isLoading, isSmallLoading }) => {
 
@@ -213,7 +213,7 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
             <div className={`${show ? 'cart-blur-overlay' : ''}`}>
                 <div className={`cart-offcanvas ${show ? 'show' : ''}`} ref={cartRef}>
                     <div className="cart-header d-flex justify-content-start gap- align-items-center p-3 border-bottom them-bg-black text-warning">
-                        <button className="text-warning m-0 cart-cross-btn" style={{ color: "white !important" }} onClick={onClose}><ImCross /></button>
+                        <button className="text-warning m-0 cart-cross-btn" style={{ color: "white !important" }} onClick={onClose}>{!isMobile ? <ImCross /> : <IoMdArrowRoundBack/>}</button>
                         <h5 className="m-auto">Checkout</h5>
                     </div>
 
