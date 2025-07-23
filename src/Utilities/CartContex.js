@@ -149,6 +149,54 @@ export const cartReducer = (state, action) => {
             localStorage.setItem('cart', JSON.stringify(cartWithInstructions));
             return cartWithInstructions;
 
+        case 'ADD_CUSTOMIZABLE_ITEM':
+            const { item, customization } = action.payload;
+
+            // Create a unique signature for the item + its customizations
+            const customizationSignature = JSON.stringify(customization || []);
+
+            const existingItemWithCustomization = state.items.find(
+                cartItem =>
+                    cartItem.itemId === item.uuid &&
+                    JSON.stringify(cartItem.customization || []) === customizationSignature
+            );
+
+            if (
+                state.items.length > 0 &&
+                state.restaurant &&
+                state.restaurant.restaurantId !== item.restaurant.restaurantId
+            ) {
+                return state; // prevent cross-restaurant addition
+            }
+
+            if (existingItemWithCustomization) {
+                updatedItems = state.items.map(cartItem =>
+                    cartItem.itemId === item.uuid &&
+                        JSON.stringify(cartItem.customization || []) === customizationSignature
+                        ? { ...cartItem, quantity: cartItem.quantity + 1 }
+                        : cartItem
+                );
+            } else {
+                updatedItems = [
+                    ...state.items,
+                    {
+                        ...item,
+                        // itemId: item.uuid,
+                        quantity: 1,
+                        customization: customization || [],
+                    },
+                ];
+            }
+
+            const cartWithCustomItem = {
+                ...state,
+                items: updatedItems,
+                restaurant: item.restaurant,
+            };
+
+            localStorage.setItem('cart', JSON.stringify(cartWithCustomItem));
+            return cartWithCustomItem;
+
         case 'SET_ADDRESS':
             const updatedWithAddress = { ...state, address: action.payload };
             localStorage.setItem('cart', JSON.stringify(updatedWithAddress));

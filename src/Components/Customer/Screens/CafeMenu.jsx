@@ -212,6 +212,9 @@ function CafeMenu() {
         dispatch({ type: "REMOVE_ITEM", payload: itemId });
     };
 
+    // customisable item
+
+
     const updateQuantity = (itemId, quantity) => {
         if (navigator.vibrate) {
             navigator.vibrate(100); // Vibrates the device for 100 milliseconds
@@ -220,7 +223,6 @@ function CafeMenu() {
             removeFromCart(itemId);
         } else {
             dispatch({ type: "UPDATE_QUANTITY", payload: { uuid: itemId, quantity } });
-            console.log("localId", itemId, quantity);
         }
     };
 
@@ -321,7 +323,7 @@ function CafeMenu() {
             />
 
             <MessagePopup show={showMessagePopup} title="Afoozo" onClose={() => setShowMessagePopup(false)} message={message} />
-            <ItemCustomPopup show={showItemCustom} onClose={() => setShowItemCustom(false)} data={customData} />
+            <ItemCustomPopup show={showItemCustom} onClose={() => setShowItemCustom(false)} data={customData} dispatch={dispatch} id={id} cart={cart} />
         </>
     )
 }

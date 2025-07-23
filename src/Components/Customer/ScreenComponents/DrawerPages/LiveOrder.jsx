@@ -72,32 +72,34 @@ export default function LiveOrders({ show, onHide, setShowOrderDetail, setOrderI
                     <span></span>
                 </div>
                 {
-                    isLoading ? <Loading /> : list?.map((itm) => {
-                        return (
-                            <>
-                                <div className="card shadow-sm p-3 m-3 rounded-4" style={{ maxWidth: 500 }} onClick={() => { setShowOrderDetail(true); setOrderId(itm?.orderReferenceId) }}>
-                                    <div className="d-flex justify-content-between align-items-start">
-                                        <div className="pe-2">
-                                            <h6 className="fw-bold mb-1">{itm?.restaurantName}</h6>
-                                            <div className="text-muted small two-line-ellipsis">{itm?.deliveryAddress}</div>
+                    isLoading ? <Loading /> :
+                        list?.length > 0 ? list?.map((itm) => {
+                            return (
+                                <>
+                                    <div className="card shadow-sm p-3 m-3 rounded-4" style={{ maxWidth: 500 }} onClick={() => { setShowOrderDetail(true); setOrderId(itm?.orderReferenceId) }}>
+                                        <div className="d-flex justify-content-between align-items-start">
+                                            <div className="pe-2">
+                                                <h6 className="fw-bold mb-1">{itm?.restaurantName}</h6>
+                                                <div className="text-muted small two-line-ellipsis">{itm?.deliveryAddress}</div>
+                                            </div>
+                                            {
+                                                itm?.orderType === "HomeDelivery" && <span className='bg-dark text-warning px-3 py-2'>🛵</span> ||
+                                                itm?.orderType === "TakeAway" && <span className='bg-dark text-warning px-3 py-2'>🧺</span> ||
+                                                itm?.orderType === "Cafe" && <span className='bg-dark text-warning px-3 py-2'>☕</span>
+                                            }
                                         </div>
-                                        {
-                                            itm?.orderType === "HomeDelivery" && <span>🛵</span> ||
-                                            itm?.orderType === "TakeAway" && <span>🧺</span> ||
-                                            itm?.orderType === "Cafe" && <span>☕</span>
-                                        }
+
+                                        <div className="fw-semibold mt-2">₹{Number(itm?.orderTotal).toFixed(2)}</div>
+
+                                        <hr className="my-2" />
+
+                                        <div className="text-dark fw-bold small">{itm?.orderItemText}</div>
+                                        <div className="text-muted small mt-1">{formatTimestamp(itm?.orderDateTime)}</div>
                                     </div>
-
-                                    <div className="fw-semibold mt-2">₹{Number(itm?.orderTotal).toFixed(2)}</div>
-
-                                    <hr className="my-2" />
-
-                                    <div className="text-dark fw-bold small">{itm?.orderItemText}</div>
-                                    <div className="text-muted small mt-1">{formatTimestamp(itm?.orderDateTime)}</div>
-                                </div>
-                            </>
-                        )
-                    })
+                                </>
+                            )
+                        }) :
+                            <p className='text-center m-auto p-3'>No Order</p>
                 }
             </div>
         </Modal>

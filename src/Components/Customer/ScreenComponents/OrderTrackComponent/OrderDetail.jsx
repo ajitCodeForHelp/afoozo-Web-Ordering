@@ -1,6 +1,8 @@
 import React from 'react';
 import { FaCircleInfo } from 'react-icons/fa6';
 import DeliveryLocationMap from './DeliveryLocationMap';
+import veg from "../../../../Assets/Veg-symbole.png";
+import nonVeg from "../../../../Assets/Non-veg-symbol.png";
 
 const OrderDetails = ({ OrderDetail }) => {
   return (
@@ -17,7 +19,7 @@ const OrderDetails = ({ OrderDetail }) => {
               return (
                 <>
                   <li className="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
-                    <span>🟢 {itm?.title}</span>
+                    <span>{itm?.title}</span>
                     <span>₹{itm?.finalPrice * itm?.quantity}</span>
                   </li>
                 </>

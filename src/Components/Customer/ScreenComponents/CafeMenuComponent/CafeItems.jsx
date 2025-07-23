@@ -88,7 +88,7 @@ const CafeItems = ({ resMenu, categoryRefs, addToCart, cart, updateQuantity, cus
                       <div className="card rounded-4 shadow-sm thali-card mb-3" key={index}>
                         {/* Category Header */}
                         <div className={`card-header bg-white border-0 py-2 ${isMobile ? "px-2" : "px-3"} d-flex align-items-center gap-2`}>
-                          {item?.vegNonVeg === "veg" ? <img src={veg} className="" width="13px" alt="veg" />
+                          {item?.vegNonVeg === "Veg" ? <img src={veg} className="" width="13px" alt="veg" />
                             : <img src={nonVeg} alt="NonVeg" width="13px" />}
                           <span className="fw-semibold text-muted small">{item?.subCategoryTitle}</span>
                         </div>

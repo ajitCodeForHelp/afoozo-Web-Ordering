@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { HiArrowNarrowLeft } from "react-icons/hi";
 
-const PaymentMode = ({ visible, onClose, orderType, orderTotal, selectPaymentType, setSelectPaymentType }) => {
+const PaymentMode = ({ visible, onClose, orderTotal, selectPaymentType, setSelectPaymentType }) => {
     const promoRef = useRef(null);
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -24,8 +24,8 @@ const PaymentMode = ({ visible, onClose, orderType, orderTotal, selectPaymentTyp
             const mobile = localStorage.getItem("mobileNo");
             const key = localStorage.getItem("secretKey");
             const BasicAuth = btoa(`${mobile}:${key}`);
-
-            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getPaymentGatewayList/${orderType}`, {
+            const type = sessionStorage.getItem("orderType")
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getPaymentGatewayList_v1/${type}`, {
                 headers: {
                     'Authorization': `Basic ${BasicAuth}`
                 }
@@ -62,7 +62,7 @@ const PaymentMode = ({ visible, onClose, orderType, orderTotal, selectPaymentTyp
                         payModeList.map((itm) => {
                             return (
                                 <>
-                                    <div className="d-flex justify-content-start m-1 p-3 shadow-sm fw-semibold cursor-pointer" onClick={()=>{setSelectPaymentType(itm); onClose()}}>
+                                    <div className="d-flex justify-content-start m-1 p-3 shadow-sm fw-semibold cursor-pointer" onClick={() => { setSelectPaymentType(itm); onClose() }}>
                                         <div className="">{itm}</div>
                                     </div>
                                 </>

@@ -22,6 +22,7 @@ function Restaurants() {
     const [cuisineList, setCuisineList] = useState([]);
     const hasRedirected = useRef(false);
     const [orderType, setOrderType] = useState("Cafe");
+
     const navigate = useNavigate();
     const getList = async (typeOrder) => {
         const token = localStorage.getItem("secretKey");
@@ -56,6 +57,7 @@ function Restaurants() {
                     navigate(`/cafeMenu/${getRes.responsePacket[0]?.restaurantUuid}`, { state: { resDetail: getRes.responsePacket[0], orderType: orderType } });
                 } else if (getRes?.responsePacket?.length <= 0 && orderType !== "HomeDelivery") {
                     getList("HomeDelivery");
+                    setOrderType("HomeDelivery");
                 } else {
                     setRestaurantLists(getRes.responsePacket);
                     setFilterResList(getRes.responsePacket);
@@ -69,6 +71,7 @@ function Restaurants() {
     };
 
     useEffect(() => {
+        sessionStorage.setItem("orderType", orderType);
         if (orderType && orderType !== 'DineIn') {
             getList(orderType);
         }
@@ -151,7 +154,7 @@ function Restaurants() {
             <div className={`${isMobile && "pb-5"}`}>
                 <ScrollToTop />
                 <Nav />
-                <Banner />
+                <Banner orderType={orderType} />
                 {!isMobile && <ServiceTabs orderType={orderType} setOrderType={setOrderType} />}
                 {orderType === "HomeDelivery" && <CafeCategory cuisineList={cuisineList} filterByCuisine={filterByCuisine} />}
                 {orderType === "DineIn" && <DineInScan showScanner={showScanner} setShowScanner={setShowScanner} />}

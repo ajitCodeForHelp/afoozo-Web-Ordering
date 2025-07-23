@@ -12,13 +12,11 @@ import AddressDrawer from '../ScreenComponents/AddressComonent.jsx/AddressSectio
 import PaymentMode from '../ScreenComponents/CartComponent/PaymentModeList';
 import usePopupBackHandler from '../../../Utilities/UsePopupStack';
 import Loading from '../CommonComponent/LoadingWait';
-import { useNavigate } from 'react-router-dom';
 import useIsMobile from '../../../Utilities/IsMobile';
 import { IoMdArrowRoundBack } from "react-icons/io";
+import TaxPopup from '../CommonComponent/Modals/TaxPopup';
 
 const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefId, saveOrder, dispatch, orderType, isLoading, isSmallLoading }) => {
-
-    const navigate = useNavigate();
 
     // appling promocode
     const [isPromoOpen, setPromoOpen] = useState(false);
@@ -102,8 +100,6 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
         }
     }, [selectPaymentType]);
 
-    // cod
-
 
     // balance
 
@@ -171,6 +167,9 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
     // Address Drawer
     const [showAddressDrawer, setShowAddressDrawer] = useState(false);
 
+    // tax
+    const [showTax, setShowTax] = useState(false);
+
     // cart outside click
     const cartRef = useRef(null);
     useEffect(() => {
@@ -180,14 +179,14 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                 onClose(); // close cart
             }
         };
-        if (show && !isPromoOpen && !showCookingPopup && !showAddressDrawer && !showPaymentModeList) {
+        if (show && !isPromoOpen && !showCookingPopup && !showAddressDrawer && !showPaymentModeList && !showTax) {
             document.addEventListener('mousedown', handleClickOutside);
         }
 
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [show, onClose, isPromoOpen, showCookingPopup, showAddressDrawer, showPaymentModeList]);
+    }, [show, onClose, isPromoOpen, showCookingPopup, showAddressDrawer, showPaymentModeList, showTax]);
 
     // api calls
     useEffect(() => {
@@ -213,7 +212,7 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
             <div className={`${show ? 'cart-blur-overlay' : ''}`}>
                 <div className={`cart-offcanvas ${show ? 'show' : ''}`} ref={cartRef}>
                     <div className="cart-header d-flex justify-content-start gap- align-items-center p-3 border-bottom them-bg-black text-warning">
-                        <button className="text-warning m-0 cart-cross-btn" style={{ color: "white !important" }} onClick={onClose}>{!isMobile ? <ImCross /> : <IoMdArrowRoundBack/>}</button>
+                        <button className="text-warning m-0 cart-cross-btn" style={{ color: "white !important" }} onClick={onClose}>{!isMobile ? <ImCross /> : <IoMdArrowRoundBack />}</button>
                         <h5 className="m-auto">Checkout</h5>
                     </div>
 
@@ -230,6 +229,7 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                                 onDecrement={() => decrement(item.orderItemId, item.quantity - 1, item.itemId)}
                                 isSmallLoading={isSmallLoading}
                                 instruction={item?.specialInstruction}
+                                customization={item?.customization}
                                 onEdit={() => { setShowCookingPopup(true); setGetItemIdForCook({ localId: item.itemId, id: item.orderItemId }) }}
                             />
                         ))}
@@ -241,6 +241,7 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                         <BillingInfo
                             bill={orderDetail?.orderSubTotal}
                             tax={orderDetail?.taxAmount}
+                            setShowTax={setShowTax}
                             packing={orderDetail?.packingCharges}
                             coin={orderDetail?.deliveryFee}
                             total={orderDetail?.orderTotal}
@@ -284,11 +285,11 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
             <PaymentMode
                 visible={showPaymentModeList}
                 onClose={() => { setShowPaymentModeList(false); }}
-                orderType={orderType}
                 orderTotal={orderDetail?.orderTotal}
                 selectPaymentType={selectPaymentType}
                 setSelectPaymentType={setSelectPaymentType}
             />
+            <TaxPopup show={showTax} onClose={() => setShowTax(false)} taxJson={orderDetail?.taxJson}/>
         </>
     );
 };

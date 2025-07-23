@@ -5,6 +5,7 @@ import { FaQrcode } from "react-icons/fa6";
 import { FaWallet } from "react-icons/fa";
 import { BsClock } from "react-icons/bs";
 import { BsCalendarEvent } from "react-icons/bs";
+import useIsMobile from "../../../../Utilities/IsMobile";
 
 function Wallet({ show, onHide }) {
     const quickAmounts = [2000, 5000, 10000];
@@ -109,7 +110,7 @@ function Wallet({ show, onHide }) {
         const year = date.getFullYear();
         return `${day}-${month}-${year}`;
     };
-
+    const isMobile = useIsMobile();
     return (
         <>
             <Modal
@@ -130,11 +131,11 @@ function Wallet({ show, onHide }) {
                     <div className="wallet-card bg-white rounded-4 shadow mx-3 p-3 d-flex align-items-center justify-content-between">
                         <div>
                             <p className="text-secondary mb-1 small">Wallet balance</p>
-                            <h5 className="text-dark fw-bold">₹{balance?.walletBalance}</h5>
+                            <h5 className="text-dark fw-bold">₹{Number(balance?.walletBalance).toFixed(2)}</h5>
                         </div>
                         <div>
                             <p className="text-secondary mb-1 small">Coin balance</p>
-                            <h5 className="text-dark fw-bold">₹{balance?.coinBalance}</h5>
+                            <h5 className="text-dark fw-bold">₹{Number(balance?.coinBalance).toFixed(2)}</h5>
                         </div>
                         <div>
                             <FaQrcode size={28} className="text-dark" />
@@ -195,14 +196,14 @@ function Wallet({ show, onHide }) {
                     {
                         activeTab === "wallet" &&
                         <>
-                            <div className="wallet-date-filter bg-white mx-3 p-3 mt-3 rounded-4 d-flex align-items-center justify-content-between gap-2 flex-wrap">
+                            <div className="wallet-date-filter bg-white mx-3 p-2 py-3 mt-3 rounded-4 d-flex align-items-center justify-content-evenly gap-1 flex-wrap">
 
                                 <div className="date-box d-flex align-items-center">
                                     <input
                                         type="date"
                                         value={fromDate}
                                         onChange={(e) => setFromDate(e.target.value)}
-                                        className="date-input"
+                                        className={`date-input ${isMobile ? "fs-12" : "small"}`}
                                     />
                                     {/* <span className="calendar-emoji ms-2">📅</span> */}
                                 </div>
@@ -212,13 +213,13 @@ function Wallet({ show, onHide }) {
                                         type="date"
                                         value={toDate}
                                         onChange={(e) => setToDate(e.target.value)}
-                                        className="date-input"
+                                        className={`date-input ${isMobile ? "fs-12" : "small"}`}
                                     />
                                     {/* <span className="calendar-emoji ms-2">📅</span> */}
                                 </div>
 
                                 <button
-                                    className="btn go-btn bg-dark text-warning fw-bold ms-md-3 mt-2"
+                                    className={`rounded-3 px-2 py-1 bg-dark text-warning ${isMobile ? "fs-12 fw-semibold" : "fw-semibold small"}`}
                                     onClick={() => handleGo("wallet")}
                                 >
                                     GO
@@ -248,7 +249,7 @@ function Wallet({ show, onHide }) {
                                                             <strong>Amount:</strong> ₹{itm?.transactionAmount}
                                                         </div>
                                                     </div>
-
+                                                    <hr className="my-2" />
                                                     <div className="d-flex justify-content-between align-items-center text-muted small mt-2">
                                                         <div className="d-flex align-items-center">
                                                             <BsClock className="me-1" />
@@ -271,14 +272,14 @@ function Wallet({ show, onHide }) {
                     {
                         activeTab === "coin" &&
                         <>
-                            <div className="wallet-date-filter bg-white mx-3 p-3 mt-3 rounded-4 d-flex align-items-center justify-content-between gap-2 flex-wrap">
+                            <div className="wallet-date-filter bg-white mx-3 p-2 py-3 mt-3 rounded-4 d-flex align-items-center justify-content-evenly gap-1 flex-wrap">
 
                                 <div className="date-box d-flex align-items-center">
                                     <input
                                         type="date"
                                         value={startDate}
                                         onChange={(e) => setStartDate(e.target.value)}
-                                        className="date-input"
+                                        className={`date-input ${isMobile ? "fs-12" : "small"}`}
                                     />
                                     {/* <span className="calendar-emoji ms-2">📅</span> */}
                                 </div>
@@ -288,13 +289,13 @@ function Wallet({ show, onHide }) {
                                         type="date"
                                         value={endDate}
                                         onChange={(e) => setEndDate(e.target.value)}
-                                        className="date-input"
+                                        className={`date-input ${isMobile ? "fs-12" : "small"}`}
                                     />
                                     {/* <span className="calendar-emoji ms-2">📅</span> */}
                                 </div>
 
                                 <button
-                                    className="btn go-btn bg-dark text-warning fw-bold ms-md-3 mt-2"
+                                    className={`rounded-3 px-2 py-1 bg-dark text-warning ${isMobile ? "fs-12 fw-semibold" : "fw-semibold small"}`}
                                     onClick={() => handleGo("coin")}
                                 >
                                     GO
@@ -324,7 +325,7 @@ function Wallet({ show, onHide }) {
                                                             <strong>Amount:</strong> ₹{itm?.transactionAmount}
                                                         </div>
                                                     </div>
-
+                                                    <hr className="my-2" />
                                                     <div className="d-flex justify-content-between align-items-center text-muted small mt-2">
                                                         <div className="d-flex align-items-center">
                                                             <BsClock className="me-1" />

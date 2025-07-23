@@ -366,7 +366,7 @@ function DineInMenu() {
                 type="confirm" // or "message"
             />
             <MessagePopup show={showMessagePopup} title="Afoozo" onClose={() => setShowMessagePopup(false)} message={message} />
-            <ItemCustomPopup show={showItemCustom} onClose={() => setShowItemCustom(false)} data={customData} />
+            <ItemCustomPopup show={showItemCustom} onClose={() => setShowItemCustom(false)} data={customData} dispatch={dispatch} id={id} cart={cart}/>
         </>
     )
 }

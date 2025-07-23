@@ -632,7 +632,7 @@ select:focus {
   background: none;
   border: none;
   font-size: 20px;
-  width: 32px;
+  width: 27px;
   color: #777;
 }
 
@@ -1542,7 +1542,7 @@ select:focus {
 .wallet-card {
   background-color: #fff;
   border-radius: 16px;
-  margin: 20px;
+  margin: 10px 20px;
 }
 
 .wallet-tab-btn {
@@ -1584,23 +1584,28 @@ select:focus {
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
 }
 
+.date-box {
+  width: 36%;
+}
+
 .date-input {
   border: 1px solid #000;
-  padding: 8px 10px;
+  padding: 5px;
   border-radius: 6px;
   font-weight: 600;
-  font-size: 14px;
+  /* font-size: 12px; */
+  width: 100%;
 }
 
 .calendar-emoji {
   font-size: 20px;
 }
 
-.go-btn {
+/* .go-btn {
   background-color: #000;
   border-radius: 40px;
-  padding: 8px 24px;
-}
+  padding: 8px 10px;
+} */
 
 .wallet-trans-list {
   overflow-y: scroll;
@@ -1847,7 +1852,7 @@ select:focus {
 .qty-selector {
   background-color: #fbbc04;
   border-radius: 50px;
-  padding: 2px ;
+  padding: 2px;
   /* 8px */
   display: flex;
   align-items: center;

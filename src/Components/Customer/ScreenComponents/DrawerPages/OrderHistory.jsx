@@ -84,23 +84,28 @@ export default function OrderHistory({ show, onHide, setShowOrderDetail, setOrde
                                                     <div className="text-muted small two-line-ellipsis">{itm?.deliveryAddress}</div>
                                                 </div>
                                                 {
-                                                    itm?.orderType === "HomeDelivery" && <span>🛵</span> ||
-                                                    itm?.orderType === "TakeAway" && <span>🧺</span> ||
-                                                    itm?.orderType === "Cafe" && <span>☕</span>
+                                                    itm?.orderType === "HomeDelivery" && <span className='bg-dark text-warning px-3 py-2'>🛵</span> ||
+                                                    itm?.orderType === "TakeAway" && <span className='bg-dark text-warning px-3 py-2'>🧺</span> ||
+                                                    itm?.orderType === "Cafe" && <span className='bg-dark text-warning px-3 py-2'>☕</span>
                                                 }
                                             </div>
 
                                             <div className="fw-semibold mt-2">₹{Number(itm?.orderTotal).toFixed(2)}</div>
 
                                             <hr className="my-2" />
-
-                                            <div className="text-dark fw-bold small">{itm?.orderItemText}</div>
                                             <div className="text-muted small mt-1">{formatTimestamp(itm?.orderDateTime)}</div>
+                                            <div className="d-flex align-items-center justify-content-evenly">
+                                                <button className='bg-dark text-warning py-1 rounded-5 m-1 small cursor-pointer'>REORDER</button>
+                                                <button className='bg-dark text-warning py-1 rounded-5 m-1 small cursor-pointer'>FEEDBACK</button>
+                                                <button className='bg-dark text-warning py-1 rounded-5 m-1 small cursor-pointer'>TIP ORDER</button>
+                                            </div>
+                                            {/* <div className="text-dark fw-bold small">{itm?.orderItemText}</div> */}
                                         </div>
                                     </>
                                 )
-                            }) : <p>No data available</p>
+                            }) : <p className='text-center m-auto p-3'>No Order</p>
                 }
+
             </div>
         </Modal>
     );
