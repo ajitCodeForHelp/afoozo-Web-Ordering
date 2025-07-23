@@ -15,8 +15,8 @@ function Banner({ orderType }) {
             // const token = localStorage.getItem("secretKey");
             const latitude = 19.032626310834413 // Number(location?.latitude);19.032626310834413  //23.8623  //
             const longitude = 72.84266162663698
-
-            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getAdBannerList?bannerPosition=${type}&lat=${latitude}&lng=${longitude}`)
+// ?bannerPosition=${type}&lat=${latitude}&lng=${longitude}
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getAdBannerList/${type}`)
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
                 setSlides(getRes.responsePacket);
