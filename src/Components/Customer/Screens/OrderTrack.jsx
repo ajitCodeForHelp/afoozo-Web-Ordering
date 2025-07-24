@@ -127,8 +127,8 @@ function OrderTrack() {
     return (
         <>
             <div className="promo-header sticky-top them-bg-black d-flex align-items-center justify-content-between">
-                <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-warning" role="button" onClick={() => navigate("/")} />
-                <h5 className="text-warning m-auto">Order Track</h5>
+                <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-white" role="button" onClick={() => navigate("/")} />
+                <h5 className="text-white m-auto">Order Track</h5>
                 <span></span>
             </div>
             <OrderProgress currentStep={2} />

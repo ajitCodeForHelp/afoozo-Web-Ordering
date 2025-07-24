@@ -67,8 +67,8 @@ export default function LiveOrders({ show, onHide, setShowOrderDetail, setOrderI
         >
             <div className="bg-white">
                 <div className="promo-header sticky-top them-bg-black d-flex align-items-center justify-content-between">
-                    <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-warning" onClick={onHide} role="button" />
-                    <h5 className="text-warning m-auto">Live Orders</h5>
+                    <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-white" onClick={onHide} role="button" />
+                    <h5 className="text-white m-auto">Live Orders</h5>
                     <span></span>
                 </div>
                 {
@@ -83,9 +83,9 @@ export default function LiveOrders({ show, onHide, setShowOrderDetail, setOrderI
                                                 <div className="text-muted small two-line-ellipsis">{itm?.deliveryAddress}</div>
                                             </div>
                                             {
-                                                itm?.orderType === "HomeDelivery" && <span className='bg-dark text-warning px-3 py-2'>🛵</span> ||
-                                                itm?.orderType === "TakeAway" && <span className='bg-dark text-warning px-3 py-2'>🧺</span> ||
-                                                itm?.orderType === "Cafe" && <span className='bg-dark text-warning px-3 py-2'>☕</span>
+                                                itm?.orderType === "HomeDelivery" && <span className='bg-dark text-white px-3 py-2'>🛵</span> ||
+                                                itm?.orderType === "TakeAway" && <span className='bg-dark text-white px-3 py-2'>🧺</span> ||
+                                                itm?.orderType === "Cafe" && <span className='bg-dark text-white px-3 py-2'>☕</span>
                                             }
                                         </div>
 

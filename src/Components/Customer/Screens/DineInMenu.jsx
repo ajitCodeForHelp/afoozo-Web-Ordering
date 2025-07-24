@@ -7,10 +7,12 @@ import ScrollToTop from "../../../Utilities/ScrollToTop";
 import { useLocation, useParams } from "react-router-dom";
 import Categories from "../ScreenComponents/CafeMenuComponent/Categories";
 import { useCart } from "../../../Utilities/CartProvider";
-import MenuItemCard from "../ScreenComponents/DineInComponent/MenuItems";
+// import MenuItemCard from "../ScreenComponents/DineInComponent/MenuItems";
 import PopupModal from "../CommonComponent/Modals/PopUpModal";
 import MessagePopup from "../CommonComponent/Modals/MessagePopup";
 import ItemCustomPopup from "../CommonComponent/Modals/ItemCustomPopup";
+import CookingInstructionModal from "../CommonComponent/Modals/CookingInstructionModal";
+import CafeItems from "../ScreenComponents/CafeMenuComponent/CafeItems";
 
 function DineInMenu() {
     const [cartVisible, setCartVisible] = useState(false);
@@ -22,6 +24,8 @@ function DineInMenu() {
 
     const getData = async () => {
         try {
+            const type = sessionStorage.getItem("orderType");
+
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getItemListWithCatSubCat`, {
                 method: "POST",
                 headers: {
@@ -29,7 +33,7 @@ function DineInMenu() {
                 },
                 body: JSON.stringify({
                     restaurantId: id,
-                    orderType: orderType,
+                    orderType: type,
                     tableNumber: resDetail?.tableNumber,
                     length: -1,
                     searchKey: "",
@@ -85,6 +89,7 @@ function DineInMenu() {
             const mobile = localStorage.getItem('mobileNo');
             const key = localStorage.getItem('secretKey');
             const BasicAuth = btoa(`${mobile}:${key}`);
+            const type = sessionStorage.getItem("orderType")
             setIsLoading(true);
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/saveOrder`, {
                 method: "POST",
@@ -93,8 +98,8 @@ function DineInMenu() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    orderType: orderType,
-                    addressId: orderType === "HomeDelivery" || orderType === "TakeAway" ? 7592 : null,
+                    orderType: type,
+                    addressId: type === "HomeDelivery" || type === "TakeAway" ? cart.address?.recordId : null,
                     specialInstruction: "Please deliver ASAP",
                     itemList: cart?.items?.map((itm) => ({
                         itemId: itm.itemId,
@@ -162,7 +167,10 @@ function DineInMenu() {
             });
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
-                getOrderDetail(orderRefId);
+                getOrderDetail(orderRefId, "noLoading");
+            } else {
+                setShowMessagePopup(true);
+                setMessage(getRes.message);
             }
         } catch (e) {
             console.log(e, "error in update quantity");
@@ -267,8 +275,6 @@ function DineInMenu() {
         updateItemQuantity(id, "less");
     };
 
-    const editItem = (id) => alert(`Edit item ${id}`);
-
     const categoryRefs = useRef({});
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -296,6 +302,30 @@ function DineInMenu() {
         setActiveCategory(uuid);
     };
 
+    const [showCookingPopup, setShowCookingPopup] = useState(false);
+    const [itemInstruction, setItemInstruction] = useState('');
+    const [getItemIdForCook, setGetItemIdForCook] = useState({ localId: '' });
+
+    const onAddInstruction = (item) => {
+        const currentItem = cart.items.find((itm) => itm.itemId === item.itemId);
+        if (currentItem) {
+            setShowCookingPopup(true);
+            setItemInstruction(currentItem.specialInstruction ? currentItem.specialInstruction : '');
+            setGetItemIdForCook({ localId: currentItem.itemId });
+        }
+    };
+
+    const handleAddInstruction = () => {
+        setShowCookingPopup(false);
+        dispatch({
+            type: 'UPDATE_SPECIAL_ITEM_INSTRUCTION',
+            payload: {
+                uuid: getItemIdForCook.localId,
+                specialInstruction: itemInstruction,
+            },
+        });
+    };
+
     return (
         <>
             <ScrollToTop />
@@ -304,7 +334,7 @@ function DineInMenu() {
                 <Categories list={resMenu} activeCategory={activeCategory} scrollToCategory={scrollToCategory} />
                 {hotSelling?.length > 0 && <PopularItem hotSelling={hotSelling} />}
 
-                {
+                {/* {
                     resMenu?.flatMap((itm, idx) => {
                         return (
                             <>
@@ -327,6 +357,7 @@ function DineInMenu() {
                                                         updateQuantity={updateQuantity}
                                                         removeFromCart={removeFromCart}
                                                         customizable={customizable}
+                                                        onEdit={onAddInstruction}
                                                     />
                                                 </div>
                                             );
@@ -336,7 +367,19 @@ function DineInMenu() {
                             </>
                         )
                     })
-                }
+                } */}
+
+                <CafeItems
+                    resMenu={resMenu}
+                    categoryRefs={categoryRefs}
+                    cart={cart}
+                    dispatch={dispatch}
+                    addToCart={addToCart}
+                    removeFromCart={removeFromCart}
+                    updateQuantity={updateQuantity}
+                    customizable={customizable}
+                    onEdit={onAddInstruction}
+                />
 
                 {cart.items.length > 0 && cart?.restaurant?.restaurantUuid === id && <CartButton openClose={() => { setCartVisible(true); saveOrder() }} orderType={orderType} restaurantId={id} />}
                 <CartPanel
@@ -346,12 +389,12 @@ function DineInMenu() {
                     orderRefId={orderRefId}
                     increment={increment}
                     decrement={decrement}
-                    edit={editItem}
                     saveOrder={saveOrder}
                     dispatch={dispatch}
                     orderType={orderType}
                     isLoading={isLoading}
                     isSmallLoading={isSmallLoading}
+                    cart={cart}
                 />
             </div>
 
@@ -366,7 +409,14 @@ function DineInMenu() {
                 type="confirm" // or "message"
             />
             <MessagePopup show={showMessagePopup} title="Afoozo" onClose={() => setShowMessagePopup(false)} message={message} />
-            <ItemCustomPopup show={showItemCustom} onClose={() => setShowItemCustom(false)} data={customData} dispatch={dispatch} id={id} cart={cart}/>
+            <ItemCustomPopup show={showItemCustom} onClose={() => setShowItemCustom(false)} data={customData} dispatch={dispatch} id={id} cart={cart} />
+            <CookingInstructionModal
+                show={showCookingPopup}
+                instruction={itemInstruction}
+                setInstruction={setItemInstruction}
+                onClose={() => { setShowCookingPopup(false); }}
+                onAdd={handleAddInstruction}
+            />
         </>
     )
 }

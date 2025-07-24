@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const CookingInstructionModal = ({ show, onClose, onAdd }) => {
-    const [instruction, setInstruction] = useState('');
+const CookingInstructionModal = ({ show, onClose, onAdd, instruction, setInstruction }) => {
 
     const [visible, setVisible] = useState(false);
 
@@ -19,7 +18,7 @@ const CookingInstructionModal = ({ show, onClose, onAdd }) => {
     return (
         <div className={`cooking-popup-overlay ${visible ? '' : 'hidden'}`} onClick={handleClose}>
             <div className={`cooking-popup-box ${visible ? '' : 'hidden'}`} onClick={(e) => e.stopPropagation()}>
-                <div className="cooking-popup-header them-bg-black text-warning">Cooking Instruction</div>
+                <div className="cooking-popup-header them-bg-black text-white">Cooking Instruction</div>
 
                 <input
                     type="text"
@@ -29,7 +28,7 @@ const CookingInstructionModal = ({ show, onClose, onAdd }) => {
                     onChange={(e) => setInstruction(e.target.value)}
                 />
 
-                <button className="cooking-popup-add-btn them-bg-black text-warning" onClick={() => onAdd(instruction)}>
+                <button className="cooking-popup-add-btn them-bg-black text-white" onClick={() => onAdd(instruction)}>
                     ADD
                 </button>
             </div>

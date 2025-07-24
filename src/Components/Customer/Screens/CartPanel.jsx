@@ -16,7 +16,7 @@ import useIsMobile from '../../../Utilities/IsMobile';
 import { IoMdArrowRoundBack } from "react-icons/io";
 import TaxPopup from '../CommonComponent/Modals/TaxPopup';
 
-const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefId, saveOrder, dispatch, orderType, isLoading, isSmallLoading }) => {
+const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefId, saveOrder, dispatch, isLoading, isSmallLoading, cart }) => {
 
     // appling promocode
     const [isPromoOpen, setPromoOpen] = useState(false);
@@ -32,6 +32,7 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
     // cookingInstruction
     const [instruction, setInstruction] = useState('');
     const [showCookingPopup, setShowCookingPopup] = useState(false);
+    const [itemInstruction, setItemInstruction] = useState('');
     // save Cooking Instruction on item
     const cookingInstructionOnOrderItem = async (instru, orderItemId) => {
         try {
@@ -52,7 +53,6 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
                 setShowCookingPopup(false);
-                saveOrder();
                 dispatch({
                     type: 'UPDATE_SPECIAL_ITEM_INSTRUCTION',
                     payload: {
@@ -60,6 +60,9 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                         specialInstruction: instru,
                     },
                 });
+                // setTimeout(() => {
+                //     saveOrder();
+                // }, 0);
             }
         } catch (e) {
             console.log(e, "error in cooking instruction Api");
@@ -68,9 +71,22 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
     const [getItemIdForCook, setGetItemIdForCook] = useState({ localId: '', id: '' });
     const handleAddInstruction = (text) => {
         if (getItemIdForCook) {
-            cookingInstructionOnOrderItem(text, getItemIdForCook)
+            cookingInstructionOnOrderItem(text, getItemIdForCook);
         }
     };
+
+    const prevInstructionRef = useRef();
+    useEffect(() => {
+        const currentItem = cart.items.find(item => item.itemId === getItemIdForCook.localId);
+
+        if (
+            currentItem &&
+            currentItem.specialInstruction !== prevInstructionRef.current
+        ) {
+            prevInstructionRef.current = currentItem.specialInstruction;
+            saveOrder();
+        }
+    }, [cart.items]);
 
     // Payment
     const [showPaymentModeList, setShowPaymentModeList] = useState(false);
@@ -211,8 +227,8 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
         <>
             <div className={`${show ? 'cart-blur-overlay' : ''}`}>
                 <div className={`cart-offcanvas ${show ? 'show' : ''}`} ref={cartRef}>
-                    <div className="cart-header d-flex justify-content-start gap- align-items-center p-3 border-bottom them-bg-black text-warning">
-                        <button className="text-warning m-0 cart-cross-btn" style={{ color: "white !important" }} onClick={onClose}>{!isMobile ? <ImCross /> : <IoMdArrowRoundBack />}</button>
+                    <div className="cart-header d-flex justify-content-start gap- align-items-center p-3 border-bottom them-bg-black text-white">
+                        <button className="text-white m-0 cart-cross-btn" onClick={onClose}>{!isMobile ? <ImCross /> : <IoMdArrowRoundBack />}</button>
                         <h5 className="m-auto">Checkout</h5>
                     </div>
 
@@ -230,7 +246,7 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                                 isSmallLoading={isSmallLoading}
                                 instruction={item?.specialInstruction}
                                 customization={item?.customization}
-                                onEdit={() => { setShowCookingPopup(true); setGetItemIdForCook({ localId: item.itemId, id: item.orderItemId }) }}
+                                onEdit={() => { setShowCookingPopup(true); setGetItemIdForCook({ localId: item.itemId, id: item.orderItemId }); setItemInstruction(item?.specialInstruction ? item?.specialInstruction : '') }}
                             />
                         ))}
                         <CookingInstruction
@@ -260,8 +276,8 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                         />
                         {
                             selectPaymentType && <div className="d-flex justify-content-evenly gap-2 fixed-bottom pb-3 bg-white pt-2 shadow-sm">
-                                <button className='border-0 px-3 py-2 bg-dark text-warning'>Delivery Later</button>
-                                <button className='border-0 px-3 py-2 bg-dark text-warning' onClick={generateOrder}>Deliver Now</button>
+                                <button className='border-0 px-3 py-2 bg-dark text-white'>Delivery Later</button>
+                                <button className='border-0 px-3 py-2 bg-dark text-white' onClick={generateOrder}>Deliver Now</button>
                             </div>
                         }
                     </div>}
@@ -278,6 +294,8 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
 
             <CookingInstructionModal
                 show={showCookingPopup}
+                instruction={itemInstruction}
+                setInstruction={setItemInstruction}
                 onClose={() => { setShowCookingPopup(false); }}
                 onAdd={handleAddInstruction}
             />
@@ -289,7 +307,7 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                 selectPaymentType={selectPaymentType}
                 setSelectPaymentType={setSelectPaymentType}
             />
-            <TaxPopup show={showTax} onClose={() => setShowTax(false)} taxJson={orderDetail?.taxJson}/>
+            <TaxPopup show={showTax} onClose={() => setShowTax(false)} taxJson={orderDetail?.taxJson} />
         </>
     );
 };

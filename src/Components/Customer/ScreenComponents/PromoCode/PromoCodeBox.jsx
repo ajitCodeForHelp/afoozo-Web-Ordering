@@ -20,8 +20,8 @@ const ApplyPromoCodeBox = ({ visible, onClose, onApply, code, setCode }) => {
   return (
     <div className={`promo-panel ${visible ? 'show' : ''}`} ref={promoRef}>
       <div className="promo-header them-bg-black d-flex align-items-center justify-content-between">
-        <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-warning" onClick={onClose} role="button" />
-        <h5 className="text-warning m-auto">Apply Coupon</h5>
+        <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-white" onClick={onClose} role="button" />
+        <h5 className="text-white m-auto">Apply Coupon</h5>
         <span></span>
       </div>
 

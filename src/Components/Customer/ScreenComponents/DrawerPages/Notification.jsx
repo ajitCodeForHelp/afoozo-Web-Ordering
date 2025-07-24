@@ -58,21 +58,21 @@ export default function DetailedNotificationPopup({ show, onHide }) {
         >
             <div className="">
                 <div className="promo-header sticky-top them-bg-black d-flex align-items-center justify-content-between">
-                    <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-warning" onClick={onHide} role="button" />
-                    <h5 className="text-warning m-auto">Notification</h5>
+                    <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-white" onClick={onHide} role="button" />
+                    <h5 className="text-white m-auto">Notification</h5>
                     <span></span>
                 </div>
 
                 {notifiList?.map((item) => {
                     return (
                         <>
-                            <div className="card shadow-sm border-0">
+                            <div className="card shadow-sm border-0 m-2">
                                 <div className="card-body">
                                     <h6 className="fw-bold mb-2">{item?.notificationTitle}</h6>
                                     <p className="text-muted small mb-3">
                                         {item?.notificationMessage}
                                     </p>
-
+<hr className='my-2'/>
                                     <div className="d-flex justify-content-start align-items-center gap-4">
                                         <div className="d-flex align-items-center gap-2">
                                             <LuClock3 size={16} className="text-muted" />

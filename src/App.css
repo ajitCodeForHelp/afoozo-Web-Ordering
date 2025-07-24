@@ -7,7 +7,7 @@
 }
 
 .them-bg-black {
-  background-color: #000 !important;
+  background-color: #212529 !important;
 }
 
 .fs-10 {
@@ -16,6 +16,10 @@
 
 .fs-12 {
   font-size: 12px;
+}
+
+.fs-14 {
+  font-size: 14px;
 }
 
 a {
@@ -63,6 +67,26 @@ select:focus {
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.current-address-ellipsis {
+  -webkit-line-clamp: 1;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  display: -webkit-box;
+}
+
+.current-address-ellipsis-2 {
+  -webkit-line-clamp: 2;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  display: -webkit-box;
+}
+
+.w-20 {
+  width: 20% !important;
 }
 
 /* login form */
@@ -191,7 +215,7 @@ select:focus {
 
 /* home cards */
 .menu-card {
-  background-color: #000 !important;
+  background-color: #212529 !important;
   color: #fcb941 !important;
   border-radius: 16px;
   padding: 40px 20px;
@@ -239,7 +263,7 @@ select:focus {
 }
 
 .navbar-nav .nav-link {
-  color: #000;
+  color: #212529;
   font-weight: 500;
 }
 
@@ -415,7 +439,7 @@ select:focus {
 .btn-close-icon {
   background: transparent;
   border: none;
-  color: #000;
+  color: #212529;
 }
 
 /* Menu */
@@ -570,7 +594,7 @@ select:focus {
   align-items: center;
   justify-content: center;
   /* color: wh; */
-  background-color: #000;
+  background-color: #666;
 }
 
 .cart-btn-container {
@@ -654,6 +678,10 @@ select:focus {
   justify-content: center;
 }
 
+.inst-btn {
+  border: 1px solid #212529 !important;
+}
+
 /*  */
 .cart-offcanvas {
   position: fixed;
@@ -687,9 +715,9 @@ select:focus {
     border-left: 1px solid #eee;
   }
 
-  .checkout-card {
+  /* .checkout-card {
     align-items: start !important;
-  }
+  } */
 }
 
 /* Mobile view — full screen */
@@ -700,9 +728,9 @@ select:focus {
     right: 0;
   }
 
-  .checkout-card {
+  /* .checkout-card {
     align-items: center;
-  }
+  } */
 }
 
 .instruction-wrapper {
@@ -711,14 +739,14 @@ select:focus {
 }
 
 .instruction-input {
-  border: 2px solid #000;
+  border: 2px solid #212529;
   font-weight: 500;
   font-size: 1.2rem;
   padding: 10px 15px;
   border-radius: 8px;
   outline: none;
   box-shadow: none !important;
-  border-color: #000 !important;
+  border-color: #212529 !important;
 }
 
 .instruction-input:focus {
@@ -852,7 +880,7 @@ select:focus {
 }
 
 .cooking-popup-header {
-  background: #000;
+  background: #212529;
   color: #f7b72c;
   /* orange text */
   font-weight: 600;
@@ -865,7 +893,7 @@ select:focus {
 }
 
 .cooking-popup-input {
-  border: 2px solid #000;
+  border: 2px solid #212529;
   border-radius: 6px;
   padding: 0.5rem 1rem;
   font-size: 1rem;
@@ -964,7 +992,7 @@ select:focus {
 .tab-item {
   flex: 0 0 auto;
   background: #1c1c1c;
-  color: #f7b64d;
+  color: white;
   padding: 10px 20px;
   border-radius: 6px;
   display: flex;
@@ -995,8 +1023,9 @@ select:focus {
 }
 
 .tab-item.active {
-  background: #f7b64d;
-  color: #000;
+  background: white;
+  border: .1px solid black;
+  color: #212529;
 }
 
 .tab-icon {
@@ -1215,9 +1244,9 @@ select:focus {
 
 /* Make radio circles match screenshot a bit closer */
 .form-check-input:checked {
-  background-color: #f5b64c !important;
+  background-color: #212529 !important;
   /* golden‑yellow accent */
-  border-color: #f5b64c !important;
+  border-color: #212529 !important;
 }
 
 /* Ensure full‑screen mobile modal always scrolls */
@@ -1364,10 +1393,10 @@ select:focus {
   position: relative;
   width: 90%;
   max-width: 400px;
-  background: #000;
+  background: #212529;
   padding: 20px;
   border-radius: 16px;
-  box-shadow: 0 0 10px #000;
+  box-shadow: 0 0 10px #212529;
   text-align: center;
 }
 
@@ -1383,7 +1412,7 @@ select:focus {
   height: 34px;
   cursor: pointer;
   font-weight: bold;
-  color: #000;
+  color: #212529;
   z-index: 10;
 }
 
@@ -1565,7 +1594,7 @@ select:focus {
 }
 
 .wallet-tab-btn.active {
-  color: #000;
+  color: #212529;
 }
 
 .wallet-tab-btn.active::after {
@@ -1589,7 +1618,7 @@ select:focus {
 }
 
 .date-input {
-  border: 1px solid #000;
+  border: 1px solid #212529;
   padding: 5px;
   border-radius: 6px;
   font-weight: 600;
@@ -1602,7 +1631,7 @@ select:focus {
 }
 
 /* .go-btn {
-  background-color: #000;
+  background-color: #212529;
   border-radius: 40px;
   padding: 8px 10px;
 } */
@@ -1831,9 +1860,9 @@ select:focus {
   color: #666;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  text-overflow: ellipsis;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
   line-height: 1.2rem;
 }
 
@@ -1850,7 +1879,7 @@ select:focus {
 }
 
 .qty-selector {
-  background-color: #fbbc04;
+  background-color: #212529;
   border-radius: 50px;
   padding: 2px;
   /* 8px */

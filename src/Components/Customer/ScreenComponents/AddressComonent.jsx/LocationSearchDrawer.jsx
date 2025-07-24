@@ -44,8 +44,8 @@ function LocationSearchDrawer({ isOpen, onClose, onSelect }) {
             >
                 <div className="sticky-top">
                     <div className="promo-header them-bg-black d-flex align-items-center justify-content-between">
-                        <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-warning" onClick={onClose} role="button" />
-                        <h5 className="text-warning m-auto">Search Address</h5>
+                        <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-white" onClick={onClose} role="button" />
+                        <h5 className="text-white m-auto">Search Address</h5>
                         <span></span>
                     </div>
                     <div className="lsd-header">

@@ -5,16 +5,15 @@ import CafeItems from "../ScreenComponents/CafeMenuComponent/CafeItems";
 import CartButton from "../CommonComponent/CartButton";
 import CartPanel from "./CartPanel";
 import ScrollToTop from "../../../Utilities/ScrollToTop";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Categories from "../ScreenComponents/CafeMenuComponent/Categories";
 import { useCart } from "../../../Utilities/CartProvider";
 import PopupModal from "../CommonComponent/Modals/PopUpModal";
 import MessagePopup from "../CommonComponent/Modals/MessagePopup";
-import useIsMobile from "../../../Utilities/IsMobile";
 import ItemCustomPopup from "../CommonComponent/Modals/ItemCustomPopup";
+import CookingInstructionModal from "../CommonComponent/Modals/CookingInstructionModal";
 
 function CafeMenu() {
-    const navigate = useNavigate();
 
     const [cartVisible, setCartVisible] = useState(false);
     const { id } = useParams();
@@ -23,9 +22,9 @@ function CafeMenu() {
 
     const [resMenu, setResMenu] = useState([]);
     const [activeCategory, setActiveCategory] = useState(resMenu[0]?.categoryUuid);
-
     const getData = async () => {
         try {
+            const type = sessionStorage.getItem("orderType");
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getItemListWithCatSubCat`, {
                 method: "POST",
                 headers: {
@@ -33,7 +32,7 @@ function CafeMenu() {
                 },
                 body: JSON.stringify({
                     restaurantId: id,
-                    orderType: orderType,
+                    orderType: type,
                     tableNumber: 0,
                     length: -1,
                     searchKey: "",
@@ -79,6 +78,8 @@ function CafeMenu() {
             const mobile = localStorage.getItem('mobileNo');
             const key = localStorage.getItem('secretKey');
             const BasicAuth = btoa(`${mobile}:${key}`);
+            const type = sessionStorage.getItem("orderType");
+
             setIsLoading(true);
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/saveOrder`, {
                 method: "POST",
@@ -87,13 +88,13 @@ function CafeMenu() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    orderType: orderType,
-                    addressId: orderType === "HomeDelivery" || orderType === "TakeAway" ? 7592 : null,
+                    orderType: type,
+                    addressId: type === "HomeDelivery" || type === "TakeAway" ? cart?.address?.recordId : null,
                     specialInstruction: "Please deliver ASAP",
                     itemList: cart?.items?.map((itm) => ({
                         itemId: itm.itemId,
                         quantity: itm.quantity,
-                        specialInstruction: itm?.specialInstruction || "",
+                        specialInstruction: itm.specialInstruction || "",
                         customization: itm?.customization || []
                     })),
                     restaurantId: id,
@@ -160,6 +161,9 @@ function CafeMenu() {
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
                 getOrderDetail(orderRefId, "noLoading");
+            } else {
+                setShowMessagePopup(true);
+                setMessage(getRes.message);
             }
         } catch (e) {
             console.log(e, "error in update quantity");
@@ -242,7 +246,6 @@ function CafeMenu() {
         }
     };
 
-    const editItem = (id) => alert(`Edit item ${id}`);
 
     const categoryRefs = useRef({});
     useEffect(() => {
@@ -271,7 +274,30 @@ function CafeMenu() {
         section?.scrollIntoView({ behavior: 'smooth', block: 'center', });
         setActiveCategory(uuid);
     };
-    const isMobile = useIsMobile();
+
+    const [showCookingPopup, setShowCookingPopup] = useState(false);
+    const [itemInstruction, setItemInstruction] = useState('');
+    const [getItemIdForCook, setGetItemIdForCook] = useState({ localId: '' });
+
+    const onAddInstruction = (item) => {
+        const currentItem = cart.items.find((itm) => itm.itemId === item.itemId);
+        if (currentItem) {
+            setShowCookingPopup(true);
+            setItemInstruction(currentItem.specialInstruction ? currentItem.specialInstruction : '');
+            setGetItemIdForCook({ localId: currentItem.itemId });
+        }
+    };
+
+    const handleAddInstruction = () => {
+        setShowCookingPopup(false);
+        dispatch({
+            type: 'UPDATE_SPECIAL_ITEM_INSTRUCTION',
+            payload: {
+                uuid: getItemIdForCook.localId,
+                specialInstruction: itemInstruction,
+            },
+        });
+    };
 
     return (
         <>
@@ -291,6 +317,7 @@ function CafeMenu() {
                     removeFromCart={removeFromCart}
                     updateQuantity={updateQuantity}
                     customizable={customizable}
+                    onEdit={onAddInstruction}
                 />
 
                 {/* cartsection */}
@@ -302,12 +329,13 @@ function CafeMenu() {
                     orderRefId={orderRefId}
                     increment={increment}
                     decrement={decrement}
-                    edit={editItem}
                     saveOrder={saveOrder}
                     dispatch={dispatch}
                     orderType={orderType}
                     isLoading={isLoading}
                     isSmallLoading={isSmallLoading}
+                    cart={cart}
+
                 />
             </div>
 
@@ -324,6 +352,13 @@ function CafeMenu() {
 
             <MessagePopup show={showMessagePopup} title="Afoozo" onClose={() => setShowMessagePopup(false)} message={message} />
             <ItemCustomPopup show={showItemCustom} onClose={() => setShowItemCustom(false)} data={customData} dispatch={dispatch} id={id} cart={cart} />
+            <CookingInstructionModal
+                show={showCookingPopup}
+                instruction={itemInstruction}
+                setInstruction={setItemInstruction}
+                onClose={() => { setShowCookingPopup(false); }}
+                onAdd={handleAddInstruction}
+            />
         </>
     )
 }

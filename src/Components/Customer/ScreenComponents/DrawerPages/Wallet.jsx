@@ -11,8 +11,8 @@ function Wallet({ show, onHide }) {
     const quickAmounts = [2000, 5000, 10000];
     const [activeTab, setActiveTab] = useState("add");
     const today = new Date().toISOString().split("T")[0]; // "YYYY-MM-DD"
-    const [fromDate, setFromDate] = useState(today);
-    const [toDate, setToDate] = useState(today);
+    const [fromDate, setFromDate] = useState();
+    const [toDate, setToDate] = useState();
     const [walletTransition, setWalletTransition] = useState([]);
     const getWalletTransition = async (stDate, enDate) => {
         try {
@@ -33,8 +33,8 @@ function Wallet({ show, onHide }) {
         }
     };
 
-    const [startDate, setStartDate] = useState(today);
-    const [endDate, setEndDate] = useState(today);
+    const [startDate, setStartDate] = useState();
+    const [endDate, setEndDate] = useState();
     const [coinTransition, setCoinTransition] = useState([]);
     const getCoinTransition = async (stDate, enDate) => {
         try {
@@ -55,9 +55,25 @@ function Wallet({ show, onHide }) {
         }
     };
 
+    const walletData = () => {
+        if (!fromDate && !toDate) {
+            setFromDate(today);
+            setToDate(today);
+            getWalletTransition(dateToTimestamp(today), dateToTimestamp(today));
+        }
+    };
+
+    const coinData = () => {
+        if (!startDate && !endDate) {
+            setStartDate(today);
+            setEndDate(today);
+            getCoinTransition(dateToTimestamp(today), dateToTimestamp(today));
+        }
+    };
+
     function dateToTimestamp(dateStr) {
         return new Date(dateStr).getTime();
-    }
+    };
     const handleGo = (transition) => {
         if (transition === "coin" && startDate && endDate) {
             getCoinTransition(dateToTimestamp(startDate), dateToTimestamp(endDate));
@@ -123,8 +139,8 @@ function Wallet({ show, onHide }) {
             >
                 <div className="pb-4">
                     <div className="promo-header sticky-top them-bg-black d-flex align-items-center justify-content-between">
-                        <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-warning" onClick={onHide} role="button" />
-                        <h5 className="text-warning m-auto">Wallet</h5>
+                        <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-white" onClick={onHide} role="button" />
+                        <h5 className="text-white m-auto">Wallet</h5>
                         <span></span>
                     </div>
 
@@ -151,13 +167,13 @@ function Wallet({ show, onHide }) {
                         </button>
                         <button
                             className={`wallet-tab-btn ${activeTab === "wallet" ? "active" : ""}`}
-                            onClick={() => setActiveTab("wallet")}
+                            onClick={() => { setActiveTab("wallet"); walletData() }}
                         >
                             WALLET HISTORY ₹
                         </button>
                         <button
                             className={`wallet-tab-btn ${activeTab === "coin" ? "active" : ""}`}
-                            onClick={() => setActiveTab("coin")}
+                            onClick={() => { setActiveTab("coin"); coinData() }}
                         >
                             COIN HISTORY ₹
                         </button>
@@ -189,7 +205,7 @@ function Wallet({ show, onHide }) {
                             ))}
                         </div>
 
-                        <button className="btn btn-dark text-warning w-100 rounded-pill fw-bold py-2">
+                        <button className="btn btn-dark text-white w-100 rounded-pill fw-bold py-2">
                             ADD SECURELY
                         </button>
                     </div>}
@@ -203,7 +219,7 @@ function Wallet({ show, onHide }) {
                                         type="date"
                                         value={fromDate}
                                         onChange={(e) => setFromDate(e.target.value)}
-                                        className={`date-input ${isMobile ? "fs-12" : "small"}`}
+                                        className={`date-input bg-white ${isMobile ? "fs-12" : "small"}`}
                                     />
                                     {/* <span className="calendar-emoji ms-2">📅</span> */}
                                 </div>
@@ -213,13 +229,13 @@ function Wallet({ show, onHide }) {
                                         type="date"
                                         value={toDate}
                                         onChange={(e) => setToDate(e.target.value)}
-                                        className={`date-input ${isMobile ? "fs-12" : "small"}`}
+                                        className={`date-input bg-white ${isMobile ? "fs-12" : "small"}`}
                                     />
                                     {/* <span className="calendar-emoji ms-2">📅</span> */}
                                 </div>
 
                                 <button
-                                    className={`rounded-3 px-2 py-1 bg-dark text-warning ${isMobile ? "fs-12 fw-semibold" : "fw-semibold small"}`}
+                                    className={`rounded-3 px-2 py-1 bg-dark border-0 text-white ${isMobile ? "fs-12 fw-semibold" : "fw-semibold small"}`}
                                     onClick={() => handleGo("wallet")}
                                 >
                                     GO
@@ -279,7 +295,7 @@ function Wallet({ show, onHide }) {
                                         type="date"
                                         value={startDate}
                                         onChange={(e) => setStartDate(e.target.value)}
-                                        className={`date-input ${isMobile ? "fs-12" : "small"}`}
+                                        className={`date-input bg-white ${isMobile ? "fs-12" : "small"}`}
                                     />
                                     {/* <span className="calendar-emoji ms-2">📅</span> */}
                                 </div>
@@ -289,13 +305,13 @@ function Wallet({ show, onHide }) {
                                         type="date"
                                         value={endDate}
                                         onChange={(e) => setEndDate(e.target.value)}
-                                        className={`date-input ${isMobile ? "fs-12" : "small"}`}
+                                        className={`date-input bg-white ${isMobile ? "fs-12" : "small"}`}
                                     />
                                     {/* <span className="calendar-emoji ms-2">📅</span> */}
                                 </div>
 
                                 <button
-                                    className={`rounded-3 px-2 py-1 bg-dark text-warning ${isMobile ? "fs-12 fw-semibold" : "fw-semibold small"}`}
+                                    className={`rounded-3 px-2 py-1 bg-dark border-0 text-white ${isMobile ? "fs-12 fw-semibold" : "fw-semibold small"}`}
                                     onClick={() => handleGo("coin")}
                                 >
                                     GO

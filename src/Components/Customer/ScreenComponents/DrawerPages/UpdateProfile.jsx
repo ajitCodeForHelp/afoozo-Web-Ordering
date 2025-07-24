@@ -65,8 +65,8 @@ export default function ProfileUpdate({ show, onHide }) {
         >
             <div className="" style={{ paddingBottom: "74px" }}>
                 <div className="promo-header sticky-top them-bg-black d-flex align-items-center justify-content-between">
-                    <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-warning" onClick={onHide} role="button" />
-                    <h5 className="text-warning m-auto">Profile</h5>
+                    <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-white" onClick={onHide} role="button" />
+                    <h5 className="text-white m-auto">Profile</h5>
                     <span></span>
                 </div>
                 <div className="d-flex align-items-center mb-3 ps-3 pt-3">

@@ -15,8 +15,8 @@ export default function AboutAppPopup({ show, onHide }) {
         >
             <div className="">
                 <div className="promo-header sticky-top them-bg-black d-flex align-items-center justify-content-between">
-                    <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-warning" onClick={onHide} role="button" />
-                    <h5 className="text-warning m-auto">About</h5>
+                    <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-white" onClick={onHide} role="button" />
+                    <h5 className="text-white m-auto">About</h5>
                     <span></span>
                 </div>
 
@@ -29,7 +29,7 @@ export default function AboutAppPopup({ show, onHide }) {
                     <h6 className="fw-bold">~~ Afoozo Cafe App ~~</h6>
                 </div>
 
-                <div className="small text-muted p-3">
+                <div className="small text-muted p-3 h-65 overflow-scroll pb-5">
                     <p><strong>Dear Guest,</strong></p>
 
                     <p>

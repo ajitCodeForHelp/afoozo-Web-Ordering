@@ -7,12 +7,12 @@ function DeskHeader() {
     const [showDrawer, setShowDrawer] = useState(false);
     return (
         <>
-            <div className="d-flex justify-content-between align-items-center p-3 sticky-top" style={{ backgroundColor: '#181818' }}>
+            <div className="d-flex justify-content-between align-items-center p-3 sticky-top bg-white shadow-sm" style={{ backgroundColor: '#181818' }}>
                 <div className="d-flex align-items-center gap-2">
-                    <button className="bg-transparent border-0 fs-2 text-warning" style={{ marginTop: "-10px" }} onClick={() => setShowDrawer(!showDrawer)} type="button">
+                    <button className="bg-transparent border-0 fs-2 text-dark" style={{ marginTop: "-10px" }} onClick={() => setShowDrawer(!showDrawer)} type="button">
                         <span className=""><RxHamburgerMenu /></span>
                     </button>
-                    <span className="text-warning fw-bold fs-5">AFOOZO</span>
+                    <span className="text-dark fw-bold fs-5">AFOOZO</span>
                 </div>
 
                 {/* <div className="w-50">
@@ -28,7 +28,7 @@ function DeskHeader() {
                     </Dropdown>
                 </div> */}
                 <div className="w-50">
-                    <input type="text" className="border-0 rounded-5 py-2 bg-white w-100 px-4" placeholder="Search" />
+                    <input type="text" className="border-0 rounded-5 py-2 bg-light w-100 px-4" placeholder="Search" />
                 </div>
 
                 <div className="d-flex gap-3 align-items-center">
@@ -37,7 +37,7 @@ function DeskHeader() {
                     </button> */}
                     <div className="wallet d-flex align-items-center rounded-pill px-3 py-1">
                         <div className="wallet-icon d-flex align-items-center justify-content-center text-white fw-bold them-color bg-light rounded-pill">
-                            <FaWallet className='text-warning' />
+                            <FaWallet className='text-dark' />
                         </div>
                         <span className="wallet-amount ms-2">₹124.50</span>
                     </div>

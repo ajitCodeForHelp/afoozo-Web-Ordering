@@ -25,8 +25,8 @@ function Categories({ list, activeCategory, scrollToCategory }) {
         <>
             <Container fluid className="py-3 sticky-top bg-white shadow-sm" style={{ top: topValue, zIndex: "1000" }}>
                 <div className="d-flex justify-content-center  align-items-center px-2 mb-3">
-                    <span className="text-warning fw-semibold view-all fs-4" onClick={() => navigate(-1)}><IoMdArrowRoundBack /></span>
-                    <h5 className="fw-bold mb-0 text-center text-warning fs-5" style={{ flex: 1 }}>Categories</h5>
+                    <span className="text-dark fw-semibold view-all fs-4" onClick={() => navigate(-1)}><IoMdArrowRoundBack /></span>
+                    <h5 className="fw-bold mb-0 text-center text-dark fs-5" style={{ flex: 1 }}>Categories</h5>
                 </div>
 
                 {/* <div className="category-scroll px-2"
@@ -48,7 +48,7 @@ function Categories({ list, activeCategory, scrollToCategory }) {
                 </div> */}
                 <div className="category-scroll px-2" ref={containerRef} style={{ scrollBehavior: "smooth", whiteSpace: "nowrap" }}>
                     {list?.map((cat, index) => (
-                        <div key={index} className={`category-item text-center mx-2 cursor-pointer ${activeCategory === cat.categoryUuid ? 'text-warning' : 'text-dark'}`}
+                        <div key={index} className={`category-item text-center mx-2 cursor-pointer ${activeCategory === cat.categoryUuid ? 'text-dark' : 'text-muted'}`}
                             onClick={() => scrollToCategory(cat.categoryUuid)}
                             ref={(el) => (itemRefs.current[cat.categoryUuid] = el)}
                         >

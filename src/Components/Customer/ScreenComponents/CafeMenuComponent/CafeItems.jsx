@@ -1,13 +1,10 @@
 import React from "react";
-import { FaStar } from "react-icons/fa";
-import { RiDragMoveLine } from "react-icons/ri";
-import { FaCircle } from "react-icons/fa6";
-import vegThaliImg from "../../../../Assets/rice.avif";
 import useIsMobile from "../../../../Utilities/IsMobile";
 import veg from "../../../../Assets/Veg-symbole.png";
 import nonVeg from "../../../../Assets/Non-veg-symbol.png";
+import { FaPencilAlt } from "react-icons/fa";
 
-const CafeItems = ({ resMenu, categoryRefs, addToCart, cart, updateQuantity, customizable }) => {
+const CafeItems = ({ resMenu, categoryRefs, addToCart, cart, updateQuantity, customizable, onEdit }) => {
   const isMobile = useIsMobile();
 
   return (
@@ -18,7 +15,7 @@ const CafeItems = ({ resMenu, categoryRefs, addToCart, cart, updateQuantity, cus
             <>
               <div className="d-flex flex-column justify-content-center gap-2">
                 <div ref={(el) => (categoryRefs.current[itm?.categoryUuid] = el)} data-id={itm?.categoryUuid} key={idx}>
-                  <h5 className="text-warning">{itm?.categoryName}</h5>
+                  <h5 className="text-dark">{itm?.categoryName}</h5>
                 </div>
                 {
                   itm?.menuList?.map((item, index) => {
@@ -117,20 +114,26 @@ const CafeItems = ({ resMenu, categoryRefs, addToCart, cart, updateQuantity, cus
                             <div className="d-flex justify-content-between align-items-center">
                               {/* Price */}
                               <div>
-                                <span className={`me-2 fw-semibold ${isMobile && "fs-12"}`} >₹{item?.finalPrice}</span>
+                                <span className={`me-2 fw-semibold ${isMobile && "fs-12"}`} >₹{Number(item?.finalPrice).toFixed(2)}</span>
                                 {/* <span className={`text-muted text-decoration-line-through ${isMobile ? "fs-10" : "small"}`}>₹260.00</span> */}
-                                <span className={`text-warning ${isMobile ? "fw-semibold fs-12" : "fw-bold"}`}>★ {item?.rating}</span>
+                                <span className={`text-dark ${isMobile ? "fw-semibold fs-12" : "fw-bold"}`}><span className="text-warning">★</span> {item?.rating === 0 ? "5" : item?.rating}</span>
                               </div>
 
                               {/* Rating + Add Button */}
                               <div className="d-flex align-items-center gap-2">
                                 {quantity > 0 ?
-                                  <div className="qty-selector">
-                                    <button className="qty-btn" onClick={() => updateQuantity(item.itemId, quantity - 1)}>−</button>
-                                    <span className="qty-count">{quantity}</span>
-                                    <button className="qty-btn" onClick={() => updateQuantity(item.itemId, quantity + 1)}>+</button>
-                                  </div> :
-                                  <button className={`btn btn-warning btn-sm rounded-pill ${isMobile ? "fw-semibold px-2" : "fw-bold px-3 py-1"}  text-white small-btn`}
+                                  <>
+                                    <button className="bg-white rounded-1 ms-2 inst-btn" onClick={() => onEdit(item)}>
+                                      <FaPencilAlt className="ri-pencil-line text-dark fs-10" />
+                                    </button>
+                                    <div className="qty-selector">
+                                      <button className="qty-btn" onClick={() => updateQuantity(item.itemId, quantity - 1)}>−</button>
+                                      <span className="qty-count">{quantity}</span>
+                                      <button className="qty-btn" onClick={() => updateQuantity(item.itemId, quantity + 1)}>+</button>
+                                    </div>
+                                  </>
+                                  :
+                                  <button className={`btn bg-dark text-white btn-sm rounded-pill ${isMobile ? "fw-semibold px-2" : "fw-bold px-3 py-1"} small-btn`}
                                     onClick={() => { item?.customization?.length > 0 ? customizable(item) : addToCart(item) }}>
                                     Add Now
                                   </button>
@@ -148,10 +151,6 @@ const CafeItems = ({ resMenu, categoryRefs, addToCart, cart, updateQuantity, cus
                     );
                   })
                 }
-
-
-
-
               </div >
             </>
           )

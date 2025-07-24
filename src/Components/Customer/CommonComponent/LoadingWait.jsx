@@ -4,7 +4,7 @@ const Loading = ({ message = "Loading...", size = "md", fullScreen = true }) => 
   return (
     <div className={`loading-wrapper ${fullScreen ? "loading-full" : ""}`}>
       <div className="loading-content text-center">
-        <div className={`spinner-border text-warning loading-spinner loading-${size}`} role="status">
+        <div className={`spinner-border text-dark loading-spinner loading-${size}`} role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
         <div className="loading-message mt-2 text-muted">{message}</div>

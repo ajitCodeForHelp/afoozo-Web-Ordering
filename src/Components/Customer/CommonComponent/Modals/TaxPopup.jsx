@@ -25,24 +25,24 @@ function TaxPopup({ show, onClose, taxJson }) {
     return (
         <>
             <div className="modal fade" tabIndex="-1" ref={modalRef}>
-                <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content rounded-5">
-                        {<div className="modal-header bg-dark text-warning text-center justify-content-center rounded-top-5 rounded-bottom-0">
-                            <h5 className="modal-title bg-dark text-warning text-center">Taxes</h5>
+                <div className="modal-dialog modal-dialog-centered justify-content-center">
+                    <div className="modal-content rounded-5" style={{ justifyContent: "center", width: "80%" }}>
+                        {<div className="modal-header bg-dark text-white text-center justify-content-center rounded-top-5 rounded-bottom-0">
+                            <h5 className="modal-title bg-dark text-white text-center">Taxes</h5>
                         </div>}
-                        <div className="modal-body pb-0">
+                        <div className="modal-body pb-0 ">
                             {taxJson?.map((itm) => {
                                 return (
                                     <div className="d-flex justify-content-between align-items-center">
                                         <p className='m-0 text-muted'>{itm.key}</p>
-                                        <p className='m-0 text-muted'>₹{itm.value}</p>
+                                        <p className='m-0 text-muted'>₹{Number(itm.value).toFixed(2)}</p>
                                     </div>
                                 )
                             })}
 
                         </div>
                         <div className="modal-footer border-0 d-flex justify-content-center align-items-center">
-                            <button type="button" className="btn btn-primary bg-dark text-warning border-0" onClick={onClose}>
+                            <button type="button" className="btn btn-primary bg-dark text-white border-0" onClick={onClose}>
                                 Closed
                             </button>
                         </div>

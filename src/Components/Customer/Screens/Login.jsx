@@ -65,7 +65,7 @@ const Login = () => {
                                             onChange={(e) => setMobileNo(e.target.value)}
                                             min={10}
                                         />
-                                        <button className="btn btn-dark w-100 rounded-pill fw-bold text-warning" onClick={handleSendOtp}>
+                                        <button className="btn btn-dark w-100 rounded-pill fw-bold text-white" onClick={handleSendOtp}>
                                             LOGIN
                                         </button>
                                     </div>
@@ -87,7 +87,7 @@ const Login = () => {
                                     onChange={(e) => setMobileNo(e.target.value)}
                                     min={10}
                                 />
-                                <button className="btn login-btn rounded-5 bg-dark text-warning" onClick={handleSendOtp}>LOGIN</button>
+                                <button className="btn login-btn rounded-5 bg-dark text-white" onClick={handleSendOtp}>LOGIN</button>
                             </div>
                             <div className="col-md-6 login-image p-0 rounded-5 z-1">
                                 <img

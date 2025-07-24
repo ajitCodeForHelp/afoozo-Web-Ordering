@@ -94,9 +94,9 @@ const OtpScreen = ({ mobileNumber, resend,onBack }) => {
     return (
         <div className="min-vh-100 bg-white d-flex flex-column">
             {/* Header */}
-            <div className="d-flex align-items-center px-4 py-4 bg-black text-warning">
+            <div className="d-flex align-items-center px-4 py-4 bg-black text-dark">
                 <FaArrowLeft className="me-2" onClick={onBack}/>
-                <h5 className="mb-0 text-warning fs-4">OTP</h5>
+                <h5 className="mb-0 text-dark fs-4">OTP</h5>
             </div>
 
             {/* Main Content */}

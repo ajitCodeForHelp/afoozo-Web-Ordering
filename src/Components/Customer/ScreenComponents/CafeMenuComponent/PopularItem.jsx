@@ -94,7 +94,7 @@ function PopularItem({resMenu}) {
                         />
                         <div className="card-body d-flex flex-column">
                             <h6 className="card-title fw-bold mb-1">
-                                {item.title.split(" ")[0]} <span className="text-warning">{item.finalPrice}</span>
+                                {item.title.split(" ")[0]} <span className="text-dark">{item.finalPrice}</span>
                             </h6>
                             <p className="card-subtitle text-muted mb-2">
                                 {item.title.split(" ").slice(1).join(" ")}
@@ -102,7 +102,7 @@ function PopularItem({resMenu}) {
                             <p className="card-text text-muted small flex-grow-1">
                                 {item.description.length > 50 ? item.desc.slice(0, 50) + "..." : item.description}
                             </p>
-                            <button className="btn btn-danger them-bg-black border-dark text-warning w-100 mt-auto rounded-pill fw-semibold">
+                            <button className="btn btn-danger them-bg-black border-dark text-white w-100 mt-auto rounded-pill fw-semibold">
                                 Add to Cart
                             </button>
                         </div>

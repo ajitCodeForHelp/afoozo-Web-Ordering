@@ -57,8 +57,8 @@ addressType:"",
             <div className={`add-address-overlay ${isOpen ? 'add-address-show' : ''}`} onClick={onClose} />
             <div className={`add-address-drawer ${isOpen ? 'add-address-open' : ''}`}>
                 <div className="promo-header sticky-top them-bg-black d-flex align-items-center justify-content-between">
-                    <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-warning" onClick={onClose} role="button" />
-                    <h5 className="text-warning m-auto">Add Address</h5>
+                    <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-white" onClick={onClose} role="button" />
+                    <h5 className="text-white m-auto">Add Address</h5>
                     <span></span>
                 </div>
                 <div className="add-address-body px-3 pb-4">

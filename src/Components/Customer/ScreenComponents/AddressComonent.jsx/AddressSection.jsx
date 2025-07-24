@@ -4,7 +4,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import AddAddressSection from './AddAddressSection';
 import PopupModal from '../../CommonComponent/Modals/PopUpModal';
 
-const AddressDrawer = ({ show, onClose }) => {
+const AddressDrawer = ({ show, onClose, handleUpdateAddress }) => {
 
     const [addressList, setAddressList] = useState([]);
 
@@ -88,8 +88,8 @@ const AddressDrawer = ({ show, onClose }) => {
                     onClick={(e) => e.stopPropagation()}
                 >
                     <div className="promo-header them-bg-black d-flex align-items-center justify-content-between">
-                        <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-warning" onClick={onClose} role="button" />
-                        <h5 className="text-warning m-auto">Address</h5>
+                        <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-white" onClick={onClose} role="button" />
+                        <h5 className="text-white m-auto">Address</h5>
                         <span></span>
                     </div>
                     <div className="py-3">
@@ -101,10 +101,10 @@ const AddressDrawer = ({ show, onClose }) => {
                             addressList?.map((itm) => {
                                 return (
                                     <>
-                                        <div className="mb-3 ps-3 address-bottom-border pb-3">
+                                        <div className="mb-3 ps-3 address-bottom-border pb-3 cursor-pointer" onClick={() => handleUpdateAddress(itm)}>
                                             <div className="fw-bold d-flex justify-content-between align-items-center">
                                                 <span className='fw-bold'>{itm.addressType}</span>
-                                                <span className='text-warning fs-5 pe-3' role='button' onClick={() => handleDelete(itm?.recordId)}><MdDeleteOutline /></span>
+                                                <span className='text-dark fs-5 pe-3' role='button' onClick={() => handleDelete(itm?.recordId)}><MdDeleteOutline /></span>
                                             </div>
                                             <div className="text-muted">
                                                 {itm.addressLine1}<br />

@@ -45,9 +45,9 @@ export default function HistoryOrderDetail({ show, onHide, orderId }) {
         >
             <div className="">
                 <div className="promo-header sticky-top them-bg-black d-flex align-items-center justify-content-between">
-                    <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-warning" onClick={onHide} role="button" />
-                    <h5 className="text-warning m-auto">Order Detail</h5>
-                    <span className='text-warning'><IoIosCall /> Call</span>
+                    <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-white" onClick={onHide} role="button" />
+                    <h5 className="text-white m-auto">Order Detail</h5>
+                    <span className='text-white'><IoIosCall /> Call</span>
                 </div>
                 <OrderProgress currentStep={2} />
                 <OrderDetails OrderDetail={orders} />

@@ -20,8 +20,8 @@ function BillToOrders({ show, onHide }) {
             >
                 <div className="pb-3">
                     <div className="promo-header sticky-top them-bg-black d-flex align-items-center justify-content-between">
-                        <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-warning" onClick={onHide} role="button" />
-                        <h5 className="text-warning m-auto">Bill To Company Orders</h5>
+                        <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-white" onClick={onHide} role="button" />
+                        <h5 className="text-white m-auto">Bill To Company Orders</h5>
                         <span></span>
                     </div>
                     <div className="d-flex justify-content-evenly align-items-center p-3">
@@ -51,7 +51,7 @@ function BillToOrders({ show, onHide }) {
                         </div>
 
                         <button
-                            className="btn go-btn bg-dark text-warning fw-bold ms-md-3 mt-2"
+                            className="btn go-btn bg-dark text-white fw-bold ms-md-3 mt-2"
                         // onClick={() => onGo(fromDate, toDate)}
                         >
                             GO

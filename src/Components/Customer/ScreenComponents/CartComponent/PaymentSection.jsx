@@ -26,12 +26,12 @@ const PaymentSection = ({ walletChecked, onWalletChange, walletAmount, onAddPaym
         {selectPaymentType ?
           <div className="d-flex justify-content-between align-items-center">
             <div className="flex-grow-1">
-              <div className="fw-semibold" style={{ fontSize: window.innerWidth < 768 ? "10px" : "16px" }}>{selectPaymentType}</div>
+              <div className="fw-semibold">{selectPaymentType}</div>
             </div>
             <button className="btn btn-link text-success fw-bold p-0 ms-2" onClick={onAddPayment}>
               Change
             </button>
-          </div> : <button className="btn btn-warning border-dark them-bg-black w-100 text-warning fw-semibold shadow-sm" onClick={onAddPayment}>
+          </div> : <button className="btn btn-warning border-dark them-bg-black w-100 text-white fw-semibold shadow-sm" onClick={onAddPayment}>
             ADD PAYMENT MODE
           </button>}
       </div>

@@ -6,7 +6,7 @@ import useIsMobile from "../../../../Utilities/IsMobile";
 import veg from "../../../../Assets/Veg-symbole.png";
 import nonVeg from "../../../../Assets/Non-veg-symbol.png";
 
-const MenuItemCard = ({ item, addToCart, quantity, updateQuantity, customizable }) => {
+const MenuItemCard = ({ item, addToCart, quantity, updateQuantity, customizable, onEdit }) => {
 
     const isMobile = useIsMobile();
 
@@ -100,7 +100,7 @@ const MenuItemCard = ({ item, addToCart, quantity, updateQuantity, customizable 
                         <div>
                             <span className={`me-2 fw-semibold ${isMobile && "fs-12"}`} >₹{item?.finalPrice}</span>
                             {/* <span className={`text-muted text-decoration-line-through ${isMobile ? "fs-10" : "small"}`}>₹260.00</span> */}
-                            <span className={`text-warning ${isMobile ? "fw-semibold fs-12" : "fw-bold"}`}>★ {item?.rating}</span>
+                            <span className={`text-dark ${isMobile ? "fw-semibold fs-12" : "fw-bold"}`}><span className="text-warning">★</span> {item?.rating}</span>
                         </div>
 
                         {/* Rating + Add Button */}

@@ -102,7 +102,7 @@ export default function Header() {
         <h1 className="logo m-0 text-dark">AFOOZO</h1>
         <div className="wallet d-flex align-items-center rounded-pill px-3 py-1">
           <div className="wallet-icon d-flex align-items-center justify-content-center text-white fw-bold them-color bg-light rounded-pill">
-            <FaWallet className='text-warning' />
+            <FaWallet className='text-dark' />
           </div>
           <span className="wallet-amount ms-2">₹124.50</span>
         </div>
@@ -116,7 +116,7 @@ export default function Header() {
           </div>
           <div className="col-auto mt-md-0">
             <div className="dropdown" ref={dropdownRef}>
-              <button className="btn btn-danger d-flex align-items-center gap-1 rounded-pill px-3 py-2 them-bg-black text-warning border-dark" onClick={() => setShowDrop(!showDrop)} type="button">
+              <button className="btn btn-danger d-flex align-items-center gap-1 rounded-pill px-3 py-2 them-bg-black text-white border-dark" onClick={() => setShowDrop(!showDrop)} type="button">
                 <IoFilterSharp />
                 <span className='dis-none'>Filters</span>
               </button>

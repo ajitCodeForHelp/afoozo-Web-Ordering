@@ -67,8 +67,8 @@ export default function OrderHistory({ show, onHide, setShowOrderDetail, setOrde
         >
             <div className="bg-white">
                 <div className="promo-header sticky-top them-bg-black d-flex align-items-center justify-content-between">
-                    <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-warning" onClick={onHide} role="button" />
-                    <h5 className="text-warning m-auto">Orders History</h5>
+                    <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-white" onClick={onHide} role="button" />
+                    <h5 className="text-white m-auto">Orders History</h5>
                     <span></span>
                 </div>
                 {
@@ -84,9 +84,9 @@ export default function OrderHistory({ show, onHide, setShowOrderDetail, setOrde
                                                     <div className="text-muted small two-line-ellipsis">{itm?.deliveryAddress}</div>
                                                 </div>
                                                 {
-                                                    itm?.orderType === "HomeDelivery" && <span className='bg-dark text-warning px-3 py-2'>🛵</span> ||
-                                                    itm?.orderType === "TakeAway" && <span className='bg-dark text-warning px-3 py-2'>🧺</span> ||
-                                                    itm?.orderType === "Cafe" && <span className='bg-dark text-warning px-3 py-2'>☕</span>
+                                                    itm?.orderType === "HomeDelivery" && <span className='bg-dark text-white px-3 py-2'>🛵</span> ||
+                                                    itm?.orderType === "TakeAway" && <span className='bg-dark text-white px-3 py-2'>🧺</span> ||
+                                                    itm?.orderType === "Cafe" && <span className='bg-dark text-white px-3 py-2'>☕</span>
                                                 }
                                             </div>
 
@@ -95,9 +95,9 @@ export default function OrderHistory({ show, onHide, setShowOrderDetail, setOrde
                                             <hr className="my-2" />
                                             <div className="text-muted small mt-1">{formatTimestamp(itm?.orderDateTime)}</div>
                                             <div className="d-flex align-items-center justify-content-evenly">
-                                                <button className='bg-dark text-warning py-1 rounded-5 m-1 small cursor-pointer'>REORDER</button>
-                                                <button className='bg-dark text-warning py-1 rounded-5 m-1 small cursor-pointer'>FEEDBACK</button>
-                                                <button className='bg-dark text-warning py-1 rounded-5 m-1 small cursor-pointer'>TIP ORDER</button>
+                                                <button className='bg-dark text-white py-1 rounded-5 m-1 small cursor-pointer'>REORDER</button>
+                                                <button className='bg-dark text-white py-1 rounded-5 m-1 small cursor-pointer'>FEEDBACK</button>
+                                                <button className='bg-dark text-white py-1 rounded-5 m-1 small cursor-pointer'>TIP ORDER</button>
                                             </div>
                                             {/* <div className="text-dark fw-bold small">{itm?.orderItemText}</div> */}
                                         </div>

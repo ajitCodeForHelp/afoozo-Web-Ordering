@@ -137,7 +137,7 @@ const ItemCustomPopup = ({ show, onClose, data, dispatch, id, cart }) => {
 
             <div className={`popup-box ${show ? 'show' : ''}`}>
                 <div className="popup-content">
-                    <h5 className="fw-bold p-3 bg-dark text-warning">{data?.title}</h5>
+                    <h5 className="fw-bold p-3 bg-dark text-white">{data?.title}</h5>
 
                     <div className="overflow-auto hv-60">
                         {customOption.map(group => (
