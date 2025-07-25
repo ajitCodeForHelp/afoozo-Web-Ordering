@@ -6,7 +6,7 @@ import { Modal } from 'react-bootstrap';
 import { HiArrowNarrowLeft } from "react-icons/hi";
 import Loading from '../../CommonComponent/LoadingWait';
 
-export default function OrderHistory({ show, onHide, setShowOrderDetail, setOrderId }) {
+export default function OrderHistory({ show, onHide, setShowHistoryOrderDetail, setOrderId }) {
     const [list, setList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const getList = async () => {
@@ -77,7 +77,7 @@ export default function OrderHistory({ show, onHide, setShowOrderDetail, setOrde
                             list?.map((itm) => {
                                 return (
                                     <>
-                                        <div className="card shadow-sm p-3 m-3 rounded-4" style={{ maxWidth: 500 }} onClick={() => { setShowOrderDetail(true); setOrderId(itm?.orderReferenceId) }}>
+                                        <div className="card shadow-sm p-3 m-3 rounded-4" style={{ maxWidth: 500 }} onClick={() => { setShowHistoryOrderDetail(true); setOrderId(itm?.orderReferenceId) }}>
                                             <div className="d-flex justify-content-between align-items-start">
                                                 <div className="pe-2">
                                                     <h6 className="fw-bold mb-1">{itm?.restaurantName}</h6>

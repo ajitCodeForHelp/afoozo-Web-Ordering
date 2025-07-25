@@ -76,7 +76,7 @@ export default function SidebarDrawer({ isOpen, onClose }) {
   const [showBiLlOrders, setShowBillOrders] = useState(false);
   const [showCheckInOut, setShowCheckInOut] = useState(false);
   const [showOrderDetail, setShowOrderDetail] = useState(false);
-  const [showHistoryOrderDetail, setShowHistoryOrderDetal] = useState(false);
+  const [showHistoryOrderDetail, setShowHistoryOrderDetail] = useState(false);
 
   const popupStack = useMemo(() => [
     { id: "checkInOut", isOpen: showCheckInOut, onClose: () => setShowCheckInOut(false) },
@@ -89,7 +89,7 @@ export default function SidebarDrawer({ isOpen, onClose }) {
     { id: "about", isOpen: showAbout, onClose: () => setShowAbout(false) },
     { id: "notification", isOpen: showNotification, onClose: () => setShowNotification(false) },
     { id: "updateProfile", isOpen: showUpdateProfile, onClose: () => setShowUpdateProfile(false) },
-    { id: "historyOrderDetail", isOpen: showHistoryOrderDetail, onClose: () => setShowHistoryOrderDetal(false) },
+    { id: "historyOrderDetail", isOpen: showHistoryOrderDetail, onClose: () => setShowHistoryOrderDetail(false) },
     { id: "drawer", isOpen: isOpen, onClose }, // ✅ LAST to close
   ], [
     showCheckInOut,
@@ -189,9 +189,9 @@ export default function SidebarDrawer({ isOpen, onClose }) {
       <DetailedNotificationPopup show={showNotification} onHide={() => setShowNotification(false)} />
       <AboutAppPopup show={showAbout} onHide={() => setShowAbout(false)} />
       <TermsConditionsPopup show={showTandC} onHide={() => setShowTandC(false)} />
-      <OrderHistory show={showHistoryOrder} onHide={() => setShowHistoryOrder(false)} setShowOrderDetail={setShowOrderDetail} setOrderId={setOrderId} />
+      <OrderHistory show={showHistoryOrder} onHide={() => setShowHistoryOrder(false)} setShowHistoryOrderDetail={setShowHistoryOrderDetail} setOrderId={setOrderId} />
       <OrderDetailSection show={showOrderDetail} onHide={() => setShowOrderDetail(false)} orderId={orderId} />
-      <HistoryOrderDetail show={showOrderDetail} onHide={() => setShowOrderDetail(false)} orderId={orderId} />
+      <HistoryOrderDetail show={showHistoryOrderDetail} onHide={() => setShowHistoryOrderDetail(false)} orderId={orderId} />
       <LiveOrders show={showLiveOrder} onHide={() => setShowLiveOrder(false)} setShowOrderDetail={setShowOrderDetail} setOrderId={setOrderId} />
       <Wallet show={showWallet} onHide={() => setShowWallet(false)} />
       <BillToOrders show={showBiLlOrders} onHide={() => setShowBillOrders(false)} />

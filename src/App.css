@@ -88,6 +88,12 @@ select:focus {
 .w-20 {
   width: 20% !important;
 }
+.w-60{
+  width: 60%;
+}
+.w-35{
+  width: 35%;
+}
 
 /* login form */
 /* Login.css */

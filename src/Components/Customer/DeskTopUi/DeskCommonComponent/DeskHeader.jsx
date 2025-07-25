@@ -3,7 +3,7 @@ import SidebarDrawer from "../../CommonComponent/Drawer";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { FaWallet } from "react-icons/fa";
 
-function DeskHeader() {
+function DeskHeader({ handleSearch }) {
     const [showDrawer, setShowDrawer] = useState(false);
     return (
         <>
@@ -28,7 +28,7 @@ function DeskHeader() {
                     </Dropdown>
                 </div> */}
                 <div className="w-50">
-                    <input type="text" className="border-0 rounded-5 py-2 bg-light w-100 px-4" placeholder="Search" />
+                    <input type="text" className="border-0 rounded-5 py-2 bg-light w-100 px-4" placeholder="Search" onChange={(e) => handleSearch(e.target.value)} />
                 </div>
 
                 <div className="d-flex gap-3 align-items-center">

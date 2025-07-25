@@ -3,12 +3,16 @@ import { Modal } from 'react-bootstrap';
 import { HiArrowNarrowLeft } from "react-icons/hi";
 import { LuClock3 } from "react-icons/lu";
 import { FaRegCalendarAlt } from "react-icons/fa";
+import Loading from '../../CommonComponent/LoadingWait';
 
 export default function DetailedNotificationPopup({ show, onHide }) {
     const [notifiList, setNotifiList] = useState([]);
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const getList = async () => {
         try {
+            setIsLoading(true);
             const mobile = localStorage.getItem('mobileNo');
             const key = localStorage.getItem("secretKey");
             const BasicAuth = btoa(`${mobile}:${key}`);
@@ -23,6 +27,8 @@ export default function DetailedNotificationPopup({ show, onHide }) {
             }
         } catch (e) {
             console.log(e, "error in notification list");
+        } finally {
+            setIsLoading(false);
         }
     };
     useEffect(() => {
@@ -63,7 +69,7 @@ export default function DetailedNotificationPopup({ show, onHide }) {
                     <span></span>
                 </div>
 
-                {notifiList?.map((item) => {
+                {isLoading ? <Loading /> : notifiList?.map((item) => {
                     return (
                         <>
                             <div className="card shadow-sm border-0 m-2">
@@ -72,7 +78,7 @@ export default function DetailedNotificationPopup({ show, onHide }) {
                                     <p className="text-muted small mb-3">
                                         {item?.notificationMessage}
                                     </p>
-<hr className='my-2'/>
+                                    <hr className='my-2' />
                                     <div className="d-flex justify-content-start align-items-center gap-4">
                                         <div className="d-flex align-items-center gap-2">
                                             <LuClock3 size={16} className="text-muted" />

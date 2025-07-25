@@ -7,7 +7,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import DeskHeader from '../DeskTopUi/DeskCommonComponent/DeskHeader';
 import useIsMobile from '../../../Utilities/IsMobile';
 
-export default function Header() {
+export default function Header({ filterVegNonVeg, handleSearch }) {
   const [showDrop, setShowDrop] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
   const dropdownRef = useRef(null);
@@ -91,7 +91,7 @@ export default function Header() {
         </nav>
       </div> */}
       {
-        !isMobile && <DeskHeader />
+        !isMobile && <DeskHeader handleSearch={handleSearch}/>
       }
 
       {isMobile && <header className="header show-992 justify-content-between align-items-center p-3 shadow-sm bg-white">
@@ -112,7 +112,7 @@ export default function Header() {
         <div className="row gx-2 align-items-center">
           <div className="col-12 col-md flex-grow-1 position-relative w-75 d-flex align-items-center">
             <IoIosSearch className='position-absolute search-icon' />
-            <input type="text" className="search-input form-control ps-5 py-2 bg-light rounded-pill" placeholder="Search food..." />
+            <input type="text" className="search-input form-control ps-5 py-2 bg-light rounded-pill" onChange={(e) => handleSearch(e.target.value)} placeholder="Search food..." />
           </div>
           <div className="col-auto mt-md-0">
             <div className="dropdown" ref={dropdownRef}>
@@ -134,22 +134,22 @@ export default function Header() {
                 >
                   <li>
                     <div className="form-check">
-                      <input className="form-check-input" type="checkbox" id="vegetarian" />
+                      <input className="form-check-input" type="radio" name="vegNonVeg" id="vegetarian" value="Veg" onChange={filterVegNonVeg} />
                       <label className="form-check-label" for="vegetarian">Vegetarian</label>
                     </div>
                   </li>
                   <li>
                     <div className="form-check">
-                      <input className="form-check-input" type="checkbox" id="nonVegetarian" />
+                      <input className="form-check-input" type="radio" name="vegNonVeg" id="nonVegetarian" value="NonVeg" onChange={filterVegNonVeg} />
                       <label className="form-check-label" for="nonVegetarian">Non-Vegetarian</label>
                     </div>
                   </li>
-                  <li>
+                  {/* <li>
                     <div className="form-check">
-                      <input className="form-check-input" type="checkbox" id="allergens" />
+                      <input className="form-check-input" type="radio" name="vegNonVeg" id="allergens" />
                       <label className="form-check-label" for="allergens">Contains Allergens</label>
                     </div>
-                  </li>
+                  </li> */}
                 </ul>}
             </div>
           </div>

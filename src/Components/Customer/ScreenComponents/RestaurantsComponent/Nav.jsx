@@ -103,11 +103,11 @@ function Nav() {
                     <span className="text-dark fw-bold fs-5">AFOOZO</span>
                 </div>
 
-                <div className={`d-flex gap-3 align-items-center ${isMobile ? "w-50" : "w-25"}`}>
+                <div className={`d-flex gap-3 align-items-center ${isMobile ? "w-60" : "w-35"}`} >
                     <button className={`btn btn-link text-dark fw-semibold d-flex  ${isMobile ? "align-items-start" : "gap-1 align-items-center"} text-decoration-none fs-6`} onClick={() => setShowAddressDrawer(true)}>
 
                         {/* className={`text-warning ${isMobile ? "small" : "fs-4"} fw-bold`} */}
-                        <span className={`${isMobile ? "current-address-ellipsis-2" : "current-address-ellipsis"} small fw-normal`}><span className="me-2"><FaLocationDot /></span>{cart?.address ? cart.address.addressLine1 : "Select Address"}</span>
+                        <span className={`${isMobile ? "current-address-ellipsis-2" : "current-address-ellipsis"} small fw-semibold`}><span className="me-2"><FaLocationDot /></span>{cart?.address ? cart.address.addressLine1 : "Select Address"}</span>
                     </button>
                     {/* <div className="wallet d-flex align-items-center rounded-pill px-3 py-1">
                         <div className="wallet-icon d-flex align-items-center justify-content-center text-white fw-bold them-color bg-light rounded-pill">

@@ -6,7 +6,7 @@ const OrderProgress = ({ currentStep }) => {
 
   return (
     <div className="sticky-top bg-white p-1">
-      <ul id="progressbar" className="d-flex justify-content-center shadow-sm rounded-4 p-1 m-3 ">
+      <ul id="progressbar" className="d-flex justify-content-center shadow-sm rounded-3 p-1 m-3 ">
         {!isMobile && <li className="active">
           Order
         </li>}

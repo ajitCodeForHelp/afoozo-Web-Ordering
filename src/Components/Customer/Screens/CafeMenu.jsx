@@ -21,6 +21,7 @@ function CafeMenu() {
     const { orderType } = location.state || {}
 
     const [resMenu, setResMenu] = useState([]);
+    const [filterResMenu, setFilterResMenu] = useState([...resMenu]);
     const [activeCategory, setActiveCategory] = useState(resMenu[0]?.categoryUuid);
     const getData = async () => {
         try {
@@ -41,6 +42,7 @@ function CafeMenu() {
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
                 setResMenu(getRes.responsePacket);
+                setFilterResMenu(getRes.responsePacket);
                 setActiveCategory(getRes.responsePacket[0]?.categoryUuid);
             }
         } catch (e) {
@@ -64,6 +66,20 @@ function CafeMenu() {
         }
 
     }, [resMenu]);
+
+    const filterVegNonVeg = (e) => {
+        const { value } = e.target;
+        const res = [...resMenu].map((itm) => ({ ...itm, menuList: itm.menuList?.filter((item) => item.vegNonVeg === value) }));
+        const filter = res.filter((itm) => itm.menuList && itm.menuList?.length > 0);
+        setFilterResMenu(filter);
+    };
+
+    const handleSearch = (e) => {
+        const res = [...resMenu].map((itm) => ({ ...itm, menuList: itm?.menuList.filter((item) => item.title.toLowerCase().includes(e.toLowerCase())) }));
+        const filter = res.filter((itm) => itm.menuList && itm.menuList.length > 0);
+        console.log(res, "res")
+        setFilterResMenu(filter);
+    };
 
     // message popup
     const [showMessagePopup, setShowMessagePopup] = useState(false);
@@ -303,13 +319,13 @@ function CafeMenu() {
         <>
             <ScrollToTop />
             <div className="" style={{ paddingBottom: "70px" }}>
-                <Header />
+                <Header filterVegNonVeg={filterVegNonVeg} handleSearch={handleSearch} />
                 {/* <Banner /> */}
                 <Categories list={resMenu} activeCategory={activeCategory} scrollToCategory={scrollToCategory} />
                 {/* <CafeCategory /> */}
                 {hotSelling?.length > 0 && <PopularItem hotSelling={hotSelling} />}
                 <CafeItems
-                    resMenu={resMenu}
+                    resMenu={filterResMenu}
                     categoryRefs={categoryRefs}
                     cart={cart}
                     dispatch={dispatch}

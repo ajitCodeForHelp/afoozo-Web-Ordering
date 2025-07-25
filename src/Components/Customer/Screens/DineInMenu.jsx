@@ -20,6 +20,7 @@ function DineInMenu() {
     const location = useLocation();
     const { resDetail, orderType } = location.state || {}
     const [resMenu, setResMenu] = useState([]);
+    const [filterResMenu, setFilterResMenu] = useState([...resMenu]);
     const [activeCategory, setActiveCategory] = useState(resMenu[0]?.categoryUuid);
 
     const getData = async () => {
@@ -42,6 +43,7 @@ function DineInMenu() {
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
                 setResMenu(getRes.responsePacket);
+                setFilterResMenu(getRes.responsePacket);
                 setActiveCategory(getRes.responsePacket[0]?.categoryUuid);
             }
         } catch (e) {
@@ -53,6 +55,20 @@ function DineInMenu() {
             getData();
         }
     }, []);
+
+    const filterVegNonVeg = (e) => {
+        const { value } = e.target;
+        const res = [...resMenu].map((itm) => ({ ...itm, menuList: itm.menuList?.filter((item) => item.vegNonVeg === value) }));
+        const filter = res.filter((itm) => itm.menuList && itm.menuList?.length > 0);
+        setFilterResMenu(filter);
+    };
+
+    const handleSearch = (e) => {
+        const res = [...resMenu].map((itm) => ({ ...itm, menuList: itm?.menuList.filter((item) => item.title.toLowerCase().includes(e.toLowerCase())) }));
+        const filter = res.filter((itm) => itm.menuList && itm.menuList.length > 0);
+        console.log(res, "res")
+        setFilterResMenu(filter);
+    };
 
     const [hotSelling, setHotSelling] = useState([]);
     useEffect(() => {
@@ -330,7 +346,7 @@ function DineInMenu() {
         <>
             <ScrollToTop />
             <div className="" style={{ paddingBottom: "70px" }}>
-                <Header />
+                <Header filterVegNonVeg={filterVegNonVeg} handleSearch={handleSearch} />
                 <Categories list={resMenu} activeCategory={activeCategory} scrollToCategory={scrollToCategory} />
                 {hotSelling?.length > 0 && <PopularItem hotSelling={hotSelling} />}
 
@@ -370,7 +386,7 @@ function DineInMenu() {
                 } */}
 
                 <CafeItems
-                    resMenu={resMenu}
+                    resMenu={filterResMenu}
                     categoryRefs={categoryRefs}
                     cart={cart}
                     dispatch={dispatch}

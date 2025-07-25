@@ -8,7 +8,7 @@ const OrderDetails = ({ OrderDetail }) => {
   return (
     <>
       <DeliveryLocationMap lati={OrderDetail?.deliveryLatitude} long={OrderDetail?.deliveryLongitude} />
-      <div className="container my-4 ">
+      <div className="container my-4">
         <div className="card shadow-sm p-3 rounded-4">
           <h6 className="fw-semibold mb-3">
             Order Details <span className="text-muted">{OrderDetail?.orderRefId}</span>

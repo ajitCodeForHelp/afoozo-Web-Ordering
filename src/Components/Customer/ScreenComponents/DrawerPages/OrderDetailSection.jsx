@@ -4,6 +4,7 @@ import { HiArrowNarrowLeft } from "react-icons/hi";
 import { IoIosCall } from "react-icons/io";
 import OrderDetails from '../OrderTrackComponent/OrderDetail';
 import OrderProgress from '../OrderTrackComponent/OrderProgress';
+import { BsGeoAlt, BsBriefcase } from "react-icons/bs";
 
 export default function OrderDetailSection({ show, onHide, orderId }) {
 
@@ -34,6 +35,7 @@ export default function OrderDetailSection({ show, onHide, orderId }) {
         }
     }, [show]);
 
+
     return (
         <Modal
             show={show}
@@ -41,15 +43,15 @@ export default function OrderDetailSection({ show, onHide, orderId }) {
             centered
             backdrop="static"
             keyboard={false}
-            dialogClassName="detailed-notification-modal modal-fullscreen-sm-down"
+            dialogClassName="detailed-notification-modal modal-fullscreen-sm-down "
         >
-            <div className="">
+            <div className="bg-white">
                 <div className="promo-header sticky-top them-bg-black d-flex align-items-center justify-content-between">
                     <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-white" onClick={onHide} role="button" />
                     <h5 className="text-white m-auto">Order Detail</h5>
                     <span className='text-white'><IoIosCall /> Call</span>
                 </div>
-                 <OrderProgress currentStep={2} />
+                <OrderProgress currentStep={2} />
                 <OrderDetails OrderDetail={orders} />
             </div>
         </Modal>
