@@ -182,6 +182,12 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
 
     // Address Drawer
     const [showAddressDrawer, setShowAddressDrawer] = useState(false);
+    const handleUpdateAddress = (address) => {
+        dispatch({
+            type: "SET_ADDRESS",
+            payload: address
+        });
+    };
 
     // tax
     const [showTax, setShowTax] = useState(false);
@@ -264,7 +270,7 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                         />
                         {(orderDetail?.orderType === "HomeDelivery" || orderDetail?.orderType === "TakeAway") &&
                             <DeliveryAddressBox
-                                address={`301 Kakad Industrial Area, Kakad Industrial Estate,\n32 Sitaram Keer Marg, VSNL Colony,\nMahim, Mumbai, Maharashtra 400016, India`}
+                                address={cart?.address.addressLine1 || "Select Address"}
                                 onChange={() => setShowAddressDrawer(true)}
                             />}
                         <PaymentSection
@@ -299,7 +305,7 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                 onClose={() => { setShowCookingPopup(false); }}
                 onAdd={handleAddInstruction}
             />
-            <AddressDrawer show={showAddressDrawer} onClose={() => { setShowAddressDrawer(false); }} />
+            <AddressDrawer show={showAddressDrawer} onClose={() => { setShowAddressDrawer(false); }} handleUpdateAddress={handleUpdateAddress} />
             <PaymentMode
                 visible={showPaymentModeList}
                 onClose={() => { setShowPaymentModeList(false); }}

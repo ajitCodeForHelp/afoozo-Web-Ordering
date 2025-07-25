@@ -5,10 +5,12 @@ import { IoIosCall } from "react-icons/io";
 import OrderDetails from '../OrderTrackComponent/OrderDetail';
 import OrderProgress from '../OrderTrackComponent/OrderProgress';
 import { BsGeoAlt, BsBriefcase } from "react-icons/bs";
+import DeliveryLocationMap from '../OrderTrackComponent/DeliveryLocationMap';
 
 export default function OrderDetailSection({ show, onHide, orderId }) {
 
     const [orders, setOrders] = useState([]);
+    const [orderStatus, setOrderStatus] = useState(0);
     const getOrderDetail = async (orderReferenceId) => {
         try {
             const mobile = localStorage.getItem("mobileNo");
@@ -23,6 +25,19 @@ export default function OrderDetailSection({ show, onHide, orderId }) {
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
                 setOrders(getRes.responsePacket);
+                switch (getRes.responsePacket.orderStatus) {
+                    case "Ordered":
+                        setOrderStatus(0);
+                        break;
+                    case "OnTheWay":
+                        setOrderStatus(1);
+                        break;
+                    case "Delivered":
+                        setOrderStatus(2);
+                        break;
+                    default:
+                        break;
+                };
             }
         } catch (e) {
             console.log(e, "error in orderDetail");
@@ -51,7 +66,8 @@ export default function OrderDetailSection({ show, onHide, orderId }) {
                     <h5 className="text-white m-auto">Order Detail</h5>
                     <span className='text-white'><IoIosCall /> Call</span>
                 </div>
-                <OrderProgress currentStep={2} />
+                <OrderProgress currentStep={orderStatus} />
+                <DeliveryLocationMap lati={orders?.deliveryLatitude} long={orders?.deliveryLongitude} />
                 <OrderDetails OrderDetail={orders} />
             </div>
         </Modal>

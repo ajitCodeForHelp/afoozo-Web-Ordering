@@ -13,77 +13,95 @@ function Nav() {
     // address
     const [showAddressDrawer, setShowAddressDrawer] = useState(false);
 
-    // const getNearAddress = async () => {
-    //     try {
-    //         const mobile = localStorage.getItem("mobileNo");
-    //         const key = localStorage.getItem("key");
-    //         const BasicAuth = btoa(`${mobile}:${key}`);
-    //         const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getNearestAddress`, {
-    //             headers: {
-    //                 'Authorization': `Basic ${BasicAuth}`
-    //             }
-    //         });
-    //         const getRes = await res.json();
-    //     } catch (e) {
-    //         console.log(e, "error in getAddre");
-    //     }
-    // };
-    // useEffect(() => {
-    //     // getNearAddress();
-    // }, []);
+    const getCurrentLocation = () => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
 
-    // const saveCurrentAdd = async (address) => {
-    //     const payload = {
-    //         addressLine1: address?.display_name || '',
-    //         addressLine2: '',
-    //         addressLine3: '',
-    //         addressType: address?.addresstype, // or 'Work', or get from user input
-    //         cityFullName: address?.address.county,
-    //         cityId: 0, // depends on your DB
-    //         countryFullName: address?.country || '',
-    //         countryId: 0, // depends on your DB
-    //         latitude: address.lat,
-    //         longitude: address.lon,
-    //         recordId: 0,
-    //         stateFullName: address?.address?.state || '',
-    //         stateId: address?.place_id,
-    //     };
-    //     try {
-    //         const mobile = localStorage.getItem("mobileNo");
-    //         const key = localStorage.getItem("key");
-    //         const BasicAuth = btoa(`${mobile}:${key}`);
-    //         const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/saveAddress`, {
-    //             method: "POST",
-    //             headers: {
-    //                 'Authorization': `Basic ${BasicAuth}`,
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify(payload)
-    //         });
+                fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`)
+                    .then(res => res.json())
+                    .then(data => {
+                        saveCurrentAdd(data)
+                    });
+            },
+            (error) => {
+                console.error("Location error:", error);
+            }
+        );
+    };
 
-    //     } catch (e) {
-    //         console.log(e, "error in save api")
-    //     }
-    // };
+    const getAddressList = async () => {
+        try {
+            const mobile = localStorage.getItem("mobileNo");
+            const key = localStorage.getItem("secretKey");
+            const basicAuth = btoa(`${mobile}:${key}`);
+
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getAddressList`, {
+                headers: {
+                    "Authorization": `Basic ${basicAuth}`,
+                }
+            });
+            const getRes = await res.json();
+            if (getRes.errorCode === 0 && getRes.responsePacket?.length > 0) {
+                if (!cart?.address) {
+                    dispatch({
+                        type: "SET_ADDRESS",
+                        payload: getRes.responsePacket[0]
+                    });
+                }
+
+            } else if (getRes.responsePacket?.length === 0) {
+                getCurrentLocation();
+            }
+        } catch (e) {
+            console.log(e, "error in getAddress");
+        }
+    };
+
+    useEffect(() => {
+        if (!cart?.address) {
+            getAddressList();
+        }
+    }, []);
+
+    const saveCurrentAdd = async (address) => {
+        const payload = {
+            addressLine1: address?.display_name || '',
+            addressLine2: '',
+            addressLine3: '',
+            addressType: address?.addresstype, // or 'Work', or get from user input
+            cityFullName: address?.address.county,
+            cityId: 0, // depends on your DB
+            countryFullName: address?.country || '',
+            countryId: 0, // depends on your DB
+            latitude: address.lat,
+            longitude: address.lon,
+            recordId: 0,
+            stateFullName: address?.address?.state || '',
+            stateId: address?.place_id,
+        };
+        try {
+            const mobile = localStorage.getItem("mobileNo");
+            const key = localStorage.getItem("key");
+            const BasicAuth = btoa(`${mobile}:${key}`);
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/saveAddress`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `Basic ${BasicAuth}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+            const getRes = await res.json();
+            if (getRes.errorCode === 0) {
+                getAddressList();
+            }
+        } catch (e) {
+            console.log(e, "error in save api")
+        }
+    };
 
     const isMobile = useIsMobile();
-    // useEffect(() => {
-    //     navigator.geolocation.getCurrentPosition(
-    //         (position) => {
-    //             const { latitude, longitude } = position.coords;
-
-    //             fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`)
-    //                 .then(res => res.json())
-    //                 .then(data => {
-    //                     console.log("Location:", data);
-    //                     // saveCurrentAdd(data)
-    //                 });
-    //         },
-    //         (error) => {
-    //             console.error("Location error:", error);
-    //         }
-    //     );
-    // }, []);
 
     const handleUpdateAddress = (address) => {
         dispatch({
