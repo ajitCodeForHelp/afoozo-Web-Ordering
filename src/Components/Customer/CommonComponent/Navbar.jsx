@@ -7,7 +7,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import DeskHeader from '../DeskTopUi/DeskCommonComponent/DeskHeader';
 import useIsMobile from '../../../Utilities/IsMobile';
 
-export default function Header({ filterVegNonVeg, handleSearch }) {
+export default function Header({ filterVegNonVeg, handleSearch, balance }) {
   const [showDrop, setShowDrop] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
   const dropdownRef = useRef(null);
@@ -91,7 +91,7 @@ export default function Header({ filterVegNonVeg, handleSearch }) {
         </nav>
       </div> */}
       {
-        !isMobile && <DeskHeader handleSearch={handleSearch}/>
+        !isMobile && <DeskHeader handleSearch={handleSearch} balance={balance} />
       }
 
       {isMobile && <header className="header show-992 justify-content-between align-items-center p-3 shadow-sm bg-white">
@@ -104,7 +104,7 @@ export default function Header({ filterVegNonVeg, handleSearch }) {
           <div className="wallet-icon d-flex align-items-center justify-content-center text-white fw-bold them-color bg-light rounded-pill">
             <FaWallet className='text-dark' />
           </div>
-          <span className="wallet-amount ms-2">₹124.50</span>
+          <span className="wallet-amount ms-2">₹{Number(balance).toFixed(2)}</span>
         </div>
       </header>}
 

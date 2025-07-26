@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import otpImg from "../../../Assets/otpImg.jpg";
+import { setSecureItem } from '../../../Utilities/Storage';
 
-const OtpScreen = ({ mobileNumber, resend,onBack }) => {
+const OtpScreen = ({ mobileNumber, resend, onBack }) => {
     const [otp, setOtp] = useState(['', '', '', '']);
     const [timer, setTimer] = useState(60);
     const [resendEnabled, setResendEnabled] = useState(false);
@@ -38,8 +39,10 @@ const OtpScreen = ({ mobileNumber, resend,onBack }) => {
             });
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
-                localStorage.setItem("secretKey", getRes.responsePacket.secretKey);
-                localStorage.setItem("mobileNo", mobileNumber);
+                setSecureItem("secretKey", getRes.responsePacket.secretKey);
+                setSecureItem("mobileNo", mobileNumber);
+                // localStorage.setItem("secretKey", getRes.responsePacket.secretKey);
+                // localStorage.setItem("mobileNo", mobileNumber);
                 navigate("/");
             }
         } catch (e) {
@@ -95,7 +98,7 @@ const OtpScreen = ({ mobileNumber, resend,onBack }) => {
         <div className="min-vh-100 bg-white d-flex flex-column">
             {/* Header */}
             <div className="d-flex align-items-center px-4 py-4 bg-black text-dark">
-                <FaArrowLeft className="me-2" onClick={onBack}/>
+                <FaArrowLeft className="me-2" onClick={onBack} />
                 <h5 className="mb-0 text-dark fs-4">OTP</h5>
             </div>
 

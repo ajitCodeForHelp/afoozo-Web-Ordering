@@ -26,6 +26,7 @@ import CheckInOut from "../ScreenComponents/DrawerPages/CheckInOut";
 import usePopupBackHandler from "../../../Utilities/UsePopupStack";
 import OrderDetailSection from "../ScreenComponents/DrawerPages/OrderDetailSection";
 import HistoryOrderDetail from "../ScreenComponents/DrawerPages/HistoryOrderDetail";
+import { Authorization } from "../../../Utilities/Authorization";
 
 export default function SidebarDrawer({ isOpen, onClose }) {
   useEffect(() => {
@@ -37,10 +38,14 @@ export default function SidebarDrawer({ isOpen, onClose }) {
 
   const getData = async () => {
     try {
-      const token = localStorage.getItem("secretKey");
+      // const token = localStorage.getItem("secretKey");
+      // const key = getSecureItem("secretKey");
+      // const mobile = getSecureItem("mobileNo");
+      // const BasicAuth = btoa(`${mobile}:${key}`);
+      const BasicAuth = Authorization();
       const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/profileDetail`, {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Basic ${BasicAuth}`
         }
       });
       const getRes = await res.json();
@@ -153,8 +158,8 @@ export default function SidebarDrawer({ isOpen, onClose }) {
               className="rounded-circle profile-img"
             />
             <div>
-              <h6 className="mb-0 fw-bold">John</h6>
-              <small className="text-muted">+91123456789</small>
+              <h6 className="mb-0 fw-bold">{profileData?.fullName}</h6>
+              <small className="text-muted">{profileData?.mobile}</small>
             </div>
           </div>
           <div className="d-flex align-items-center gap-2" onClick={() => setShowUpdateProfile(true)}>
@@ -177,7 +182,7 @@ export default function SidebarDrawer({ isOpen, onClose }) {
           <li onClick={() => setShowNotification(true)}><RiNotificationBadgeFill /> <span>Notification</span></li>
           <li onClick={() => setShowAbout(true)}><FaInfoCircle /> <span>About</span></li>
           <li onClick={() => setShowTandC(true)}><MdContentPaste /> <span>Terms & Conditions</span></li>
-          <li><FiHeadphones /><span>Help & Support</span></li>
+          {/* <li><FiHeadphones /><span>Help & Support</span></li> */}
         </ul>
 
         <div className="logout-section">
@@ -185,7 +190,7 @@ export default function SidebarDrawer({ isOpen, onClose }) {
         </div>
       </div>
 
-      <ProfileUpdate show={showUpdateProfile} onHide={() => setShowUpdateProfile(false)} />
+      <ProfileUpdate show={showUpdateProfile} onHide={() => setShowUpdateProfile(false)} profileData={profileData} getData={getData}/>
       <DetailedNotificationPopup show={showNotification} onHide={() => setShowNotification(false)} />
       <AboutAppPopup show={showAbout} onHide={() => setShowAbout(false)} />
       <TermsConditionsPopup show={showTandC} onHide={() => setShowTandC(false)} />

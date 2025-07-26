@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { HiArrowNarrowLeft } from "react-icons/hi";
 import DraggableMap from './DraggableMap';
 import LocationSearchDrawer from './LocationSearchDrawer';
+import { Authorization } from '../../../../Utilities/Authorization';
 // import { useJsApiLoader } from '@react-google-maps/api';
 
 
@@ -26,9 +27,11 @@ const AddAddressSection = ({ isOpen, onClose }) => {
     
     const addNewAddress=async()=>{
         try {
-            const mobile = localStorage.getItem("mobileNo");
-            const key = localStorage.getItem("secretKey");
-            const BasicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem("mobileNo");
+            // const key = localStorage.getItem("secretKey");
+            // const BasicAuth = btoa(`${mobile}:${key}`);
+
+              const BasicAuth = Authorization();
 
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/saveAddress`,{
                 method:"POST",

@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { HiArrowNarrowLeft } from "react-icons/hi";
 import Loading from '../../CommonComponent/LoadingWait';
+import { Authorization } from '../../../../Utilities/Authorization';
 
 export default function LiveOrders({ show, onHide, setShowOrderDetail, setOrderId }) {
     const [list, setList] = useState([]);
@@ -12,9 +13,10 @@ export default function LiveOrders({ show, onHide, setShowOrderDetail, setOrderI
     const getList = async () => {
         try {
             setIsLoading(true);
-            const mobile = localStorage.getItem("mobileNo");
-            const key = localStorage.getItem("secretKey");
-            const BasicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem("mobileNo");
+            // const key = localStorage.getItem("secretKey");
+            // const BasicAuth = btoa(`${mobile}:${key}`);
+              const BasicAuth = Authorization();
 
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getOrderList/All/Live/0/-1`, {
                 headers: {

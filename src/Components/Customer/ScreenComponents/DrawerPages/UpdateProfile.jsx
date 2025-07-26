@@ -1,14 +1,24 @@
 // ------------------------------
 // ProfileUpdate.jsx
 // ------------------------------
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { HiArrowNarrowLeft } from "react-icons/hi";
 import pic from "../../../../Assets/profilePic.jpg";
+import { Authorization } from '../../../../Utilities/Authorization';
+import { getSecureItem } from '../../../../Utilities/Storage';
 
-export default function ProfileUpdate({ show, onHide }) {
+export default function ProfileUpdate({ show, onHide, profileData, getData }) {
 
-    const mobile = localStorage.getItem('mobileNo');
+    const mobile = getSecureItem("mobileNo");
+
+    const dateFormate = (timestamp) => {
+        const get = new Date(timestamp);
+        const date = get.toISOString().split("T")[0];
+        return date;
+    };
+
+
     const [form, setForm] = useState({
         fullName: '',
         email: '',
@@ -18,11 +28,33 @@ export default function ProfileUpdate({ show, onHide }) {
         gender: '',
     });
 
+    useEffect(() => {
+        if (show && profileData) {
+            setForm({
+                fullName: profileData?.fullName || '',
+                email: profileData?.email || '',
+                mobileNumber: mobile,
+                dateOfBirth: dateFormate(profileData?.dateOfBirth) || '', // ISO for date inputs
+                anniversaryDate: dateFormate(profileData?.anniversaryDate) || '',
+                gender: profileData?.gender || '',
+            });
+        }
+    }, [show, profileData]);
+
     const updateProfile = async () => {
         try {
-            const mobile = localStorage.getItem("mobileNo");
-            const key = localStorage.getItem("secretKey");
-            const BasicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem("mobileNo");
+            // const key = localStorage.getItem("secretKey");
+            // const BasicAuth = btoa(`${mobile}:${key}`);
+            const BasicAuth = Authorization();
+            const payload = {
+                fullName: form?.fullName || '',
+                email: form?.email || '',
+                mobileNumber: mobile,
+                dateOfBirth: new Date(form?.dateOfBirth).getTime() || '', // ISO for date inputs
+                anniversaryDate: new Date(form?.anniversaryDate).getTime() || '',
+                gender: form?.gender || '',
+            };
 
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/updateProfile`, {
                 method: "POST",
@@ -30,11 +62,12 @@ export default function ProfileUpdate({ show, onHide }) {
                     'Authorization': `Basic ${BasicAuth}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(form)
+                body: JSON.stringify(payload)
             })
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
-                alert("update successfully !");
+                // alert("update successfully !");
+                getData();
                 onHide();
             }
         } catch (e) {
@@ -51,7 +84,6 @@ export default function ProfileUpdate({ show, onHide }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         updateProfile();
-
     };
 
     return (
@@ -130,11 +162,11 @@ export default function ProfileUpdate({ show, onHide }) {
                                     type="date"
                                     name="dateOfBirth"
                                     id="birthday"
-                                    // value={form.dateOfBirth}
+                                    value={form.dateOfBirth}
                                     onChange={(e) => {
-                                        const date = new Date(e.target.value);
-                                        const timestamp = date.getTime();
-                                        setForm({ ...form, dateOfBirth: timestamp });
+                                        // const date = new Date(e.target.value);
+                                        // const timestamp = date.getTime(
+                                        setForm({ ...form, dateOfBirth: e.target.value });
                                     }}
                                     placeholder="Birthday"
                                     className="form-control border-0"
@@ -150,9 +182,7 @@ export default function ProfileUpdate({ show, onHide }) {
                                     id="anniversary"
                                     value={form.anniversaryDate}
                                     onChange={(e) => {
-                                        const date = new Date(e.target.value);
-                                        const timestamp = date.getTime();
-                                        setForm({ ...form, anniversaryDate: timestamp });
+                                        setForm({ ...form, anniversaryDate: e.target.value });
                                     }}
                                     placeholder="Anniversary"
                                     className="form-control border-0"
@@ -169,8 +199,8 @@ export default function ProfileUpdate({ show, onHide }) {
                                         type="radio"
                                         name="gender"
                                         id="male"
-                                        value="male"
-                                        checked={form.gender === 'male'}
+                                        value="MALE"
+                                        checked={form.gender === 'MALE'}
                                         onChange={handleChange}
                                     />
                                     <label className="form-check-label" htmlFor="male">
@@ -183,8 +213,8 @@ export default function ProfileUpdate({ show, onHide }) {
                                         type="radio"
                                         name="gender"
                                         id="female"
-                                        value="female"
-                                        checked={form.gender === 'female'}
+                                        value="FEMALE"
+                                        checked={form.gender === 'FEMALE'}
                                         onChange={handleChange}
                                     />
                                     <label className="form-check-label" htmlFor="female">

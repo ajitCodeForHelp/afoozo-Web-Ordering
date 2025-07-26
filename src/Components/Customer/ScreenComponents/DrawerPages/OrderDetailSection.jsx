@@ -6,6 +6,7 @@ import OrderDetails from '../OrderTrackComponent/OrderDetail';
 import OrderProgress from '../OrderTrackComponent/OrderProgress';
 import { BsGeoAlt, BsBriefcase } from "react-icons/bs";
 import DeliveryLocationMap from '../OrderTrackComponent/DeliveryLocationMap';
+import { Authorization } from '../../../../Utilities/Authorization';
 
 export default function OrderDetailSection({ show, onHide, orderId }) {
 
@@ -13,9 +14,10 @@ export default function OrderDetailSection({ show, onHide, orderId }) {
     const [orderStatus, setOrderStatus] = useState(0);
     const getOrderDetail = async (orderReferenceId) => {
         try {
-            const mobile = localStorage.getItem("mobileNo");
-            const key = localStorage.getItem("secretKey");
-            const BasicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem("mobileNo");
+            // const key = localStorage.getItem("secretKey");
+            // const BasicAuth = btoa(`${mobile}:${key}`);
+              const BasicAuth = Authorization();
 
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/orderDetail/${orderReferenceId}`, {
                 headers: {

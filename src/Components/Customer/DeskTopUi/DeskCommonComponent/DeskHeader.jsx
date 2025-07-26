@@ -3,7 +3,7 @@ import SidebarDrawer from "../../CommonComponent/Drawer";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { FaWallet } from "react-icons/fa";
 
-function DeskHeader({ handleSearch }) {
+function DeskHeader({ handleSearch, balance }) {
     const [showDrawer, setShowDrawer] = useState(false);
     return (
         <>
@@ -39,7 +39,7 @@ function DeskHeader({ handleSearch }) {
                         <div className="wallet-icon d-flex align-items-center justify-content-center text-white fw-bold them-color bg-light rounded-pill">
                             <FaWallet className='text-dark' />
                         </div>
-                        <span className="wallet-amount ms-2">₹124.50</span>
+                        <span className="wallet-amount ms-2">₹{Number(balance).toFixed(2)}</span>
                     </div>
                 </div>
             </div>

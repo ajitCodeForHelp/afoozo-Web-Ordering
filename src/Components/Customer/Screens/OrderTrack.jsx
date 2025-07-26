@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import OrderProgress from "../ScreenComponents/OrderTrackComponent/OrderProgress";
-import DeliveryLocationMap from "../ScreenComponents/OrderTrackComponent/DeliveryLocationMap";
 import OrderDetails from "../ScreenComponents/OrderTrackComponent/OrderDetail";
 import { HiArrowNarrowLeft } from "react-icons/hi";
 import MessagePopup from "../CommonComponent/Modals/MessagePopup";
 import { useNavigate } from "react-router-dom";
+import { Authorization } from "../../../Utilities/Authorization";
 
 function OrderTrack() {
     const verifyPayment = async (orderReferenceId) => {
         try {
-            const mobile = localStorage.getItem("mobileNo");
-            const key = localStorage.getItem('secretKey');
-            const BasicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem("mobileNo");
+            // const key = localStorage.getItem('secretKey');
+            // const BasicAuth = btoa(`${mobile}:${key}`);
+            const BasicAuth = Authorization();
             const orderData = JSON.parse(localStorage.getItem("orderData"));
 
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/cashFree/verifiedPayment/${orderReferenceId}`, {
@@ -35,9 +36,10 @@ function OrderTrack() {
 
     const updatePaymentReq = async (orderId, txStatus, orderAmount, specialInstruction) => {
         try {
-            const mobile = localStorage.getItem("mobileNo");
-            const key = localStorage.getItem("secretKey");
-            const BasicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem("mobileNo");
+            // const key = localStorage.getItem("secretKey");
+            // const BasicAuth = btoa(`${mobile}:${key}`);
+            const BasicAuth = Authorization();
             const paymentType = localStorage.getItem("paymentType");
 
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/updatePaymentRequestForCashFreeV2`, {
@@ -67,9 +69,10 @@ function OrderTrack() {
     const [message, setMessage] = useState('');
     const placeOrder = async (orderReferenceId, specialInstruction, paidByWallet, paymentType) => {
         try {
-            const mobile = localStorage.getItem("mobileNo");
-            const key = localStorage.getItem("secretKey");
-            const BasicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem("mobileNo");
+            // const key = localStorage.getItem("secretKey");
+            // const BasicAuth = btoa(`${mobile}:${key}`);
+            const BasicAuth = Authorization();
 
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/placeOrder/${orderReferenceId}`, {
                 method: "POST",
@@ -102,11 +105,13 @@ function OrderTrack() {
 
     const [orders, setOrders] = useState([]);
 
+    const [orderStatus, setOrderStatus] = useState(0);
     const orderDetail = async (orderReferenceId) => {
         try {
-            const mobile = localStorage.getItem("mobileNo");
-            const key = localStorage.getItem("secretKey");
-            const BasicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem("mobileNo");
+            // const key = localStorage.getItem("secretKey");
+            // const BasicAuth = btoa(`${mobile}:${key}`);
+            const BasicAuth = Authorization();
 
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/orderDetail/${orderReferenceId}`, {
                 headers: {
@@ -116,6 +121,19 @@ function OrderTrack() {
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
                 setOrders(getRes.responsePacket);
+                switch (getRes.responsePacket.orderStatus) {
+                    case "Ordered":
+                        setOrderStatus(0);
+                        break;
+                    case "OnTheWay":
+                        setOrderStatus(1);
+                        break;
+                    case "Delivered":
+                        setOrderStatus(2);
+                        break;
+                    default:
+                        break;
+                };
             }
         } catch (e) {
             console.log(e, "error in orderDetail");
@@ -131,7 +149,7 @@ function OrderTrack() {
                 <h5 className="text-white m-auto">Order Track</h5>
                 <span></span>
             </div>
-            <OrderProgress currentStep={2} />
+            <OrderProgress currentStep={orderStatus} />
             {/* <DeliveryLocationMap lati="28.6139" long="77.2090" /> */}
             <OrderDetails OrderDetail={orders} />
             <MessagePopup show={showMessagePopup} message={message} onClose={() => setShowMessagePopup(false)} />

@@ -12,6 +12,7 @@ import PopupModal from "../CommonComponent/Modals/PopUpModal";
 import MessagePopup from "../CommonComponent/Modals/MessagePopup";
 import ItemCustomPopup from "../CommonComponent/Modals/ItemCustomPopup";
 import CookingInstructionModal from "../CommonComponent/Modals/CookingInstructionModal";
+import { Authorization } from "../../../Utilities/Authorization";
 
 function CafeMenu() {
 
@@ -89,11 +90,12 @@ function CafeMenu() {
     const [orderDetail, setOrderDetail] = useState([]);
     const [orderRefId, setOrderRefId] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const saveOrder = async () => {
+    const saveOrder = async (address) => {
         try {
-            const mobile = localStorage.getItem('mobileNo');
-            const key = localStorage.getItem('secretKey');
-            const BasicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem('mobileNo');
+            // const key = localStorage.getItem('secretKey');
+            // const BasicAuth = btoa(`${mobile}:${key}`);
+            const BasicAuth = Authorization();
             const type = sessionStorage.getItem("orderType");
 
             setIsLoading(true);
@@ -105,7 +107,7 @@ function CafeMenu() {
                 },
                 body: JSON.stringify({
                     orderType: type,
-                    addressId: type === "HomeDelivery" || type === "TakeAway" ? cart?.address?.recordId : null,
+                    addressId: type === "HomeDelivery" || type === "TakeAway" ? (address ? address.recordId : cart?.address?.recordId) : null,
                     specialInstruction: "Please deliver ASAP",
                     itemList: cart?.items?.map((itm) => ({
                         itemId: itm.itemId,
@@ -117,6 +119,12 @@ function CafeMenu() {
                 })
             });
             const getRes = await res.json();
+            if (getRes.errorCode === 0 && address) {
+                dispatch({
+                    type: 'SET_ADDRESS',
+                    payload: address
+                })
+            }
             if (getRes.errorCode === 0) {
                 getOrderDetail(getRes.responsePacket);
                 setOrderRefId(getRes.responsePacket);
@@ -135,9 +143,10 @@ function CafeMenu() {
             setIsLoading(true);
         }
         try {
-            const mobile = localStorage.getItem("mobileNo");
-            const key = localStorage.getItem("secretKey");
-            const BasicAuth = btoa(`${mobile}:${key}`)
+            // const mobile = localStorage.getItem("mobileNo");
+            // const key = localStorage.getItem("secretKey");
+            // const BasicAuth = btoa(`${mobile}:${key}`)
+            const BasicAuth = Authorization();
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/orderDetail/${orderReferenceId}`, {
                 headers: {
                     'Authorization': `Basic ${BasicAuth}`
@@ -166,9 +175,10 @@ function CafeMenu() {
         try {
             setIsSmallLoading((prev) => ({ ...prev, [`${orderItemId}-${operation}`]: true }));
 
-            const mobile = localStorage.getItem('mobileNo');
-            const key = localStorage.getItem('secretKey');
-            const BasicAuth = btoa(`${mobile}:${key}`)
+            // const mobile = localStorage.getItem('mobileNo');
+            // const key = localStorage.getItem('secretKey');
+            // const BasicAuth = btoa(`${mobile}:${key}`)
+            const BasicAuth = Authorization();
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/updateOrderItemQuantity/${orderRefId}/${orderItemId}/${operation}`, {
                 headers: {
                     'Authorization': `Basic ${BasicAuth}`
@@ -315,11 +325,32 @@ function CafeMenu() {
         });
     };
 
+    const [balance, setBalance] = useState('');
+    const walletBalance = async () => {
+        try {
+            const BasicAuth = Authorization();
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getBalance`, {
+                headers: {
+                    'Authorization': `basic ${BasicAuth}`
+                }
+            });
+            const getRes = await res.json();
+            if (getRes.errorCode === 0) {
+                setBalance(getRes.responsePacket);
+            }
+        } catch (e) {
+            console.log(e, "error in walletBalance Api");
+        }
+    };
+    useEffect(()=>{
+        walletBalance();
+    },[]);
+
     return (
         <>
             <ScrollToTop />
             <div className="" style={{ paddingBottom: "70px" }}>
-                <Header filterVegNonVeg={filterVegNonVeg} handleSearch={handleSearch} />
+                <Header filterVegNonVeg={filterVegNonVeg} handleSearch={handleSearch} balance={balance}/>
                 {/* <Banner /> */}
                 <Categories list={resMenu} activeCategory={activeCategory} scrollToCategory={scrollToCategory} />
                 {/* <CafeCategory /> */}
@@ -351,7 +382,6 @@ function CafeMenu() {
                     isLoading={isLoading}
                     isSmallLoading={isSmallLoading}
                     cart={cart}
-
                 />
             </div>
 

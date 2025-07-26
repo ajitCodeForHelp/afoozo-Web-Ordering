@@ -15,6 +15,7 @@ import Loading from '../CommonComponent/LoadingWait';
 import useIsMobile from '../../../Utilities/IsMobile';
 import { IoMdArrowRoundBack } from "react-icons/io";
 import TaxPopup from '../CommonComponent/Modals/TaxPopup';
+import { Authorization } from '../../../Utilities/Authorization';
 
 const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefId, saveOrder, dispatch, isLoading, isSmallLoading, cart }) => {
 
@@ -36,9 +37,10 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
     // save Cooking Instruction on item
     const cookingInstructionOnOrderItem = async (instru, orderItemId) => {
         try {
-            const mobile = localStorage.getItem("mobileNo");
-            const key = localStorage.getItem("secretKey");
-            const BasicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem("mobileNo");
+            // const key = localStorage.getItem("secretKey");
+            // const BasicAuth = btoa(`${mobile}:${key}`);
+            const BasicAuth = Authorization();
 
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/updateInstructionOnOrderItem/${orderRefId}/${orderItemId?.id}`, {
                 method: "POST",
@@ -93,9 +95,10 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
     const [selectPaymentType, setSelectPaymentType] = useState('');
     const getLastPaymentMode = async () => {
         try {
-            const mobile = localStorage.getItem("mobileNo");
-            const key = localStorage.getItem('secretKey');
-            const BasicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem("mobileNo");
+            // const key = localStorage.getItem('secretKey');
+            // const BasicAuth = btoa(`${mobile}:${key}`);
+            const BasicAuth = Authorization();
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getLastPaymentMode_v1`, {
                 headers: {
                     'Authorization': `Basic ${BasicAuth}`
@@ -121,9 +124,10 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
 
     const generateOrder = async () => {
         try {
-            const mobile = localStorage.getItem("mobileNo");
-            const key = localStorage.getItem("secretKey");
-            const BasicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem("mobileNo");
+            // const key = localStorage.getItem("secretKey");
+            // const BasicAuth = btoa(`${mobile}:${key}`);
+            const BasicAuth = Authorization();
 
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/cashFree/createOrder`, {
                 method: "POST",
@@ -162,9 +166,10 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
     const [balance, setBalance] = useState({});
     const getBalance = async () => {
         try {
-            const mobile = localStorage.getItem('mobileNo');
-            const key = localStorage.getItem("secretKey");
-            const BasicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem('mobileNo');
+            // const key = localStorage.getItem("secretKey");
+            // const BasicAuth = btoa(`${mobile}:${key}`);
+            const BasicAuth = Authorization();
 
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getCoinAndWalletBalance`, {
                 headers: {
@@ -182,11 +187,22 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
 
     // Address Drawer
     const [showAddressDrawer, setShowAddressDrawer] = useState(false);
+    const [selectedAddress, setSelectedAddress] = useState('');
+    const addressRef = useRef();
+    useEffect(() => {
+        if (selectedAddress) {
+            const existAddress = cart?.address?.recordId === selectedAddress?.recordId
+            if (existAddress && selectedAddress?.recordId !== addressRef.current) {
+                addressRef.current = selectedAddress?.recordId
+                
+            }
+        }
+    }, [cart.address]);
+
     const handleUpdateAddress = (address) => {
-        dispatch({
-            type: "SET_ADDRESS",
-            payload: address
-        });
+        setSelectedAddress(address);
+        saveOrder(address);
+        setShowAddressDrawer(false);
     };
 
     // tax

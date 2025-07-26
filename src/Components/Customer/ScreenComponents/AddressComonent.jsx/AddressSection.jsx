@@ -3,6 +3,7 @@ import { HiArrowNarrowLeft } from "react-icons/hi";
 import { MdDeleteOutline } from "react-icons/md";
 import AddAddressSection from './AddAddressSection';
 import PopupModal from '../../CommonComponent/Modals/PopUpModal';
+import { Authorization } from '../../../../Utilities/Authorization';
 
 const AddressDrawer = ({ show, onClose, handleUpdateAddress }) => {
 
@@ -10,13 +11,14 @@ const AddressDrawer = ({ show, onClose, handleUpdateAddress }) => {
 
     const getAddressList = async () => {
         try {
-            const mobile = localStorage.getItem("mobileNo");
-            const key = localStorage.getItem("secretKey");
-            const basicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem("mobileNo");
+            // const key = localStorage.getItem("secretKey");
+            // const basicAuth = btoa(`${mobile}:${key}`);
+              const BasicAuth = Authorization();
 
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getAddressList`, {
                 headers: {
-                    "Authorization": `Basic ${basicAuth}`,
+                    "Authorization": `Basic ${BasicAuth}`,
                 }
             });
             const getRes = await res.json();
@@ -51,9 +53,10 @@ const AddressDrawer = ({ show, onClose, handleUpdateAddress }) => {
 
     const deleteAddress = async (addressId) => {
         try {
-            const mobile = localStorage.getItem('mobileNo');
-            const key = localStorage.getItem('secretKey');
-            const BasicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem('mobileNo');
+            // const key = localStorage.getItem('secretKey');
+            // const BasicAuth = btoa(`${mobile}:${key}`);
+             const BasicAuth = Authorization();
 
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/deleteAddress/${addressId}`, {
                 method: "DELETE",

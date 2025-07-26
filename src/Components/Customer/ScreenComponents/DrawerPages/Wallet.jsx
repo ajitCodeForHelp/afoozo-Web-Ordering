@@ -6,6 +6,7 @@ import { FaWallet } from "react-icons/fa";
 import { BsClock } from "react-icons/bs";
 import { BsCalendarEvent } from "react-icons/bs";
 import useIsMobile from "../../../../Utilities/IsMobile";
+import { Authorization } from "../../../../Utilities/Authorization";
 
 function Wallet({ show, onHide }) {
     const quickAmounts = [2000, 5000, 10000];
@@ -16,9 +17,10 @@ function Wallet({ show, onHide }) {
     const [walletTransition, setWalletTransition] = useState([]);
     const getWalletTransition = async (stDate, enDate) => {
         try {
-            const mobile = localStorage.getItem('mobileNo');
-            const key = localStorage.getItem("secretKey");
-            const BasicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem('mobileNo');
+            // const key = localStorage.getItem("secretKey");
+            // const BasicAuth = btoa(`${mobile}:${key}`);
+              const BasicAuth = Authorization();
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getWalletTransactionListData/0/-1/${stDate}/${enDate}`, {
                 headers: {
                     'Authorization': `Basic ${BasicAuth}`
@@ -38,9 +40,10 @@ function Wallet({ show, onHide }) {
     const [coinTransition, setCoinTransition] = useState([]);
     const getCoinTransition = async (stDate, enDate) => {
         try {
-            const mobile = localStorage.getItem('mobileNo');
-            const key = localStorage.getItem("secretKey");
-            const BasicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem('mobileNo');
+            // const key = localStorage.getItem("secretKey");
+            // const BasicAuth = btoa(`${mobile}:${key}`);
+              const BasicAuth = Authorization();
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getCoinTransactionListData/0/-1/${stDate}/${enDate}`, {
                 headers: {
                     'Authorization': `Basic ${BasicAuth}`
@@ -87,9 +90,10 @@ function Wallet({ show, onHide }) {
     const [balance, setBalance] = useState({});
     const getBalance = async () => {
         try {
-            const mobile = localStorage.getItem('mobileNo');
-            const key = localStorage.getItem("secretKey");
-            const BasicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem('mobileNo');
+            // const key = localStorage.getItem("secretKey");
+            // const BasicAuth = btoa(`${mobile}:${key}`);
+              const BasicAuth = Authorization();
 
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getCoinAndWalletBalance`, {
                 headers: {

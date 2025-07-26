@@ -4,6 +4,7 @@ import { HiArrowNarrowLeft } from "react-icons/hi";
 import { LuClock3 } from "react-icons/lu";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import Loading from '../../CommonComponent/LoadingWait';
+import { Authorization } from '../../../../Utilities/Authorization';
 
 export default function DetailedNotificationPopup({ show, onHide }) {
     const [notifiList, setNotifiList] = useState([]);
@@ -13,9 +14,10 @@ export default function DetailedNotificationPopup({ show, onHide }) {
     const getList = async () => {
         try {
             setIsLoading(true);
-            const mobile = localStorage.getItem('mobileNo');
-            const key = localStorage.getItem("secretKey");
-            const BasicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem('mobileNo');
+            // const key = localStorage.getItem("secretKey");
+            // const BasicAuth = btoa(`${mobile}:${key}`);
+              const BasicAuth = Authorization();
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getNotificationList/ALL`, {
                 headers: {
                     'Authorization': `Basic ${BasicAuth}`

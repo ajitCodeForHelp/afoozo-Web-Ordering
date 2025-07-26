@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import DineInScan from "../ScreenComponents/RestaurantsComponent/DineInScan";
 import QRCodeScanner from "../CommonComponent/QRCodeScanner";
 import Loading from "../CommonComponent/LoadingWait";
+import { Authorization } from "../../../Utilities/Authorization";
 
 function Restaurants() {
     const location = useContext(LocationContext);
@@ -113,9 +114,10 @@ function Restaurants() {
     const [showScanner, setShowScanner] = useState(false);
     const getScanCode = async (qrCode) => {
         try {
-            const mobile = localStorage.getItem("mobileNo");
-            const key = localStorage.getItem("secretKey");
-            const BasicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem("mobileNo");
+            // const key = localStorage.getItem("secretKey");
+            // const BasicAuth = btoa(`${mobile}:${key}`);
+            const BasicAuth = Authorization();
 
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/scanQrCode/${qrCode}`, {
                 headers: {

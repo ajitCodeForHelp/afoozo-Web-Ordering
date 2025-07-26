@@ -6,6 +6,7 @@ import { FaWallet } from "react-icons/fa";
 import AddressDrawer from "../AddressComonent.jsx/AddressSection";
 import { useCart } from "../../../../Utilities/CartProvider";
 import useIsMobile from "../../../../Utilities/IsMobile";
+import { Authorization } from "../../../../Utilities/Authorization";
 
 function Nav() {
     const [showDrawer, setShowDrawer] = useState(false);
@@ -32,13 +33,14 @@ function Nav() {
 
     const getAddressList = async () => {
         try {
-            const mobile = localStorage.getItem("mobileNo");
-            const key = localStorage.getItem("secretKey");
-            const basicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem("mobileNo");
+            // const key = localStorage.getItem("secretKey");
+            // const basicAuth = btoa(`${mobile}:${key}`);
+               const BasicAuth = Authorization();
 
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getAddressList`, {
                 headers: {
-                    "Authorization": `Basic ${basicAuth}`,
+                    "Authorization": `Basic ${BasicAuth}`,
                 }
             });
             const getRes = await res.json();
@@ -81,9 +83,10 @@ function Nav() {
             stateId: address?.place_id,
         };
         try {
-            const mobile = localStorage.getItem("mobileNo");
-            const key = localStorage.getItem("key");
-            const BasicAuth = btoa(`${mobile}:${key}`);
+            // const mobile = localStorage.getItem("mobileNo");
+            // const key = localStorage.getItem("key");
+            // const BasicAuth = btoa(`${mobile}:${key}`);
+              const BasicAuth = Authorization();
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/saveAddress`, {
                 method: "POST",
                 headers: {
