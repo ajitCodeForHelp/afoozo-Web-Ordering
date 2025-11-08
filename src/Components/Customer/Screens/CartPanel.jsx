@@ -286,7 +286,7 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                         />
                         {(orderDetail?.orderType === "HomeDelivery" || orderDetail?.orderType === "TakeAway") &&
                             <DeliveryAddressBox
-                                address={cart?.address.addressLine1 || "Select Address"}
+                                address={cart?.address?.addressLine1 || "Select Address"}
                                 onChange={() => setShowAddressDrawer(true)}
                             />}
                         <PaymentSection

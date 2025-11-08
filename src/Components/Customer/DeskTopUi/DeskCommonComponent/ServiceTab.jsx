@@ -5,6 +5,7 @@ import {
   FaShoppingBag,
   FaUtensils,
 } from "react-icons/fa";
+import { setOrderTypeee } from "../../../../Redux/orderTypeSlice";
 
 const tabs = [
   { icon: <FaMotorcycle />, label: "Delivery", type: "HomeDelivery" },
@@ -14,7 +15,7 @@ const tabs = [
   { icon: "", label: "Check-In", type: "CheckIn" },
 ];
 
-const ServiceTabs = ({ orderType, setOrderType }) => {
+const ServiceTabs = ({ orderType, setOrderType, getList }) => {
   const containerRef = useRef();
 
   useEffect(() => {
@@ -28,7 +29,7 @@ const ServiceTabs = ({ orderType, setOrderType }) => {
         <div
           key={index}
           className={`tab-item ${orderType === tab.type ? "active" : ""}`} // 1 is active for demo
-          onClick={() => setOrderType(tab.type)}
+          onClick={() => { setOrderType(setOrderTypeee(tab.type)); getList(tab.type) }}
         >
           {tab.icon && <span className="tab-icon">{tab.icon}</span>}
           <span className="tab-label">{tab.label}</span>

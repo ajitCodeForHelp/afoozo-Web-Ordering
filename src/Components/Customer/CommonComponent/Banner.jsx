@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import banner from "../../../Assets/hero-bg.jpg";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
@@ -36,7 +35,8 @@ function Banner({ orderType }) {
     const isMobile = useIsMobile();
     return (
         <>
-            {isMobile ? <div className="p-4">
+            {isMobile ? 
+            <div className="p-4">
                 <Swiper
                     spaceBetween={10}
                     pagination={{ clickable: true }}

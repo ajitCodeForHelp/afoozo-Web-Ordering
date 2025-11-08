@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { HiArrowNarrowLeft } from "react-icons/hi";
 import { Authorization } from '../../../../Utilities/Authorization';
+import { useSelector } from 'react-redux';
 
 const PaymentMode = ({ visible, onClose, orderTotal, selectPaymentType, setSelectPaymentType }) => {
     const promoRef = useRef(null);
@@ -20,14 +21,15 @@ const PaymentMode = ({ visible, onClose, orderTotal, selectPaymentType, setSelec
     }, [visible, onClose]);
 
     const [payModeList, setPayModeList] = useState([]);
+
+    const orderType = useSelector((state)=>state.orderType.orderType);
     const modeList = async () => {
         try {
             // const mobile = localStorage.getItem("mobileNo");
             // const key = localStorage.getItem("secretKey");
             // const BasicAuth = btoa(`${mobile}:${key}`);
               const BasicAuth = Authorization();
-            const type = sessionStorage.getItem("orderType")
-            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getPaymentGatewayList_v1/${type}`, {
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getPaymentGatewayList_v1/${orderType}`, {
                 headers: {
                     'Authorization': `Basic ${BasicAuth}`
                 }

@@ -2,10 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { IoIosSearch } from "react-icons/io";
 import { IoFilterSharp } from "react-icons/io5";
 import SidebarDrawer from './Drawer';
-import { FaWallet } from "react-icons/fa";
-import { RxHamburgerMenu } from "react-icons/rx";
+// import { FaWallet } from "react-icons/fa";
+// import { RxHamburgerMenu } from "react-icons/rx";
+import { IoMdArrowRoundBack } from "react-icons/io";
 import DeskHeader from '../DeskTopUi/DeskCommonComponent/DeskHeader';
 import useIsMobile from '../../../Utilities/IsMobile';
+import { useNavigate } from 'react-router-dom';
 
 export default function Header({ filterVegNonVeg, handleSearch, balance }) {
   const [showDrop, setShowDrop] = useState(false);
@@ -35,6 +37,8 @@ export default function Header({ filterVegNonVeg, handleSearch, balance }) {
   //   }
   // }, []);
   const isMobile = useIsMobile();
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -94,21 +98,25 @@ export default function Header({ filterVegNonVeg, handleSearch, balance }) {
         !isMobile && <DeskHeader handleSearch={handleSearch} balance={balance} />
       }
 
-      {isMobile && <header className="header show-992 justify-content-between align-items-center p-3 shadow-sm bg-white">
-        <button className="nav-menu-btn" onClick={() => setShowDrawer(!showDrawer)} type="button">
-          <span className=""><RxHamburgerMenu /></span>
-        </button>
+      {isMobile &&
+        <header className="w-100 show-992 justify-content-start align-items-center px-3 py-2 shadow-sm bg-dark sticky-top">
+          {/* <button className="nav-menu-btn" onClick={() => setShowDrawer(!showDrawer)} type="button"> */}
+          <button className="nav-menu-btn bg-dark" onClick={() => navigate(-1)} type="button">
+            <span className="text-white"><IoMdArrowRoundBack /></span>
+          </button>
 
-        <h1 className="logo m-0 text-dark">AFOOZO</h1>
-        <div className="wallet d-flex align-items-center rounded-pill px-3 py-1">
-          <div className="wallet-icon d-flex align-items-center justify-content-center text-white fw-bold them-color bg-light rounded-pill">
-            <FaWallet className='text-dark' />
-          </div>
-          <span className="wallet-amount ms-2">₹{Number(balance).toFixed(2)}</span>
-        </div>
-      </header>}
+          <h1 className="logo m-0 text-dark flex-1 text-center d-flex justify-content-center text-white" style={{ flex: 1 }}>Menu</h1>
+          {/* <div className="wallet d-flex align-items-center rounded-pill px-3 py-1">
+            <div className="wallet-icon d-flex align-items-center justify-content-center text-white fw-bold them-color bg-light rounded-pill">
+              <FaWallet className='text-dark' />
+            </div>
+            <span className="wallet-amount ms-2">₹{Number(balance).toFixed(2)}</span>
+          </div> */}
 
-      {isMobile && <div className="container-fluid bg-white shadow-sm py-3 px-3 sticky-top">
+        </header>
+      }
+
+      {isMobile && <div className="container-fluid bg-dark shadow-sm py-3 px-3 sticky-top" style={{ top: "50px" }}>
         <div className="row gx-2 align-items-center">
           <div className="col-12 col-md flex-grow-1 position-relative w-75 d-flex align-items-center">
             <IoIosSearch className='position-absolute search-icon' />
@@ -116,8 +124,8 @@ export default function Header({ filterVegNonVeg, handleSearch, balance }) {
           </div>
           <div className="col-auto mt-md-0">
             <div className="dropdown" ref={dropdownRef}>
-              <button className="btn btn-danger d-flex align-items-center gap-1 rounded-pill px-3 py-2 them-bg-black text-white border-dark" onClick={() => setShowDrop(!showDrop)} type="button">
-                <IoFilterSharp />
+              <button className="btn btn-danger d-flex align-items-center gap-1 rounded-pill px-3 py-2 bg-white text-dark border-dark" onClick={() => setShowDrop(!showDrop)} type="button">
+                <IoFilterSharp className='fs-5 fw-semibold' />
                 <span className='dis-none'>Filters</span>
               </button>
 
@@ -134,6 +142,12 @@ export default function Header({ filterVegNonVeg, handleSearch, balance }) {
                 >
                   <li>
                     <div className="form-check">
+                      <input className="form-check-input" type="radio" name="vegNonVeg" id="all" value="all" onChange={filterVegNonVeg} />
+                      <label className="form-check-label" for="all">All</label>
+                    </div>
+                  </li>
+                  <li>
+                    <div className="form-check">
                       <input className="form-check-input" type="radio" name="vegNonVeg" id="vegetarian" value="Veg" onChange={filterVegNonVeg} />
                       <label className="form-check-label" for="vegetarian">Vegetarian</label>
                     </div>
@@ -144,6 +158,7 @@ export default function Header({ filterVegNonVeg, handleSearch, balance }) {
                       <label className="form-check-label" for="nonVegetarian">Non-Vegetarian</label>
                     </div>
                   </li>
+
                   {/* <li>
                     <div className="form-check">
                       <input className="form-check-input" type="radio" name="vegNonVeg" id="allergens" />

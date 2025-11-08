@@ -550,9 +550,51 @@ select:focus {
 
 
 /* responsive header */
-.header {
+/* .header {
   width: 100%;
+} */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  white-space: nowrap;
 }
+
+.header-logo {
+  width: 35px;
+  height: 35px;
+  object-fit: contain;
+}
+
+.location-text {
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.address-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 520px; /* adjust for smaller screens */
+}
+
+@media (max-width: 768px) {
+  .address-text {
+    max-width: 140px;
+  }
+
+  .header-logo {
+    width: 25px;
+    height: 25px;
+  }
+
+  /* .fw-bold.fs-5 {
+    font-size: 1rem !important;
+  } */
+}
+
+
 
 .logo {
   font-size: 1.5rem;

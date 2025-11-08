@@ -13,13 +13,18 @@ import MessagePopup from "../CommonComponent/Modals/MessagePopup";
 import ItemCustomPopup from "../CommonComponent/Modals/ItemCustomPopup";
 import CookingInstructionModal from "../CommonComponent/Modals/CookingInstructionModal";
 import { Authorization } from "../../../Utilities/Authorization";
+import { useSelector } from "react-redux";
 
 function CafeMenu() {
 
     const [cartVisible, setCartVisible] = useState(false);
     const { id } = useParams();
     const location = useLocation();
-    const { orderType } = location.state || {}
+    const { orderType, open } = location.state || {}
+
+    const orderTypeee = useSelector((state)=>state.orderType.orderType);
+    console.log(orderTypeee,"typeeeee");
+    // console.log(open, "open");
 
     const [resMenu, setResMenu] = useState([]);
     const [filterResMenu, setFilterResMenu] = useState([...resMenu]);
@@ -56,23 +61,27 @@ function CafeMenu() {
         }
     }, []);
 
-    const [hotSelling, setHotSelling] = useState([]);
-    useEffect(() => {
-        if (resMenu) {
-            const getPopularItems = () => {
-                const get = resMenu?.flatMap((itm) => itm.menuList?.filter((res) => res.sticker === "hotSelling"));
-                setHotSelling(get);
-            };
-            getPopularItems();
-        }
+    // const [hotSelling, setHotSelling] = useState([]);
+    // useEffect(() => {
+    //     if (resMenu) {
+    //         const getPopularItems = () => {
+    //             const get = resMenu?.flatMap((itm) => itm.menuList?.filter((res) => res.sticker === "hotSelling"));
+    //             // setHotSelling(get);
+    //         };
+    //         // getPopularItems();
+    //     }
 
-    }, [resMenu]);
+    // }, [resMenu]);
 
     const filterVegNonVeg = (e) => {
         const { value } = e.target;
-        const res = [...resMenu].map((itm) => ({ ...itm, menuList: itm.menuList?.filter((item) => item.vegNonVeg === value) }));
-        const filter = res.filter((itm) => itm.menuList && itm.menuList?.length > 0);
-        setFilterResMenu(filter);
+        if (value === "all") {
+            setFilterResMenu(resMenu);
+        } else {
+            const res = [...resMenu].map((itm) => ({ ...itm, menuList: itm.menuList?.filter((item) => item.vegNonVeg === value) }));
+            const filter = res.filter((itm) => itm.menuList && itm.menuList?.length > 0);
+            setFilterResMenu(filter);
+        }
     };
 
     const handleSearch = (e) => {
@@ -216,7 +225,11 @@ function CafeMenu() {
             navigator.vibrate(100); // Vibrates the device for 100 milliseconds
         }
         const currentRestaurant = cart.restaurant;
-        if (cart.items.length > 0 && currentRestaurant?.restaurantUuid !== id) {
+        if (open === false) {
+            // setPendingItem(item);
+            setMessage("Restaurant is closed. Please try again after some time.");
+            setShowMessagePopup(true);
+        } else if (cart.items.length > 0 && currentRestaurant?.restaurantUuid !== id) {
             setPendingItem(item);
             setMessage("You already have items from another restaurant. Clear the cart and add this item?");
             setModalVisible(true);
@@ -342,19 +355,19 @@ function CafeMenu() {
             console.log(e, "error in walletBalance Api");
         }
     };
-    useEffect(()=>{
+    useEffect(() => {
         walletBalance();
-    },[]);
+    }, []);
 
     return (
         <>
             <ScrollToTop />
             <div className="" style={{ paddingBottom: "70px" }}>
-                <Header filterVegNonVeg={filterVegNonVeg} handleSearch={handleSearch} balance={balance}/>
+                <Header filterVegNonVeg={filterVegNonVeg} handleSearch={handleSearch} balance={balance} />
                 {/* <Banner /> */}
                 <Categories list={resMenu} activeCategory={activeCategory} scrollToCategory={scrollToCategory} />
                 {/* <CafeCategory /> */}
-                {hotSelling?.length > 0 && <PopularItem hotSelling={hotSelling} />}
+                {/* {hotSelling?.length > 0 && <PopularItem hotSelling={hotSelling} />} */}
                 <CafeItems
                     resMenu={filterResMenu}
                     categoryRefs={categoryRefs}
@@ -396,7 +409,7 @@ function CafeMenu() {
                 type="confirm" // or "message"
             />
 
-            <MessagePopup show={showMessagePopup} title="Afoozo" onClose={() => setShowMessagePopup(false)} message={message} />
+            <MessagePopup show={showMessagePopup} title="Afoozo" onClose={() => { setShowMessagePopup(false); setMessage("") }} message={message} />
             <ItemCustomPopup show={showItemCustom} onClose={() => setShowItemCustom(false)} data={customData} dispatch={dispatch} id={id} cart={cart} />
             <CookingInstructionModal
                 show={showCookingPopup}

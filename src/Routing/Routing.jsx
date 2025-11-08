@@ -14,7 +14,7 @@ function Routing() {
 
     return (
         <CartProvider>
-            <LocationGate>
+            {/* <LocationGate> */}
                 <Routes>
                     <Route path="/"
                         element={
@@ -41,7 +41,7 @@ function Routing() {
 
                     {/* <Route path="/cafeMenu" element={<Home />} /> */}
                 </Routes>
-            </LocationGate>
+            {/* </LocationGate> */}
         </CartProvider>
     )
 }

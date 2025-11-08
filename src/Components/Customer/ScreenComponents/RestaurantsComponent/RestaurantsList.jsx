@@ -16,7 +16,7 @@ const RestaurantList = ({ restaurants, selectedCuisine, setSelectedCuisine, orde
       </p>
       <div className="d-flex flex-column gap-3">
         {restaurants?.map((res, idx) => (
-          <Link to={`/cafeMenu/${res.restaurantUuid}`} state={{ resDetail: res, orderType: orderType }}>
+          <Link to={`/cafeMenu/${res.restaurantUuid}`} state={{ resDetail: res, orderType: orderType, open: res.open }}>
             <div
               key={idx}
               className="d-flex gap-3 p-2 rounded-3 shadow-sm align-items-start bg-white overflow-hidden"

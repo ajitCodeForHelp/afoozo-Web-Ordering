@@ -2,10 +2,11 @@ import React, { useEffect, useRef } from "react";
 import { Container } from 'react-bootstrap';
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import useIsMobile from "../../../../Utilities/IsMobile";
 
 function Categories({ list, activeCategory, scrollToCategory }) {
 
-    const topValue = window.innerWidth < 768 ? '70px' : '72px';
+    const topValue = window.innerWidth < 768 ? '120px' : '72px';
 
     const navigate = useNavigate();
 
@@ -21,12 +22,14 @@ function Categories({ list, activeCategory, scrollToCategory }) {
         }
     }, [activeCategory]);
 
+    const isMobile = useIsMobile();
+
     return (
         <>
             <Container fluid className="py-3 sticky-top bg-white shadow-sm" style={{ top: topValue, zIndex: "1000" }}>
-                <div className="d-flex justify-content-center  align-items-center px-2 mb-3">
-                    <span className="text-dark fw-semibold view-all fs-4" onClick={() => navigate(-1)}><IoMdArrowRoundBack /></span>
-                    <h5 className="fw-bold mb-0 text-center text-dark fs-5" style={{ flex: 1 }}>Categories</h5>
+                <div className={`d-flex justify-content-${isMobile ? "start" : "center"} align-items-center px-2 mb-3`}>
+                    {!isMobile && <span className="text-dark fw-semibold view-all fs-4" onClick={() => navigate(-1)}><IoMdArrowRoundBack /></span>}
+                    <h5 className={`fw-bold mb-0 text-${isMobile ? "start" : "center"} text-dark fs-5`} style={{ flex: 1 }}>Categories</h5>
                 </div>
 
                 {/* <div className="category-scroll px-2"
