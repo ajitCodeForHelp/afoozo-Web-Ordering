@@ -7,87 +7,114 @@ import { useNavigate } from "react-router-dom";
 import { Authorization } from "../../../Utilities/Authorization";
 
 function OrderTrack() {
-    const verifyPayment = async (orderReferenceId) => {
-        try {
-            // const mobile = localStorage.getItem("mobileNo");
-            // const key = localStorage.getItem('secretKey');
-            // const BasicAuth = btoa(`${mobile}:${key}`);
-            const BasicAuth = Authorization();
-            const orderData = JSON.parse(localStorage.getItem("orderData"));
+    // const verifyPayment = async (orderReferenceId) => {
+    //     try {
+    //         // const mobile = localStorage.getItem("mobileNo");
+    //         // const key = localStorage.getItem('secretKey');
+    //         // const BasicAuth = btoa(`${mobile}:${key}`);
+    //         const BasicAuth = Authorization();
+    //         const orderData = JSON.parse(localStorage.getItem("orderData"));
 
-            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/cashFree/verifiedPayment/${orderReferenceId}`, {
+    //         const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/cashFree/verifiedPayment/${orderReferenceId}`, {
+    //             headers: {
+    //                 'Authorization': `Basic ${BasicAuth}`
+    //             }
+    //         });
+    //         const getRes = await res.json();
+    //         if (getRes.errorCode === 0) {
+    //             updatePaymentReq(orderData?.orderId, getRes.responsePacket, orderData?.orderTotal, orderData?.specialInstruction);
+    //         };
+    //     } catch (e) {
+    //         console.log(e, "error in verifying");
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     const orderData = JSON.parse(localStorage.getItem("orderData"));
+    //     verifyPayment(orderData.orderId);
+    // }, []);
+
+    // const updatePaymentReq = async (orderId, txStatus, orderAmount, specialInstruction) => {
+    //     try {
+    //         // const mobile = localStorage.getItem("mobileNo");
+    //         // const key = localStorage.getItem("secretKey");
+    //         // const BasicAuth = btoa(`${mobile}:${key}`);
+    //         const BasicAuth = Authorization();
+    //         const paymentType = localStorage.getItem("paymentType");
+
+    //         const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/updatePaymentRequestForCashFreeV2`, {
+    //             method: "POST",
+    //             headers: {
+    //                 'Authorization': `Basic ${BasicAuth}`,
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify({
+    //                 orderId: orderId,
+    //                 referenceId: orderId,
+    //                 txStatus: txStatus,
+    //                 paymentGateway: paymentType,
+    //                 orderAmount: orderAmount,
+    //             })
+    //         });
+    //         const getRes = await res.json();
+    //         if (getRes.errorCode === 0) {
+    //             placeOrder(orderId, specialInstruction, orderAmount, paymentType);
+    //         }
+    //     } catch (e) {
+    //         console.log(e, "error in update payment api");
+    //     }
+    // };
+
+    const [showMessagePopup, setShowMessagePopup] = useState(false);
+    const [message, setMessage] = useState('');
+    // const placeOrder = async (orderReferenceId, specialInstruction, paidByWallet, paymentType) => {
+    //     try {
+    //         // const mobile = localStorage.getItem("mobileNo");
+    //         // const key = localStorage.getItem("secretKey");
+    //         // const BasicAuth = btoa(`${mobile}:${key}`);
+    //         const BasicAuth = Authorization();
+    //         // v1/api/caseFree/getPaymentStatus/{orderRefecid}
+    //         const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/placeOrder/${orderReferenceId}`, {
+    //             method: "POST",
+    //             headers: {
+    //                 'Authorization': `Basic ${BasicAuth}`,
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify({
+    //                 specialInstruction: specialInstruction,
+    //                 paidOnDelivery: 0,
+    //                 paidByWallet: paidByWallet,
+    //                 paymentType: paymentType
+    //             })
+    //         });
+    //         const getRes = await res.json();
+    //         if (getRes.errorCode === 0) {
+    //             setShowMessagePopup(true);
+    //             setMessage(getRes.message);
+    //             orderDetail(orderReferenceId);
+    //         } else if (getRes.message === "This order has already been processed.") {
+    //             orderDetail(orderReferenceId);
+    //         } else {
+    //             setShowMessagePopup(true);
+    //             setMessage(getRes.message);
+    //         }
+    //     } catch (e) {
+    //         console.log(e, 'error in place order');
+    //     }
+    // };
+
+    const [issue, setIssue] = useState(false);
+
+    const getPaymentStatus = async (orderReferenceId) => {
+        try {
+            const BasicAuth = Authorization();
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/cashFree/getPaymentStatus/${orderReferenceId}`, {
                 headers: {
                     'Authorization': `Basic ${BasicAuth}`
                 }
             });
             const getRes = await res.json();
-            if (getRes.errorCode === 0) {
-                updatePaymentReq(orderData?.orderId, getRes.responsePacket, orderData?.orderTotal, orderData?.specialInstruction);
-            };
-        } catch (e) {
-            console.log(e, "error in verifying");
-        }
-    };
-
-    useEffect(() => {
-        const orderData = JSON.parse(localStorage.getItem("orderData"));
-        verifyPayment(orderData.orderId);
-    }, []);
-
-    const updatePaymentReq = async (orderId, txStatus, orderAmount, specialInstruction) => {
-        try {
-            // const mobile = localStorage.getItem("mobileNo");
-            // const key = localStorage.getItem("secretKey");
-            // const BasicAuth = btoa(`${mobile}:${key}`);
-            const BasicAuth = Authorization();
-            const paymentType = localStorage.getItem("paymentType");
-
-            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/updatePaymentRequestForCashFreeV2`, {
-                method: "POST",
-                headers: {
-                    'Authorization': `Basic ${BasicAuth}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    orderId: orderId,
-                    referenceId: orderId,
-                    txStatus: txStatus,
-                    paymentGateway: paymentType,
-                    orderAmount: orderAmount,
-                })
-            });
-            const getRes = await res.json();
-            if (getRes.errorCode === 0) {
-                placeOrder(orderId, specialInstruction, orderAmount, paymentType);
-            }
-        } catch (e) {
-            console.log(e, "error in update payment api");
-        }
-    };
-
-    const [showMessagePopup, setShowMessagePopup] = useState(false);
-    const [message, setMessage] = useState('');
-    const placeOrder = async (orderReferenceId, specialInstruction, paidByWallet, paymentType) => {
-        try {
-            // const mobile = localStorage.getItem("mobileNo");
-            // const key = localStorage.getItem("secretKey");
-            // const BasicAuth = btoa(`${mobile}:${key}`);
-            const BasicAuth = Authorization();
-
-            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/placeOrder/${orderReferenceId}`, {
-                method: "POST",
-                headers: {
-                    'Authorization': `Basic ${BasicAuth}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    specialInstruction: specialInstruction,
-                    paidOnDelivery: 0,
-                    paidByWallet: paidByWallet,
-                    paymentType: paymentType
-                })
-            });
-            const getRes = await res.json();
+            console.log(getRes, "check status");
             if (getRes.errorCode === 0) {
                 setShowMessagePopup(true);
                 setMessage(getRes.message);
@@ -97,11 +124,19 @@ function OrderTrack() {
             } else {
                 setShowMessagePopup(true);
                 setMessage(getRes.message);
+                setIssue(true);
             }
-        } catch (e) {
-            console.log(e, 'error in place order');
+        } catch (err) {
+            console.log(err, "error in get payment status");
+            setShowMessagePopup(true);
+            setMessage("something went wrong!");
+            setIssue(true);
         }
-    };
+    }
+    useEffect(() => {
+        const orderData = JSON.parse(localStorage.getItem("orderData"));
+        getPaymentStatus(orderData.orderId);
+    }, []);
 
     const [orders, setOrders] = useState([]);
 
@@ -142,6 +177,13 @@ function OrderTrack() {
 
     const navigate = useNavigate();
 
+    const handleClose = () => {
+        if (issue) {
+            navigate("/");
+        }
+        setShowMessagePopup(false);
+    };
+
     return (
         <>
             <div className="promo-header sticky-top them-bg-black d-flex align-items-center justify-content-between">
@@ -152,7 +194,7 @@ function OrderTrack() {
             <OrderProgress currentStep={orderStatus} />
             {/* <DeliveryLocationMap lati="28.6139" long="77.2090" /> */}
             <OrderDetails OrderDetail={orders} />
-            <MessagePopup show={showMessagePopup} message={message} onClose={() => setShowMessagePopup(false)} />
+            <MessagePopup show={showMessagePopup} message={message} onClose={() => handleClose()} />
         </>
     )
 }

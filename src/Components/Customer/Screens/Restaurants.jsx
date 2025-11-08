@@ -101,21 +101,23 @@ function Restaurants() {
                                     open: getRes.responsePacket[0].open
                                 }
                             });
-                    } else {
+                    } else if (getRes?.responsePacket?.length <= 0 && order !== "HomeDelivery") {
+                        // sessionStorage.setItem("orderType", "HomeDelivery");
+                        setOrderType(setOrderTypeee("HomeDelivery"));
+                        // setOrderType("HomeDelivery");
+                        getLisz("HomeDelivery"); 
+                    }
+                    else {
                         setRestaurantLists(getRes.responsePacket);
                         setFilterResList(getRes.responsePacket);
                     }
-                    //  else if (getRes?.responsePacket?.length <= 0 && order !== "HomeDelivery" ) {
-                    //     setOrderType(setOrderTypeee("HomeDelivery"));
-                    //     // setOrderType("HomeDelivery");
-                    //     getLisz(order);
-                    // }
                 }
             });
         } catch (err) {
             console.log(err, "error in fetch restautrent")
         }
     };
+
     useEffect(() => {
         const hasVisited = sessionStorage.getItem("hasVisited");
         if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
