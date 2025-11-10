@@ -22,8 +22,8 @@ function CafeMenu() {
     const location = useLocation();
     const { orderType, open } = location.state || {}
 
-    const orderTypeee = useSelector((state)=>state.orderType.orderType);
-    console.log(orderTypeee,"typeeeee");
+    // const orderTypeee = useSelector((state)=>state.orderType.orderType);
+    // console.log(orderTypeee,"typeeeee");
     // console.log(open, "open");
 
     const [resMenu, setResMenu] = useState([]);
@@ -381,7 +381,10 @@ function CafeMenu() {
                 />
 
                 {/* cartsection */}
-                {cart.items.length > 0 && cart?.restaurant?.restaurantUuid === id && <CartButton openClose={() => { setCartVisible(true); saveOrder() }} orderType={orderType} restaurantId={id} />}
+                {cart.items.length > 0 && cart?.restaurant?.restaurantUuid === id &&
+                    <CartButton openClose={() => { setCartVisible(true); saveOrder() }} orderType={orderType} restaurantId={id} />
+                }
+                
                 <CartPanel
                     show={cartVisible}
                     onClose={() => { setCartVisible(false) }}

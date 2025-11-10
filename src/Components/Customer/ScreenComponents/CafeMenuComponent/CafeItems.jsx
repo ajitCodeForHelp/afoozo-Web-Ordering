@@ -123,8 +123,8 @@ const CafeItems = ({ resMenu, categoryRefs, addToCart, cart, updateQuantity, cus
                               <div className="d-flex align-items-center gap-2">
                                 {quantity > 0 ?
                                   <>
-                                    <button className="bg-white rounded-1 ms-2 inst-btn" onClick={() => onEdit(item)}>
-                                      <FaPencilAlt className="ri-pencil-line text-dark fs-10" />
+                                    <button className="bg-white rounded-1 ms-2 inst-btn border-0" onClick={() => onEdit(item)}>
+                                      <FaPencilAlt className="ri-pencil-line text-dark fs-12" />
                                     </button>
                                     <div className="qty-selector">
                                       <button className="qty-btn" onClick={() => updateQuantity(item.itemId, quantity - 1)}>−</button>

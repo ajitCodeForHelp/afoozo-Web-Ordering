@@ -11,7 +11,7 @@ import useIsMobile from "../../../../Utilities/IsMobile";
 import { Authorization } from "../../../../Utilities/Authorization";
 import logo from "../../../../Assets/notification_icon-removebg-preview.png";
 
-function Nav() {
+function Nav({ orderType }) {
     const [showDrawer, setShowDrawer] = useState(false);
     const { cart, dispatch } = useCart();
     // address
@@ -209,7 +209,7 @@ function Nav() {
                 </div>
             </div> */}
 
-            <div className="header py-2 px-1 shadow-sm bg-white sticky-top" style={{ top: isMobile ? "46px" : "72px" }}>
+            {orderType !== "DineIn" && <div className="header py-2 px-1 shadow-sm bg-white sticky-top" style={{ top: isMobile ? "46px" : "72px" }}>
                 <Container fluid>
                     <Row className="align-items-center justify-content-between flex-nowrap">
                         {/* Logo */}
@@ -228,13 +228,13 @@ function Nav() {
                             <div className="location-text">
                                 <span className="fw-semibold small">Change Location</span>
                                 <div className="text-muted small address-text">
-                                    {cart?.address ? cart.address.addressLine1 : "Select Address"}
+                                    {cart?.address ? cart?.address?.addressLine1 : "Select Address"}
                                 </div>
                             </div>
                         </Col>
                     </Row>
                 </Container>
-            </div>
+            </div>}
 
             <SidebarDrawer isOpen={showDrawer} onClose={() => setShowDrawer(!showDrawer)} />
             <AddressDrawer show={showAddressDrawer} onClose={() => setShowAddressDrawer(false)} handleUpdateAddress={handleUpdateAddress} />

@@ -51,7 +51,7 @@ function Categories({ list, activeCategory, scrollToCategory }) {
                 </div> */}
                 <div className="category-scroll px-2" ref={containerRef} style={{ scrollBehavior: "smooth", whiteSpace: "nowrap" }}>
                     {list?.map((cat, index) => (
-                        <div key={index} className={`category-item text-center mx-2 cursor-pointer ${activeCategory === cat.categoryUuid ? 'text-dark' : 'text-muted'}`}
+                        <div key={index} className={`category-item flex-column justify-content-center align-items-center d-flex text-center mx-2 cursor-pointer ${activeCategory === cat.categoryUuid ? 'text-dark' : 'text-muted'}`}
                             onClick={() => scrollToCategory(cat.categoryUuid)}
                             ref={(el) => (itemRefs.current[cat.categoryUuid] = el)}
                         >

@@ -154,7 +154,7 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                 const checkoutOptions = {
                     paymentSessionId: payment_session_id, // must be dynamic and valid
                     redirectTarget: "_self", // or "_blank"
-                    returnUrl: `${window.location.origin}/orderTrack`
+                    returnUrl: `${window.location.origin}/orderTrack?order_id=${orderRefId}`
                 };
                 cashfree.checkout(checkoutOptions);
             }
@@ -194,7 +194,7 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
             const existAddress = cart?.address?.recordId === selectedAddress?.recordId
             if (existAddress && selectedAddress?.recordId !== addressRef.current) {
                 addressRef.current = selectedAddress?.recordId
-                
+
             }
         }
     }, [cart.address]);

@@ -5,13 +5,15 @@ import {
   FiHeadphones,
   FiX,
 } from "react-icons/fi";
+import { IoMdLogOut } from "react-icons/io";
+
 import { RiNotificationBadgeFill } from "react-icons/ri";
 import { FaChevronRight, FaInfoCircle } from "react-icons/fa";
 import { GiWallet } from "react-icons/gi";
 import { FaMoneyBillTrendUp, FaBuildingCircleCheck } from "react-icons/fa6";
 import { BsCartCheck } from "react-icons/bs";
 import { MdContentPaste } from "react-icons/md";
-import pic from "../../../Assets/profilePic.jpg";
+import pic from "../../../Assets/profilePic.png";
 import ProfileUpdate from "../ScreenComponents/DrawerPages/UpdateProfile";
 import DetailedNotificationPopup from "../ScreenComponents/DrawerPages/Notification";
 import AboutAppPopup from "../ScreenComponents/DrawerPages/About";
@@ -27,6 +29,7 @@ import usePopupBackHandler from "../../../Utilities/UsePopupStack";
 import OrderDetailSection from "../ScreenComponents/DrawerPages/OrderDetailSection";
 import HistoryOrderDetail from "../ScreenComponents/DrawerPages/HistoryOrderDetail";
 import { Authorization } from "../../../Utilities/Authorization";
+import PopupModal from "./Modals/PopUpModal";
 
 export default function SidebarDrawer({ isOpen, onClose }) {
   useEffect(() => {
@@ -64,9 +67,12 @@ export default function SidebarDrawer({ isOpen, onClose }) {
 
   const navigate = useNavigate();
 
+  const [showLogoutPopup, setShowLogoutPopup] = useState(false);
+
   const signOut = () => {
     localStorage.removeItem("secretKey");
     localStorage.removeItem("mobileNo");
+    setShowLogoutPopup(false)
     navigate("/login");
   };
   const isMobile = useIsMobile();
@@ -150,7 +156,7 @@ export default function SidebarDrawer({ isOpen, onClose }) {
           </button>
         </div>
 
-        <div className="d-flex align-items-center justify-content-between border-bottom mt-1">
+        <div className="d-flex align-items-center justify-content-between border-bottom mt-1 pb-2">
           <div className="d-flex align-items-center gap-3">
             <img
               src={pic} // use your avatar or placeholder image
@@ -185,12 +191,22 @@ export default function SidebarDrawer({ isOpen, onClose }) {
           {/* <li><FiHeadphones /><span>Help & Support</span></li> */}
         </ul>
 
-        <div className="logout-section">
-          <li onClick={signOut}><FiLogOut /> <span>Logout</span></li>
+        <div className="logout-section text-center d-flex justify-content-center">
+          <li onClick={()=>setShowLogoutPopup(true)} className="bg-dark px-3 py-1 text-white w-auto" style={{ borderRadius: "25px" }} ><IoMdLogOut className="logout-logo text-warning" /> <span>Logout</span></li>
         </div>
       </div>
 
-      <ProfileUpdate show={showUpdateProfile} onHide={() => setShowUpdateProfile(false)} profileData={profileData} getData={getData}/>
+      <PopupModal
+        type="confirm"
+        show={showLogoutPopup}
+        message={"Do you want to logout ?"}
+        onClose={() => setShowLogoutPopup(false)}
+        onConfirm={signOut}
+        title={'Afoozo'}
+        confirmText="Yes"
+      />
+
+      <ProfileUpdate show={showUpdateProfile} onHide={() => setShowUpdateProfile(false)} profileData={profileData} getData={getData} />
       <DetailedNotificationPopup show={showNotification} onHide={() => setShowNotification(false)} />
       <AboutAppPopup show={showAbout} onHide={() => setShowAbout(false)} />
       <TermsConditionsPopup show={showTandC} onHide={() => setShowTandC(false)} />

@@ -1,17 +1,17 @@
 import React from 'react';
 
-const DineInScan = ({ showScanner, setShowScanner }) => {
+const DineInScan = ({ setShowScanner }) => {
   return (
-    <div className="scan-order-page bg-white d-flex flex-column ">
+    <div className="scan-order-page bg-white d-flex flex-column flex-grow-1 justify-content-center align-items-center" style={{ minHeight: "500px" }}>
       {/* Header */}
-      <div className="d-flex align-items-center justify-content-between px-3 py-3 border-bottom bg-black text-white">
+      {/* {false && <div className="d-flex align-items-center justify-content-between px-3 py-3 border-bottom bg-black text-white">
         <i className="bi bi-arrow-left fs-4"></i>
         <h5 className="mb-0">Scan and Order</h5>
         <div style={{ width: '1.5rem' }}></div>
-      </div>
+      </div>} */}
 
       {/* QR and Info */}
-      <div className="flex-grow-1 d-flex flex-column align-items-center justify-content-center text-center p-3">
+      <div className="flex-grow-1 d-flex flex-column align-items-center justify-content-center text-center p-3 ">
         <div className="qr-circle mb-4">
           <img
             src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=sample"
@@ -22,7 +22,7 @@ const DineInScan = ({ showScanner, setShowScanner }) => {
 
         <div className="scan-order-card p-4 rounded-4 shadow-sm">
           <h5 className="fw-bold">Scan and Order</h5>
-          <p>Please Scan your QR Code on your table to place an Order</p> 
+          <p>Please Scan your QR Code on your table to place an Order</p>
           {/* <p className="text-muted small mb-1">You are seated at</p>
           <p className="text-muted small mb-1">Tata Guest House</p>
           <p className="text-muted small mb-1">house no 574, urban estate ph2, ludhiana</p>
@@ -34,7 +34,7 @@ const DineInScan = ({ showScanner, setShowScanner }) => {
 
           <div className="divider my-2">OR</div> */}
 
-          <button className="btn btn-dark w-100 rounded-pill py-2" onClick={()=>setShowScanner(true)}>
+          <button className="btn btn-dark w-100 rounded-pill py-2" onClick={() => setShowScanner(true)}>
             SCAN
           </button>
         </div>

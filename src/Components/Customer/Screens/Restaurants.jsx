@@ -20,6 +20,7 @@ import { fetchRestaurant } from "../../../Redux/ResturantApi";
 function Restaurants() {
     const location = useContext(LocationContext);
     const { response } = useSelector((state) => state.resturentApi);
+    console.log(response);
     const [RestaurantLists, setRestaurantLists] = useState(response?.responsePacket || []);
     const [filterResList, setFilterResList] = useState(response?.responsePacket || []);
     const [isLoading, setIsLoading] = useState(false);
@@ -101,11 +102,11 @@ function Restaurants() {
                                     open: getRes.responsePacket[0].open
                                 }
                             });
-                    } else if (getRes?.responsePacket?.length <= 0 && order !== "HomeDelivery") {
+                    } else if (getRes?.responsePacket?.length <= 0 && order !== "HomeDelivery" && order !== 'DineIn') {
                         // sessionStorage.setItem("orderType", "HomeDelivery");
                         setOrderType(setOrderTypeee("HomeDelivery"));
                         // setOrderType("HomeDelivery");
-                        getLisz("HomeDelivery"); 
+                        getLisz("HomeDelivery");
                     }
                     else {
                         setRestaurantLists(getRes.responsePacket);
@@ -122,7 +123,7 @@ function Restaurants() {
         const hasVisited = sessionStorage.getItem("hasVisited");
         if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
             getLisz(orderType);
-        } else if (!hasVisited) {
+        } else if (!hasVisited || response?.length <= 0) {
             getLisz(orderType);
             sessionStorage.setItem("hasVisited", "true");
         }
@@ -218,17 +219,17 @@ function Restaurants() {
         }
     };
 
-    console.log(orderType, "orderType");
+    // console.log(orderType, "orderType");
 
     return (
         <>
             <div className={`${isMobile && "pb-5"}`}>
                 <ScrollToTop />
-                <Nav />
-                <Banner orderType={orderType} />
+                <Nav orderType={orderType} />
+                {orderType !== "DineIn" && <Banner orderType={orderType} />}
                 {!isMobile && <ServiceTabs orderType={orderType} setOrderType={setOrderType} getList={getLisz} />}
                 {orderType === "HomeDelivery" && <CafeCategory cuisineList={cuisineList} filterByCuisine={filterByCuisine} />}
-                {orderType === "DineIn" && <DineInScan showScanner={showScanner} setShowScanner={setShowScanner} />}
+                {orderType === "DineIn" && <DineInScan setShowScanner={setShowScanner} />}
                 {isLoading ? <Loading fullScreen={false} /> : orderType !== "DineIn" && <RestaurantList restaurants={filterResList} selectedCuisine={selectedCuisine} setSelectedCuisine={setSelectedCuisine} orderType={orderType} />}
                 {orderType === "DineIn" && showScanner && <QRCodeScanner onScanSuccess={handleScanSuccess} onClose={() => setShowScanner(false)} />}
                 {isMobile && <BottomNav orderType={orderType} setOrderType={setOrderType} getList={getLisz} />}

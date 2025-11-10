@@ -3,7 +3,7 @@ import OrderProgress from "../ScreenComponents/OrderTrackComponent/OrderProgress
 import OrderDetails from "../ScreenComponents/OrderTrackComponent/OrderDetail";
 import { HiArrowNarrowLeft } from "react-icons/hi";
 import MessagePopup from "../CommonComponent/Modals/MessagePopup";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Authorization } from "../../../Utilities/Authorization";
 
 function OrderTrack() {
@@ -104,6 +104,8 @@ function OrderTrack() {
     // };
 
     const [issue, setIssue] = useState(false);
+    const [searchParams] = useSearchParams();
+    console.log(searchParams.get('order_id'));
 
     const getPaymentStatus = async (orderReferenceId) => {
         try {
@@ -114,11 +116,16 @@ function OrderTrack() {
                 }
             });
             const getRes = await res.json();
-            console.log(getRes, "check status");
             if (getRes.errorCode === 0) {
-                setShowMessagePopup(true);
-                setMessage(getRes.message);
-                orderDetail(orderReferenceId);
+                if (getRes.responsePacket === "Pending") {
+                    setTimeout(() => {
+                        getPaymentStatus(orderReferenceId);
+                    }, 500);
+                } else if (getRes.responsePacket === "Completed") {
+                    setShowMessagePopup(true);
+                    setMessage("Your Payment is Verified");
+                    orderDetail(orderReferenceId);
+                }
             } else if (getRes.message === "This order has already been processed.") {
                 orderDetail(orderReferenceId);
             } else {
@@ -134,8 +141,11 @@ function OrderTrack() {
         }
     }
     useEffect(() => {
-        const orderData = JSON.parse(localStorage.getItem("orderData"));
-        getPaymentStatus(orderData.orderId);
+        // const orderData = JSON.parse(localStorage.getItem("orderData"));
+        const orderId = searchParams.get('order_id');
+        if (orderId) {
+            getPaymentStatus(orderId);
+        }
     }, []);
 
     const [orders, setOrders] = useState([]);

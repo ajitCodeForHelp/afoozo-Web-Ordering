@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { HiArrowNarrowLeft } from "react-icons/hi";
-import pic from "../../../../Assets/profilePic.jpg";
+import pic from "../../../../Assets/profilePic.png";
 import { Authorization } from '../../../../Utilities/Authorization';
 import { getSecureItem } from '../../../../Utilities/Storage';
 
@@ -14,7 +14,7 @@ export default function ProfileUpdate({ show, onHide, profileData, getData }) {
 
     const dateFormate = (timestamp) => {
         const get = new Date(timestamp);
-        const date = get.toISOString().split("T")[0];
+        const date = get?.toISOString().split("T")[0];
         return date;
     };
 
@@ -34,8 +34,8 @@ export default function ProfileUpdate({ show, onHide, profileData, getData }) {
                 fullName: profileData?.fullName || '',
                 email: profileData?.email || '',
                 mobileNumber: mobile,
-                dateOfBirth: dateFormate(profileData?.dateOfBirth) || '', // ISO for date inputs
-                anniversaryDate: dateFormate(profileData?.anniversaryDate) || '',
+                dateOfBirth: profileData?.dateOfBirth && dateFormate(profileData?.dateOfBirth) || '', // ISO for date inputs
+                anniversaryDate: profileData?.anniversaryDate && dateFormate(profileData?.anniversaryDate) || '',
                 gender: profileData?.gender || '',
             });
         }
@@ -98,7 +98,7 @@ export default function ProfileUpdate({ show, onHide, profileData, getData }) {
             <div className="" style={{ paddingBottom: "74px" }}>
                 <div className="promo-header sticky-top them-bg-black d-flex align-items-center justify-content-between">
                     <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-white" onClick={onHide} role="button" />
-                    <h5 className="text-white m-auto">Profile</h5>
+                    <h5 className="text-white m-auto">Update Profile</h5>
                     <span></span>
                 </div>
                 <div className="d-flex align-items-center mb-3 ps-3 pt-3">

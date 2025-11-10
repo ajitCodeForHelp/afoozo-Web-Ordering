@@ -29,7 +29,7 @@ const ServiceTabs = ({ orderType, setOrderType, getList }) => {
         <div
           key={index}
           className={`tab-item ${orderType === tab.type ? "active" : ""}`} // 1 is active for demo
-          onClick={() => { setOrderType(setOrderTypeee(tab.type)); getList(tab.type) }}
+          onClick={() => { setOrderType(setOrderTypeee(tab.type)); tab.type !== "DineIn" && getList(tab.type) }}
         >
           {tab.icon && <span className="tab-icon">{tab.icon}</span>}
           <span className="tab-label">{tab.label}</span>

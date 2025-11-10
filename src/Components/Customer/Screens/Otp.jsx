@@ -3,13 +3,16 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import otpImg from "../../../Assets/otpImg.jpg";
 import { setSecureItem } from '../../../Utilities/Storage';
+import Loading from '../CommonComponent/LoadingWait';
 
 const OtpScreen = ({ mobileNumber, resend, onBack }) => {
     const [otp, setOtp] = useState(['', '', '', '']);
     const [timer, setTimer] = useState(60);
     const [resendEnabled, setResendEnabled] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
 
     useEffect(() => {
+        if (resendEnabled) return; 
         const interval = setInterval(() => {
             setTimer((prev) => {
                 if (prev <= 1) {
@@ -21,12 +24,16 @@ const OtpScreen = ({ mobileNumber, resend, onBack }) => {
             });
         }, 1000);
         return () => clearInterval(interval);
-    }, []);
+    }, [resendEnabled]);
 
     const navigate = useNavigate();
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const verifyOtp = async (otp) => {
         try {
+            setIsLoading(true);
+            setErrorMsg("");
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/loginUserByOtp`, {
                 method: "POST",
                 headers: {
@@ -44,9 +51,18 @@ const OtpScreen = ({ mobileNumber, resend, onBack }) => {
                 // localStorage.setItem("secretKey", getRes.responsePacket.secretKey);
                 // localStorage.setItem("mobileNo", mobileNumber);
                 navigate("/");
+            } else {
+                // ✅ Show invalid OTP message
+                setErrorMsg(getRes.message || "Invalid OTP. Please try again.");
+                setOtp(['', '', '', '']);
+                document.getElementById("otp-0")?.focus();
             }
+
         } catch (e) {
             console.log(e, "error in login api");
+            setErrorMsg("Something went wrong. Please try again later.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -61,6 +77,7 @@ const OtpScreen = ({ mobileNumber, resend, onBack }) => {
                 document.getElementById(`otp-${index + 1}`)?.focus();
             }
         }
+        setErrorMsg('');
     };
 
     useEffect(() => {
@@ -92,14 +109,18 @@ const OtpScreen = ({ mobileNumber, resend, onBack }) => {
         if (!resendEnabled) return;
         setTimer(60);
         setResendEnabled(false);
+        setOtp(['', '', '', '']);
+        resend();
+        setErrorMsg("");
     };
 
     return (
         <div className="min-vh-100 bg-white d-flex flex-column">
             {/* Header */}
-            <div className="d-flex align-items-center px-4 py-4 bg-black text-dark">
+            <div className="d-flex align-items-center px-4 py-4 bg-black text-light">
                 <FaArrowLeft className="me-2" onClick={onBack} />
-                <h5 className="mb-0 text-dark fs-4">OTP</h5>
+                <h5 className="mb-0 text-light fs-4 flex-grow-1 text-center">OTP</h5>
+                <span className='me-2'> </span>
             </div>
 
             {/* Main Content */}
@@ -112,37 +133,44 @@ const OtpScreen = ({ mobileNumber, resend, onBack }) => {
 
                 <h5>Enter OTP</h5>
                 <p className="text-muted mb-1">We have sent you an access code via SMS for mobile number verification</p>
-                <strong>{mobileNumber}</strong>
+                <strong className='text-muted'>{mobileNumber}</strong>
 
                 {/* OTP Boxes */}
-                <div className="d-flex justify-content-center gap-3 mt-4 p-3 rounded-4 shadow bg-white">
-                    {otp.map((digit, index) => (
-                        <input
-                            key={index}
-                            id={`otp-${index}`}
-                            type="number"
-                            className="form-control text-center fw-bold"
-                            style={{ width: '45px', fontSize: '24px' }}
-                            maxLength={1}
-                            value={digit}
-                            onChange={(e) => handleOtpChange(index, e.target.value)}
-                            onKeyDown={(e) => handleKeyDown(index, e)}
-                        />
-                    ))}
+                <div className="rounded-4 shadow bg-white mt-4">
+                    <div className="d-flex justify-content-center gap-3 mt-3 p-3 ">
+                        {otp.map((digit, index) => (
+                            <input
+                                key={index}
+                                id={`otp-${index}`}
+                                type="number"
+                                className="form-control text-center fw-bold "
+                                style={{ width: '48px', fontSize: '24px', borderRadius: "50%" }}
+                                maxLength={1}
+                                value={digit}
+                                onChange={(e) => handleOtpChange(index, e.target.value)}
+                                onKeyDown={(e) => handleKeyDown(index, e)}
+                            />
+                        ))}
+                    </div>
+                    <div className="mb-3 mt-1 text-end me-2">
+                        {resendEnabled ? (
+                            <button className="btn " onClick={handleResend}>
+                                Resend OTP
+                            </button>
+                        ) : (
+                            <span className="text-muted">
+                                00:{timer.toString().padStart(2, '0')} Resend OTP
+                            </span>
+                        )}
+                    </div>
                 </div>
+                {errorMsg && (
+                    <div className="text-danger mt-3 fw-semibold" style={{ fontSize: "15px" }}>
+                        {errorMsg}
+                    </div>
+                )}
+                {isLoading && <Loading />}
 
-                {/* Resend OTP */}
-                <div className="mt-3">
-                    {resendEnabled ? (
-                        <button className="btn btn-link" onClick={handleResend}>
-                            Resend OTP
-                        </button>
-                    ) : (
-                        <span className="text-muted">
-                            00:{timer.toString().padStart(2, '0')} Resend OTP
-                        </span>
-                    )}
-                </div>
             </div>
         </div>
     );

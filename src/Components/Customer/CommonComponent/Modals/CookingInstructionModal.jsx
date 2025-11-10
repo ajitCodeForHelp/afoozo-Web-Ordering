@@ -17,7 +17,7 @@ const CookingInstructionModal = ({ show, onClose, onAdd, instruction, setInstruc
 
     return (
         <div className={`cooking-popup-overlay ${visible ? '' : 'hidden'}`} onClick={handleClose}>
-            <div className={`cooking-popup-box ${visible ? '' : 'hidden'}`} onClick={(e) => e.stopPropagation()}>
+            <div className={`cooking-popup-box text-center ${visible ? '' : 'hidden'}`} onClick={(e) => e.stopPropagation()}>
                 <div className="cooking-popup-header them-bg-black text-white">Cooking Instruction</div>
 
                 <input
@@ -28,9 +28,12 @@ const CookingInstructionModal = ({ show, onClose, onAdd, instruction, setInstruc
                     onChange={(e) => setInstruction(e.target.value)}
                 />
 
-                <button className="cooking-popup-add-btn them-bg-black text-white" onClick={() => onAdd(instruction)}>
-                    ADD
-                </button>
+                <div className="d-flex justify-content-center">
+                    <button className="cooking-popup-add-btn them-bg-black text-white w-auto" onClick={() => onAdd(instruction)}>
+                        ADD
+                    </button>
+                </div>
+
             </div>
         </div>
     );

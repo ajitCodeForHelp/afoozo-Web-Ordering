@@ -46,8 +46,8 @@ function CartItems({ id, name, price, quantity, onIncrement, onDecrement, onEdit
             {/* </div> */}
             <div className="d-flex justify-content-between align-items-center">
                 <p className="m-0"> {instruction && <span className="text-muted fs-12 fw-normal two-line-ellipsis">{instruction}</span>}</p>
-                <button className="bg-white rounded-1 ms-2 inst-btn" onClick={onEdit}>
-                    <FaPencilAlt className="ri-pencil-line text-dark fs-10" />
+                <button className="bg-white rounded-1 ms-2 border-0 inst-btn" onClick={onEdit}>
+                    <FaPencilAlt className="ri-pencil-line text-dark fs-12" />
                 </button>
             </div>
         </div>
