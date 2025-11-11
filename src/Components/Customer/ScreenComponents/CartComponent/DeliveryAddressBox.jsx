@@ -16,7 +16,7 @@ const DeliveryAddressBox = ({ address, onChange }) => {
                 </div>
 
                 <div>
-                    <button className="btn btn-link text-success fw-bold p-0 ms-2" onClick={onChange}>
+                    <button className="btn btn-link text-decoration-none text-success fw-bold p-0 ms-2" onClick={onChange}>
                         Change
                     </button>
                 </div>

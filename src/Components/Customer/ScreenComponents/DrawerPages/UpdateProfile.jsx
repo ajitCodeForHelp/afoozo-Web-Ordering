@@ -7,8 +7,11 @@ import { HiArrowNarrowLeft } from "react-icons/hi";
 import pic from "../../../../Assets/profilePic.png";
 import { Authorization } from '../../../../Utilities/Authorization';
 import { getSecureItem } from '../../../../Utilities/Storage';
+import { useNavigate } from 'react-router-dom';
 
 export default function ProfileUpdate({ show, onHide, profileData, getData }) {
+
+
 
     const mobile = getSecureItem("mobileNo");
 
@@ -86,6 +89,8 @@ export default function ProfileUpdate({ show, onHide, profileData, getData }) {
         updateProfile();
     };
 
+    const navigation = useNavigate();
+
     return (
         <Modal
             show={show}
@@ -97,7 +102,7 @@ export default function ProfileUpdate({ show, onHide, profileData, getData }) {
         >
             <div className="" style={{ paddingBottom: "74px" }}>
                 <div className="promo-header sticky-top them-bg-black d-flex align-items-center justify-content-between">
-                    <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-white" onClick={onHide} role="button" />
+                    <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-white" onClick={() => { onHide(); navigation(-1) }} role="button" />
                     <h5 className="text-white m-auto">Update Profile</h5>
                     <span></span>
                 </div>

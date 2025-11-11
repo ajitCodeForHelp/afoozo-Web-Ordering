@@ -16,8 +16,11 @@ import useIsMobile from '../../../Utilities/IsMobile';
 import { IoMdArrowRoundBack } from "react-icons/io";
 import TaxPopup from '../CommonComponent/Modals/TaxPopup';
 import { Authorization } from '../../../Utilities/Authorization';
+import SlideToOrder from '../ScreenComponents/CartComponent/SliderToOrder';
 
 const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefId, saveOrder, dispatch, isLoading, isSmallLoading, cart }) => {
+
+    console.log(orderDetail, "orderDetail");
 
     // appling promocode
     const [isPromoOpen, setPromoOpen] = useState(false);
@@ -282,9 +285,10 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                             setShowTax={setShowTax}
                             packing={orderDetail?.packingCharges}
                             coin={orderDetail?.deliveryFee}
+                            orderType={orderDetail?.orderType}
                             total={orderDetail?.orderTotal}
                         />
-                        {(orderDetail?.orderType === "HomeDelivery" || orderDetail?.orderType === "TakeAway") &&
+                        {(orderDetail?.orderType === "HomeDelivery") &&
                             <DeliveryAddressBox
                                 address={cart?.address?.addressLine1 || "Select Address"}
                                 onChange={() => setShowAddressDrawer(true)}
@@ -297,9 +301,11 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                             selectPaymentType={selectPaymentType}
                         />
                         {
-                            selectPaymentType && <div className="d-flex justify-content-evenly gap-2 fixed-bottom pb-3 bg-white pt-2 shadow-sm">
-                                <button className='border-0 px-3 py-2 bg-dark text-white'>Delivery Later</button>
-                                <button className='border-0 px-3 py-2 bg-dark text-white' onClick={generateOrder}>Deliver Now</button>
+                            selectPaymentType &&
+                            <div className="d-flex justify-content-evenly gap-2 fixed-bottom pb-3 bg-white pt-2 mx-3 shadow-sm">
+                                {/* <button className='border-0 px-3 py-2 bg-dark text-white'>Delivery Later</button>
+                                <button className='border-0 px-3 py-2 bg-dark text-white' onClick={generateOrder}>Deliver Now</button> */}
+                                <SlideToOrder onComplete={generateOrder} />
                             </div>
                         }
                     </div>}

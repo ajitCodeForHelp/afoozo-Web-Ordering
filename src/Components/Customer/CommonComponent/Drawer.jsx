@@ -20,7 +20,7 @@ import AboutAppPopup from "../ScreenComponents/DrawerPages/About";
 import TermsConditionsPopup from "../ScreenComponents/DrawerPages/Terms&conditions";
 import OrderHistory from "../ScreenComponents/DrawerPages/OrderHistory";
 import LiveOrders from "../ScreenComponents/DrawerPages/LiveOrder";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import useIsMobile from "../../../Utilities/IsMobile";
 import Wallet from "../ScreenComponents/DrawerPages/Wallet";
 import BillToOrders from "../ScreenComponents/DrawerPages/BillToOrders";
@@ -99,7 +99,7 @@ export default function SidebarDrawer({ isOpen, onClose }) {
     { id: "terms", isOpen: showTandC, onClose: () => setShowTandC(false) },
     { id: "about", isOpen: showAbout, onClose: () => setShowAbout(false) },
     { id: "notification", isOpen: showNotification, onClose: () => setShowNotification(false) },
-    { id: "updateProfile", isOpen: showUpdateProfile, onClose: () => setShowUpdateProfile(false) },
+    // { id: "updateProfile", isOpen: showUpdateProfile, onClose: () => setShowUpdateProfile(false) },
     { id: "historyOrderDetail", isOpen: showHistoryOrderDetail, onClose: () => setShowHistoryOrderDetail(false) },
     { id: "drawer", isOpen: isOpen, onClose }, // ✅ LAST to close
   ], [
@@ -111,7 +111,7 @@ export default function SidebarDrawer({ isOpen, onClose }) {
     showTandC,
     showAbout,
     showNotification,
-    showUpdateProfile,
+    // showUpdateProfile,
     showOrderDetail,
     showHistoryOrderDetail,
     isOpen,
@@ -138,6 +138,20 @@ export default function SidebarDrawer({ isOpen, onClose }) {
   // }, [isOpen]);
 
   const [orderId, setOrderId] = useState('');
+
+
+  const [search] = useSearchParams();
+  const url = search.get("updateProfile");
+
+  useEffect(() => {
+    if (url) {
+      console.log('got it you can do it ');
+      setShowUpdateProfile(true)
+    }
+  }, [url]);
+
+  // const navigation = useNavigate();
+
 
   return (
     <>
@@ -168,7 +182,8 @@ export default function SidebarDrawer({ isOpen, onClose }) {
               <small className="text-muted">{profileData?.mobile}</small>
             </div>
           </div>
-          <div className="d-flex align-items-center gap-2" onClick={() => setShowUpdateProfile(true)}>
+          {/* setShowUpdateProfile(true) */}
+          <div className="d-flex align-items-center gap-2" onClick={() => navigate('?updateProfile=1')}>
             <img
               src="https://img.icons8.com/ios-filled/24/000000/qr-code.png"
               alt="QR"
@@ -192,7 +207,7 @@ export default function SidebarDrawer({ isOpen, onClose }) {
         </ul>
 
         <div className="logout-section text-center d-flex justify-content-center">
-          <li onClick={()=>setShowLogoutPopup(true)} className="bg-dark px-3 py-1 text-white w-auto" style={{ borderRadius: "25px" }} ><IoMdLogOut className="logout-logo text-warning" /> <span>Logout</span></li>
+          <li onClick={() => setShowLogoutPopup(true)} className="bg-dark px-3 py-1 text-white w-auto" style={{ borderRadius: "25px" }} ><IoMdLogOut className="logout-logo text-warning" /> <span>Logout</span></li>
         </div>
       </div>
 

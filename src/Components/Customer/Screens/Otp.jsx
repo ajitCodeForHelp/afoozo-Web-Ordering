@@ -143,7 +143,7 @@ const OtpScreen = ({ mobileNumber, resend, onBack }) => {
                                 key={index}
                                 id={`otp-${index}`}
                                 type="number"
-                                className="form-control text-center fw-bold "
+                                className="form-control text-center"
                                 style={{ width: '48px', fontSize: '24px', borderRadius: "50%" }}
                                 maxLength={1}
                                 value={digit}

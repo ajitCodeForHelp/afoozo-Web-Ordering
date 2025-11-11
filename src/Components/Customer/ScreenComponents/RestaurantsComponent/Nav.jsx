@@ -10,6 +10,7 @@ import { useCart } from "../../../../Utilities/CartProvider";
 import useIsMobile from "../../../../Utilities/IsMobile";
 import { Authorization } from "../../../../Utilities/Authorization";
 import logo from "../../../../Assets/notification_icon-removebg-preview.png";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 function Nav({ orderType }) {
     const [showDrawer, setShowDrawer] = useState(false);
@@ -138,10 +139,13 @@ function Nav({ orderType }) {
         walletBalance();
     }, []);
 
+  
+
     return (
         <>
             <div className={`d-flex justify-content-between align-items-center px-3 ${isMobile ? "py-2" : "py-3"} sticky-top bg-dark shadow-sm`}>
                 <div className="d-flex align-items-center gap-2">
+                    {/* setShowDrawer(!showDrawer) */}
                     <button className="bg-transparent border-0 fs-2 text-white" style={{ marginTop: "-10px" }} onClick={() => setShowDrawer(!showDrawer)} type="button">
                         <span className=""><RxHamburgerMenu /></span>
                     </button>

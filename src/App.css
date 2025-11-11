@@ -32,6 +32,12 @@ input:focus {
   /* background: var(--white) !important; */
 }
 
+input:focus, textarea:focus, select:focus {
+  box-shadow: none !important;
+  border-color: inherit !important;
+  outline: none !important;
+}
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -1937,6 +1943,7 @@ select:focus {
 .thali-card {
   border: none !important;
   border-radius: 16px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 4px;
 }
 
 .card-description {

@@ -20,7 +20,6 @@ import { fetchRestaurant } from "../../../Redux/ResturantApi";
 function Restaurants() {
     const location = useContext(LocationContext);
     const { response } = useSelector((state) => state.resturentApi);
-    console.log(response);
     const [RestaurantLists, setRestaurantLists] = useState(response?.responsePacket || []);
     const [filterResList, setFilterResList] = useState(response?.responsePacket || []);
     const [isLoading, setIsLoading] = useState(false);

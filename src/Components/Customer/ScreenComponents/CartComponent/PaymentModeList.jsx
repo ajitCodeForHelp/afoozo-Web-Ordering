@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { HiArrowNarrowLeft } from "react-icons/hi";
 import { Authorization } from '../../../../Utilities/Authorization';
 import { useSelector } from 'react-redux';
+import { BsPeople } from "react-icons/bs";
 
 const PaymentMode = ({ visible, onClose, orderTotal, selectPaymentType, setSelectPaymentType }) => {
     const promoRef = useRef(null);
@@ -22,13 +23,13 @@ const PaymentMode = ({ visible, onClose, orderTotal, selectPaymentType, setSelec
 
     const [payModeList, setPayModeList] = useState([]);
 
-    const orderType = useSelector((state)=>state.orderType.orderType);
+    const orderType = useSelector((state) => state.orderType.orderType);
     const modeList = async () => {
         try {
             // const mobile = localStorage.getItem("mobileNo");
             // const key = localStorage.getItem("secretKey");
             // const BasicAuth = btoa(`${mobile}:${key}`);
-              const BasicAuth = Authorization();
+            const BasicAuth = Authorization();
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getPaymentGatewayList_v1/${orderType}`, {
                 headers: {
                     'Authorization': `Basic ${BasicAuth}`
@@ -66,7 +67,8 @@ const PaymentMode = ({ visible, onClose, orderTotal, selectPaymentType, setSelec
                         payModeList.map((itm) => {
                             return (
                                 <>
-                                    <div className="d-flex justify-content-start m-1 p-3 shadow-sm fw-semibold cursor-pointer" onClick={() => { setSelectPaymentType(itm); onClose() }}>
+                                    <div className="d-flex justify-content-start gap-2 align-items-center m-1 p-3 shadow-sm fw-semibold cursor-pointer" onClick={() => { setSelectPaymentType(itm); onClose() }}>
+                                        <span><BsPeople /></span>
                                         <div className="">{itm}</div>
                                     </div>
                                 </>

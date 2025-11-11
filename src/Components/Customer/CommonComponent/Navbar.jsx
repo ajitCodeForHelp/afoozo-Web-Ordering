@@ -8,6 +8,7 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import DeskHeader from '../DeskTopUi/DeskCommonComponent/DeskHeader';
 import useIsMobile from '../../../Utilities/IsMobile';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 export default function Header({ filterVegNonVeg, handleSearch, balance }) {
   const [showDrop, setShowDrop] = useState(false);
@@ -39,6 +40,8 @@ export default function Header({ filterVegNonVeg, handleSearch, balance }) {
   const isMobile = useIsMobile();
 
   const navigate = useNavigate();
+
+  const vegNonVeg = useSelector((state) => state.vegNonveg.vegNonveg);
 
   return (
     <>
@@ -99,28 +102,29 @@ export default function Header({ filterVegNonVeg, handleSearch, balance }) {
       }
 
       {isMobile &&
-        <header className="w-100 show-992 justify-content-start align-items-center px-3 py-2 shadow-sm bg-dark sticky-top">
+        <header className="w-100 show-992 justify-content-start align-items-center px-3 py-1 shadow-sm bg-dark sticky-top">
           {/* <button className="nav-menu-btn" onClick={() => setShowDrawer(!showDrawer)} type="button"> */}
           <button className="nav-menu-btn bg-dark" onClick={() => navigate(-1)} type="button">
             <span className="text-white"><IoMdArrowRoundBack /></span>
           </button>
 
-          <h1 className="logo m-0 text-dark flex-1 text-center d-flex justify-content-center text-white" style={{ flex: 1 }}>Menu</h1>
+          <h2 className="logo m-0 text-dark flex-1 text-center d-flex justify-content-center text-white" style={{ flex: 1 }}>Menu</h2>
           {/* <div className="wallet d-flex align-items-center rounded-pill px-3 py-1">
             <div className="wallet-icon d-flex align-items-center justify-content-center text-white fw-bold them-color bg-light rounded-pill">
               <FaWallet className='text-dark' />
             </div>
             <span className="wallet-amount ms-2">₹{Number(balance).toFixed(2)}</span>
           </div> */}
+          <span className='me-2'></span>
 
         </header>
       }
 
-      {isMobile && <div className="container-fluid bg-dark shadow-sm py-3 px-3 sticky-top" style={{ top: "50px" }}>
+      {isMobile && <div className="container-fluid bg-dark shadow-sm py-2 px-3 sticky-top" style={{ top: "40px" }}>
         <div className="row gx-2 align-items-center">
-          <div className="col-12 col-md flex-grow-1 position-relative w-75 d-flex align-items-center">
+          <div className="col-12 col-md flex-grow-1 position-relative w-50 d-flex align-items-center">
             <IoIosSearch className='position-absolute search-icon' />
-            <input type="text" className="search-input form-control ps-5 py-2 bg-light rounded-pill" onChange={(e) => handleSearch(e.target.value)} placeholder="Search food..." />
+            <input type="text" className="search-input form-control ps-5 py-2 bg-light rounded-pill" onChange={(e) => handleSearch(e.target.value)} placeholder="Search items..." />
           </div>
           <div className="col-auto mt-md-0">
             <div className="dropdown" ref={dropdownRef}>
@@ -142,20 +146,20 @@ export default function Header({ filterVegNonVeg, handleSearch, balance }) {
                 >
                   <li>
                     <div className="form-check">
-                      <input className="form-check-input" type="radio" name="vegNonVeg" id="all" value="all" onChange={filterVegNonVeg} />
+                      <input className="form-check-input" type="radio" checked={vegNonVeg === 'all'} name="vegNonVeg" id="all" value="all" onChange={filterVegNonVeg} />
                       <label className="form-check-label" for="all">All</label>
                     </div>
                   </li>
                   <li>
                     <div className="form-check">
-                      <input className="form-check-input" type="radio" name="vegNonVeg" id="vegetarian" value="Veg" onChange={filterVegNonVeg} />
-                      <label className="form-check-label" for="vegetarian">Vegetarian</label>
+                      <input className="form-check-input" type="radio" name="vegNonVeg" id="vegetarian" checked={vegNonVeg === "Veg"} value="Veg" onChange={filterVegNonVeg} />
+                      <label className="form-check-label" for="vegetarian">Veg Only</label>
                     </div>
                   </li>
                   <li>
                     <div className="form-check">
-                      <input className="form-check-input" type="radio" name="vegNonVeg" id="nonVegetarian" value="NonVeg" onChange={filterVegNonVeg} />
-                      <label className="form-check-label" for="nonVegetarian">Non-Vegetarian</label>
+                      <input className="form-check-input" type="radio" name="vegNonVeg" id="nonVegetarian" checked={vegNonVeg === 'NonVeg'} value="NonVeg" onChange={filterVegNonVeg} />
+                      <label className="form-check-label" for="nonVegetarian">Non-Veg Only</label>
                     </div>
                   </li>
 

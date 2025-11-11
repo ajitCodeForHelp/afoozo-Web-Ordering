@@ -13,25 +13,28 @@ import MessagePopup from "../CommonComponent/Modals/MessagePopup";
 import ItemCustomPopup from "../CommonComponent/Modals/ItemCustomPopup";
 import CookingInstructionModal from "../CommonComponent/Modals/CookingInstructionModal";
 import { Authorization } from "../../../Utilities/Authorization";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setVegNonveg } from "../../../Redux/VegNonvegSlice";
 
 function CafeMenu() {
 
     const [cartVisible, setCartVisible] = useState(false);
     const { id } = useParams();
     const location = useLocation();
-    const { orderType, open } = location.state || {}
+    const { open } = location.state || {}
 
-    // const orderTypeee = useSelector((state)=>state.orderType.orderType);
+    const orderTypeee = useSelector((state) => state.orderType.orderType);
     // console.log(orderTypeee,"typeeeee");
     // console.log(open, "open");
 
     const [resMenu, setResMenu] = useState([]);
     const [filterResMenu, setFilterResMenu] = useState([...resMenu]);
     const [activeCategory, setActiveCategory] = useState(resMenu[0]?.categoryUuid);
+    const setVegnonVeg = useDispatch();
+
     const getData = async () => {
         try {
-            const type = sessionStorage.getItem("orderType");
+            // const type = sessionStorage.getItem("orderType");
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getItemListWithCatSubCat`, {
                 method: "POST",
                 headers: {
@@ -39,7 +42,7 @@ function CafeMenu() {
                 },
                 body: JSON.stringify({
                     restaurantId: id,
-                    orderType: type,
+                    orderType: orderTypeee,
                     tableNumber: 0,
                     length: -1,
                     searchKey: "",
@@ -47,6 +50,7 @@ function CafeMenu() {
             })
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
+                setVegnonVeg(setVegNonveg(''));
                 setResMenu(getRes.responsePacket);
                 setFilterResMenu(getRes.responsePacket);
                 setActiveCategory(getRes.responsePacket[0]?.categoryUuid);
@@ -73,8 +77,10 @@ function CafeMenu() {
 
     // }, [resMenu]);
 
+
     const filterVegNonVeg = (e) => {
         const { value } = e.target;
+        setVegnonVeg(setVegNonveg(value))
         if (value === "all") {
             setFilterResMenu(resMenu);
         } else {
@@ -87,7 +93,6 @@ function CafeMenu() {
     const handleSearch = (e) => {
         const res = [...resMenu].map((itm) => ({ ...itm, menuList: itm?.menuList.filter((item) => item.title.toLowerCase().includes(e.toLowerCase())) }));
         const filter = res.filter((itm) => itm.menuList && itm.menuList.length > 0);
-        console.log(res, "res")
         setFilterResMenu(filter);
     };
 
@@ -104,8 +109,8 @@ function CafeMenu() {
             // const mobile = localStorage.getItem('mobileNo');
             // const key = localStorage.getItem('secretKey');
             // const BasicAuth = btoa(`${mobile}:${key}`);
+            // const type = sessionStorage.getItem("orderType");
             const BasicAuth = Authorization();
-            const type = sessionStorage.getItem("orderType");
 
             setIsLoading(true);
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/saveOrder`, {
@@ -115,8 +120,8 @@ function CafeMenu() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    orderType: type,
-                    addressId: type === "HomeDelivery" || type === "TakeAway" ? (address ? address.recordId : cart?.address?.recordId) : null,
+                    orderType: orderTypeee,
+                    addressId: orderTypeee === "HomeDelivery" ? (address ? address.recordId : cart?.address?.recordId) : null,
                     specialInstruction: "Please deliver ASAP",
                     itemList: cart?.items?.map((itm) => ({
                         itemId: itm.itemId,
@@ -365,7 +370,7 @@ function CafeMenu() {
             <div className="" style={{ paddingBottom: "70px" }}>
                 <Header filterVegNonVeg={filterVegNonVeg} handleSearch={handleSearch} balance={balance} />
                 {/* <Banner /> */}
-                <Categories list={resMenu} activeCategory={activeCategory} scrollToCategory={scrollToCategory} />
+                <Categories list={filterResMenu} activeCategory={activeCategory} scrollToCategory={scrollToCategory} />
                 {/* <CafeCategory /> */}
                 {/* {hotSelling?.length > 0 && <PopularItem hotSelling={hotSelling} />} */}
                 <CafeItems
@@ -382,9 +387,9 @@ function CafeMenu() {
 
                 {/* cartsection */}
                 {cart.items.length > 0 && cart?.restaurant?.restaurantUuid === id &&
-                    <CartButton openClose={() => { setCartVisible(true); saveOrder() }} orderType={orderType} restaurantId={id} />
+                    <CartButton openClose={() => { setCartVisible(true); saveOrder() }} orderType={orderTypeee} restaurantId={id} />
                 }
-                
+
                 <CartPanel
                     show={cartVisible}
                     onClose={() => { setCartVisible(false) }}
@@ -394,7 +399,7 @@ function CafeMenu() {
                     decrement={decrement}
                     saveOrder={saveOrder}
                     dispatch={dispatch}
-                    orderType={orderType}
+                    orderType={orderTypeee}
                     isLoading={isLoading}
                     isSmallLoading={isSmallLoading}
                     cart={cart}

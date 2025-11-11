@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaSackDollar } from "react-icons/fa6";
 
 const PaymentSection = ({ walletChecked, onWalletChange, walletAmount, onAddPayment, selectPaymentType }) => {
   return (
@@ -26,9 +27,9 @@ const PaymentSection = ({ walletChecked, onWalletChange, walletAmount, onAddPaym
         {selectPaymentType ?
           <div className="d-flex justify-content-between align-items-center">
             <div className="flex-grow-1">
-              <div className="fw-semibold">{selectPaymentType}</div>
+              <div className="fw-semibold d-flex gap-2 align-items-center justify-content-start"><FaSackDollar /> {selectPaymentType}</div>
             </div>
-            <button className="btn btn-link text-success fw-bold p-0 ms-2" onClick={onAddPayment}>
+            <button className="btn btn-link text-decoration-none text-success fw-bold p-0 ms-2" onClick={onAddPayment}>
               Change
             </button>
           </div> : <button className="btn btn-warning border-dark them-bg-black w-100 text-white fw-semibold shadow-sm" onClick={onAddPayment}>

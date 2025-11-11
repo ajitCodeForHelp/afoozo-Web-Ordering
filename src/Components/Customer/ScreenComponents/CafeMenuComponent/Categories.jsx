@@ -6,7 +6,7 @@ import useIsMobile from "../../../../Utilities/IsMobile";
 
 function Categories({ list, activeCategory, scrollToCategory }) {
 
-    const topValue = window.innerWidth < 768 ? '120px' : '72px';
+    const topValue = window.innerWidth < 768 ? '95px' : '72px';
 
     const navigate = useNavigate();
 
