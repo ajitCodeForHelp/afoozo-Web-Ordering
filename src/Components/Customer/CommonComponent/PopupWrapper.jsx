@@ -10,19 +10,20 @@ const PopupManager = ({ popupKey, children }) => {
     const [search] = useSearchParams();
     const navigate = useNavigate();
 
-    const popupStack = search.get("popup")?.split(",") || [];
+    const popupStack = search.get("sub")?.split(",") || [];
+
     // const isTopPopup = popupStack[popupStack.length - 1] === popupKey;
     const isOpen = popupStack.includes(popupKey);
 
     const openPopup = (key) => {
         const newStack = [...popupStack, key].filter(Boolean);
-        navigate(`?popup=${newStack.join(",")}`);
+        navigate(`?sub=${newStack.join(",")}`);
     };
 
     const closePopup = () => {
         const newStack = popupStack.slice(0, -1);
         if (newStack.length) {
-            navigate(`?popup=${newStack.join(",")}`);
+            navigate(`?sub=${newStack.join(",")}`);
         } else {
             navigate(window.location.pathname); // remove popup param
         }

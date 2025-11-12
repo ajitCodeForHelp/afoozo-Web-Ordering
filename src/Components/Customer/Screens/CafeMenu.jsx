@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import Header from "../CommonComponent/Navbar";
-import PopularItem from "../ScreenComponents/CafeMenuComponent/PopularItem";
+// import PopularItem from "../ScreenComponents/CafeMenuComponent/PopularItem";
 import CafeItems from "../ScreenComponents/CafeMenuComponent/CafeItems";
 import CartButton from "../CommonComponent/CartButton";
 import CartPanel from "./CartPanel";
 import ScrollToTop from "../../../Utilities/ScrollToTop";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Categories from "../ScreenComponents/CafeMenuComponent/Categories";
 import { useCart } from "../../../Utilities/CartProvider";
 import PopupModal from "../CommonComponent/Modals/PopUpModal";
@@ -15,6 +15,7 @@ import CookingInstructionModal from "../CommonComponent/Modals/CookingInstructio
 import { Authorization } from "../../../Utilities/Authorization";
 import { useDispatch, useSelector } from "react-redux";
 import { setVegNonveg } from "../../../Redux/VegNonvegSlice";
+import { setDeliveryAddress } from "../../../Redux/customerSlice";
 
 function CafeMenu() {
 
@@ -104,6 +105,10 @@ function CafeMenu() {
     const [orderDetail, setOrderDetail] = useState([]);
     const [orderRefId, setOrderRefId] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const dispatchAddress = useDispatch();
+    const deliveryAddress = useSelector((state) => state.customerData?.address);
+
+
     const saveOrder = async (address) => {
         try {
             // const mobile = localStorage.getItem('mobileNo');
@@ -121,7 +126,8 @@ function CafeMenu() {
                 },
                 body: JSON.stringify({
                     orderType: orderTypeee,
-                    addressId: orderTypeee === "HomeDelivery" ? (address ? address.recordId : cart?.address?.recordId) : null,
+                    addressId: null,
+                    addressId: orderTypeee === "HomeDelivery" ? (address ? address.recordId : deliveryAddress?.recordId) : null,
                     specialInstruction: "Please deliver ASAP",
                     itemList: cart?.items?.map((itm) => ({
                         itemId: itm.itemId,
@@ -137,7 +143,8 @@ function CafeMenu() {
                 dispatch({
                     type: 'SET_ADDRESS',
                     payload: address
-                })
+                });
+                dispatchAddress(setDeliveryAddress(address));
             }
             if (getRes.errorCode === 0) {
                 getOrderDetail(getRes.responsePacket);
@@ -364,6 +371,18 @@ function CafeMenu() {
         walletBalance();
     }, []);
 
+    const navigate = useNavigate();
+
+    const [search] = useSearchParams();
+    const url = search.get("modal");
+    useEffect(() => {
+        if (url === "cart") {
+            setCartVisible(true);
+        } else if (!url !== "cart") {
+            setCartVisible(false);
+        }
+    }, [navigate, url]);
+
     return (
         <>
             <ScrollToTop />
@@ -387,12 +406,12 @@ function CafeMenu() {
 
                 {/* cartsection */}
                 {cart.items.length > 0 && cart?.restaurant?.restaurantUuid === id &&
-                    <CartButton openClose={() => { setCartVisible(true); saveOrder() }} orderType={orderTypeee} restaurantId={id} />
+                    <CartButton openClose={() => { navigate("?modal=cart"); saveOrder() }} orderType={orderTypeee} restaurantId={id} />
                 }
 
                 <CartPanel
                     show={cartVisible}
-                    onClose={() => { setCartVisible(false) }}
+                    onClose={() => navigate(-1)}
                     orderDetail={orderDetail}
                     orderRefId={orderRefId}
                     increment={increment}
@@ -417,7 +436,7 @@ function CafeMenu() {
                 type="confirm" // or "message"
             />
 
-            <MessagePopup show={showMessagePopup} title="Afoozo" onClose={() => { setShowMessagePopup(false); setMessage("") }} message={message} />
+            <MessagePopup show={showMessagePopup} title="Afoozo" onClose={() => { setShowMessagePopup(false); setMessage(""); navigate(-1) }} message={message} />
             <ItemCustomPopup show={showItemCustom} onClose={() => setShowItemCustom(false)} data={customData} dispatch={dispatch} id={id} cart={cart} />
             <CookingInstructionModal
                 show={showCookingPopup}

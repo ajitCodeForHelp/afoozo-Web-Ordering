@@ -4,15 +4,21 @@ import { useNavigate } from 'react-router-dom';
 import otpImg from "../../../Assets/otpImg.jpg";
 import { setSecureItem } from '../../../Utilities/Storage';
 import Loading from '../CommonComponent/LoadingWait';
+import { useDispatch } from 'react-redux';
+import { setCustomerData } from '../../../Redux/customerSlice';
+import { Authorization } from '../../../Utilities/Authorization';
 
 const OtpScreen = ({ mobileNumber, resend, onBack }) => {
+
+    const dispatch = useDispatch();
+
     const [otp, setOtp] = useState(['', '', '', '']);
     const [timer, setTimer] = useState(60);
     const [resendEnabled, setResendEnabled] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
 
     useEffect(() => {
-        if (resendEnabled) return; 
+        if (resendEnabled) return;
         const interval = setInterval(() => {
             setTimer((prev) => {
                 if (prev <= 1) {
@@ -29,6 +35,32 @@ const OtpScreen = ({ mobileNumber, resend, onBack }) => {
     const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState(false);
+
+    const userInfo = async () => {
+        try {
+            const BasicAuth = Authorization();
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/profileDetail`, {
+                headers: {
+                    'Authorization': `Basic ${BasicAuth}`
+                }
+            });
+            const getRes = await res.json();
+            if (getRes.errorCode === 0) {
+                setSecureItem("customerData", getRes.responsePacket)
+                dispatch(setCustomerData(getRes.responsePacket));
+
+                if (getRes.responsePacket?.email && getRes.responsePacket?.fullName) {
+                    navigate("/");
+                } else {
+                    navigate("/?modal=drawer&sub=updateProfile");
+                }
+            }
+        } catch (error) {
+            console.log(error, "error in user info api");
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const verifyOtp = async (otp) => {
         try {
@@ -48,9 +80,10 @@ const OtpScreen = ({ mobileNumber, resend, onBack }) => {
             if (getRes.errorCode === 0) {
                 setSecureItem("secretKey", getRes.responsePacket.secretKey);
                 setSecureItem("mobileNo", mobileNumber);
+                userInfo(getRes.responsePacket.secretKey)
                 // localStorage.setItem("secretKey", getRes.responsePacket.secretKey);
                 // localStorage.setItem("mobileNo", mobileNumber);
-                navigate("/");
+
             } else {
                 // ✅ Show invalid OTP message
                 setErrorMsg(getRes.message || "Invalid OTP. Please try again.");
@@ -61,8 +94,6 @@ const OtpScreen = ({ mobileNumber, resend, onBack }) => {
         } catch (e) {
             console.log(e, "error in login api");
             setErrorMsg("Something went wrong. Please try again later.");
-        } finally {
-            setIsLoading(false);
         }
     };
 

@@ -96,6 +96,7 @@ export default function DetailedNotificationPopup({ show, onHide }) {
                         </>
                     )
                 })}
+                
             </div>
         </Modal>
     );

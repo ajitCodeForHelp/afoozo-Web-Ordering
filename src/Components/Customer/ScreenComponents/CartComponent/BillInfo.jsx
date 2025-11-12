@@ -1,7 +1,7 @@
 import React from 'react';
 
 const BillingInfo = ({ bill, tax, packing, coin, total, setShowTax, orderType }) => {
-  console.log(coin, "coin");
+  
   return (
     <div className="billing-box p-3 mb-4 shadow-sm rounded bg-white">
       <h6 className="fw-bold mb-3">Billing Information</h6>

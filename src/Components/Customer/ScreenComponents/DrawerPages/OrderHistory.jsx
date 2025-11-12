@@ -16,7 +16,7 @@ export default function OrderHistory({ show, onHide, setShowHistoryOrderDetail, 
             // const mobile = localStorage.getItem("mobileNo");
             // const key = localStorage.getItem("secretKey");
             // const BasicAuth = btoa(`${mobile}:${key}`);
-              const BasicAuth = Authorization();
+            const BasicAuth = Authorization();
 
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getOrderList/All/history/0/-1`, {
                 headers: {

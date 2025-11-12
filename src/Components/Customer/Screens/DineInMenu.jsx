@@ -14,6 +14,8 @@ import ItemCustomPopup from "../CommonComponent/Modals/ItemCustomPopup";
 import CookingInstructionModal from "../CommonComponent/Modals/CookingInstructionModal";
 import CafeItems from "../ScreenComponents/CafeMenuComponent/CafeItems";
 import { Authorization } from "../../../Utilities/Authorization";
+import { useDispatch } from "react-redux";
+import { setDeliveryAddress } from "../../../Redux/customerSlice";
 
 function DineInMenu() {
     const [cartVisible, setCartVisible] = useState(false);
@@ -101,6 +103,8 @@ function DineInMenu() {
     const [orderDetail, setOrderDetail] = useState([]);
     const [orderRefId, setOrderRefId] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const dispatchAddress = useDispatch();
+
     const saveOrder = async (address) => {
         try {
             // const mobile = localStorage.getItem('mobileNo');
@@ -134,7 +138,8 @@ function DineInMenu() {
                 dispatch({
                     type: 'SET_ADDRESS',
                     payload: address
-                })
+                });
+                dispatchAddress(setDeliveryAddress(address));
             }
             if (getRes.errorCode === 0) {
                 getOrderDetail(getRes.responsePacket);

@@ -30,6 +30,10 @@ import OrderDetailSection from "../ScreenComponents/DrawerPages/OrderDetailSecti
 import HistoryOrderDetail from "../ScreenComponents/DrawerPages/HistoryOrderDetail";
 import { Authorization } from "../../../Utilities/Authorization";
 import PopupModal from "./Modals/PopUpModal";
+import PopupManager from "./PopupWrapper";
+import { useDispatch } from "react-redux";
+import { setCustomerData } from "../../../Redux/customerSlice";
+import { setSecureItem } from "../../../Utilities/Storage";
 
 export default function SidebarDrawer({ isOpen, onClose }) {
   useEffect(() => {
@@ -38,13 +42,10 @@ export default function SidebarDrawer({ isOpen, onClose }) {
   }, [isOpen]);
 
   const [profileData, setProfileData] = useState([]);
+  const dispatch = useDispatch();
 
   const getData = async () => {
     try {
-      // const token = localStorage.getItem("secretKey");
-      // const key = getSecureItem("secretKey");
-      // const mobile = getSecureItem("mobileNo");
-      // const BasicAuth = btoa(`${mobile}:${key}`);
       const BasicAuth = Authorization();
       const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/profileDetail`, {
         headers: {
@@ -53,6 +54,8 @@ export default function SidebarDrawer({ isOpen, onClose }) {
       });
       const getRes = await res.json();
       if (getRes.errorCode === 0) {
+        setSecureItem("customerData", getRes.responsePacket);
+        dispatch(setCustomerData(getRes.responsePacket));
         setProfileData(getRes.responsePacket);
       }
     } catch (r) {
@@ -72,7 +75,7 @@ export default function SidebarDrawer({ isOpen, onClose }) {
   const signOut = () => {
     localStorage.removeItem("secretKey");
     localStorage.removeItem("mobileNo");
-    setShowLogoutPopup(false)
+    setShowLogoutPopup(false);
     navigate("/login");
   };
   const isMobile = useIsMobile();
@@ -89,34 +92,34 @@ export default function SidebarDrawer({ isOpen, onClose }) {
   const [showOrderDetail, setShowOrderDetail] = useState(false);
   const [showHistoryOrderDetail, setShowHistoryOrderDetail] = useState(false);
 
-  const popupStack = useMemo(() => [
-    { id: "checkInOut", isOpen: showCheckInOut, onClose: () => setShowCheckInOut(false) },
-    { id: "billOrders", isOpen: showBiLlOrders, onClose: () => setShowBillOrders(false) },
-    { id: "wallet", isOpen: showWallet, onClose: () => setShowWallet(false) },
-    { id: "liveOrder", isOpen: showLiveOrder, onClose: () => setShowLiveOrder(false) },
-    { id: "historyOrder", isOpen: showHistoryOrder, onClose: () => setShowHistoryOrder(false) },
-    { id: "orderDetails", isOpen: showOrderDetail, onClose: () => setShowOrderDetail(false) },
-    { id: "terms", isOpen: showTandC, onClose: () => setShowTandC(false) },
-    { id: "about", isOpen: showAbout, onClose: () => setShowAbout(false) },
-    { id: "notification", isOpen: showNotification, onClose: () => setShowNotification(false) },
-    // { id: "updateProfile", isOpen: showUpdateProfile, onClose: () => setShowUpdateProfile(false) },
-    { id: "historyOrderDetail", isOpen: showHistoryOrderDetail, onClose: () => setShowHistoryOrderDetail(false) },
-    { id: "drawer", isOpen: isOpen, onClose }, // ✅ LAST to close
-  ], [
-    showCheckInOut,
-    showBiLlOrders,
-    showWallet,
-    showLiveOrder,
-    showHistoryOrder,
-    showTandC,
-    showAbout,
-    showNotification,
-    // showUpdateProfile,
-    showOrderDetail,
-    showHistoryOrderDetail,
-    isOpen,
-  ]);
-  usePopupBackHandler(popupStack);
+  // const popupStack = useMemo(() => [
+  //   { id: "checkInOut", isOpen: showCheckInOut, onClose: () => setShowCheckInOut(false) },
+  //   { id: "billOrders", isOpen: showBiLlOrders, onClose: () => setShowBillOrders(false) },
+  //   { id: "wallet", isOpen: showWallet, onClose: () => setShowWallet(false) },
+  //   { id: "liveOrder", isOpen: showLiveOrder, onClose: () => setShowLiveOrder(false) },
+  //   { id: "historyOrder", isOpen: showHistoryOrder, onClose: () => setShowHistoryOrder(false) },
+  //   { id: "orderDetails", isOpen: showOrderDetail, onClose: () => setShowOrderDetail(false) },
+  //   { id: "terms", isOpen: showTandC, onClose: () => setShowTandC(false) },
+  //   { id: "about", isOpen: showAbout, onClose: () => setShowAbout(false) },
+  //   { id: "notification", isOpen: showNotification, onClose: () => setShowNotification(false) },
+  //   // { id: "updateProfile", isOpen: showUpdateProfile, onClose: () => setShowUpdateProfile(false) },
+  //   { id: "historyOrderDetail", isOpen: showHistoryOrderDetail, onClose: () => setShowHistoryOrderDetail(false) },
+  //   { id: "drawer", isOpen: isOpen, onClose }, // ✅ LAST to close
+  // ], [
+  //   showCheckInOut,
+  //   showBiLlOrders,
+  //   showWallet,
+  //   showLiveOrder,
+  //   showHistoryOrder,
+  //   showTandC,
+  //   showAbout,
+  //   showNotification,
+  //   // showUpdateProfile,
+  //   showOrderDetail,
+  //   showHistoryOrderDetail,
+  //   isOpen,
+  // ]);
+  // usePopupBackHandler(popupStack);
 
   // useEffect(() => {
   //   const handlePopState = () => {
@@ -183,7 +186,7 @@ export default function SidebarDrawer({ isOpen, onClose }) {
             </div>
           </div>
           {/* setShowUpdateProfile(true) */}
-          <div className="d-flex align-items-center gap-2" onClick={() => navigate('?updateProfile=1')}>
+          <div className="d-flex align-items-center gap-2" onClick={() => navigate('?modal=drawer&sub=updateProfile')}>
             <img
               src="https://img.icons8.com/ios-filled/24/000000/qr-code.png"
               alt="QR"
@@ -195,14 +198,30 @@ export default function SidebarDrawer({ isOpen, onClose }) {
 
         <ul className="menu-list">
           {/* <li><FiHome /> <span>Home</span></li> */}
-          <li onClick={() => setShowLiveOrder(true)}><BsCartCheck /> <span>Live Order</span></li>
-          <li onClick={() => setShowHistoryOrder(true)}><FiClock /> <span>Order History</span></li>
-          <li onClick={() => setShowWallet(true)}><GiWallet /> <span>Wallet</span></li>
-          <li onClick={() => setShowBillOrders(true)}><FaMoneyBillTrendUp /> <span>Bill To Company Orders</span></li>
-          <li onClick={() => setShowCheckInOut(true)}><FaBuildingCircleCheck /> <span>Check -In</span></li>
-          <li onClick={() => setShowNotification(true)}><RiNotificationBadgeFill /> <span>Notification</span></li>
-          <li onClick={() => setShowAbout(true)}><FaInfoCircle /> <span>About</span></li>
-          <li onClick={() => setShowTandC(true)}><MdContentPaste /> <span>Terms & Conditions</span></li>
+          <li onClick={() => navigate('?modal=drawer&sub=liveOrders')}>
+            <BsCartCheck /> <span>Live Order</span>
+          </li>
+          <li onClick={() => navigate('?modal=drawer&sub=orderHistory')}>
+            <FiClock /> <span>Order History</span>
+          </li>
+          <li onClick={() => navigate('?modal=drawer&sub=wallet')}>
+            <GiWallet /> <span>Wallet</span>
+          </li>
+          <li onClick={() => navigate('?modal=drawer&sub=bills')}>
+            <FaMoneyBillTrendUp /> <span>Bill To Company Orders</span>
+          </li>
+          <li onClick={() => navigate('?modal=drawer&sub=checkin')}>
+            <FaBuildingCircleCheck /> <span>Check -In</span>
+          </li>
+          <li onClick={() => navigate('?modal=drawer&sub=notification')}><RiNotificationBadgeFill />
+            <span>Notification</span>
+          </li>
+          <li onClick={() => navigate('?modal=drawer&sub=about')}>
+            <FaInfoCircle /> <span>About</span>
+          </li>
+          <li onClick={() => navigate('?modal=drawer&sub=termsCondition')}>
+            <MdContentPaste /> <span>Terms & Conditions</span>
+          </li>
           {/* <li><FiHeadphones /><span>Help & Support</span></li> */}
         </ul>
 
@@ -215,23 +234,52 @@ export default function SidebarDrawer({ isOpen, onClose }) {
         type="confirm"
         show={showLogoutPopup}
         message={"Do you want to logout ?"}
-        onClose={() => setShowLogoutPopup(false)}
+        onClose={() => { setShowLogoutPopup(false) }}
         onConfirm={signOut}
         title={'Afoozo'}
         confirmText="Yes"
       />
 
-      <ProfileUpdate show={showUpdateProfile} onHide={() => setShowUpdateProfile(false)} profileData={profileData} getData={getData} />
-      <DetailedNotificationPopup show={showNotification} onHide={() => setShowNotification(false)} />
-      <AboutAppPopup show={showAbout} onHide={() => setShowAbout(false)} />
-      <TermsConditionsPopup show={showTandC} onHide={() => setShowTandC(false)} />
-      <OrderHistory show={showHistoryOrder} onHide={() => setShowHistoryOrder(false)} setShowHistoryOrderDetail={setShowHistoryOrderDetail} setOrderId={setOrderId} />
-      <OrderDetailSection show={showOrderDetail} onHide={() => setShowOrderDetail(false)} orderId={orderId} />
-      <HistoryOrderDetail show={showHistoryOrderDetail} onHide={() => setShowHistoryOrderDetail(false)} orderId={orderId} />
-      <LiveOrders show={showLiveOrder} onHide={() => setShowLiveOrder(false)} setShowOrderDetail={setShowOrderDetail} setOrderId={setOrderId} />
-      <Wallet show={showWallet} onHide={() => setShowWallet(false)} />
-      <BillToOrders show={showBiLlOrders} onHide={() => setShowBillOrders(false)} />
-      <CheckInOut show={showCheckInOut} onHide={() => setShowCheckInOut(false)} />
+      <PopupManager popupKey={"updateProfile"}>
+        <ProfileUpdate show={true} />
+      </PopupManager>
+
+      <PopupManager popupKey={"notification"}>
+        <DetailedNotificationPopup show={true} onHide={() => navigate(-1)} />
+      </PopupManager>
+
+      <PopupManager popupKey={'about'}>
+        <AboutAppPopup show={true} onHide={() => navigate(-1)} />
+      </PopupManager>
+
+      <PopupManager popupKey={"termsCondition"}>
+        <TermsConditionsPopup show={true} onHide={() => navigate(-1)} />
+      </PopupManager>
+
+      <PopupManager popupKey={'orderHistory'}>
+        <OrderHistory show={true} onHide={() => navigate(-1)} setShowHistoryOrderDetail={setShowHistoryOrderDetail} setOrderId={setOrderId} />
+      </PopupManager>
+
+      <PopupManager popupKey={'orderDetail'}>
+        <OrderDetailSection show={true} onHide={() => navigate(-1)} orderId={orderId} />
+      </PopupManager>
+
+      <PopupManager popupKey={'historyOrderDetail'}>
+        <HistoryOrderDetail show={true} onHide={() => navigate(-1)} orderId={orderId} />
+      </PopupManager>
+      <PopupManager popupKey={'liveOrders'}>
+        <LiveOrders show={true} onHide={() => navigate(-1)} setShowOrderDetail={setShowOrderDetail} setOrderId={setOrderId} />
+      </PopupManager>
+      <PopupManager popupKey={'wallet'}>
+        <Wallet show={true} onHide={() => navigate(-1)} />
+      </PopupManager>
+      <PopupManager popupKey={'bills'}>
+        <BillToOrders show={true} onHide={() => navigate(-1)} />
+      </PopupManager>
+      <PopupManager popupKey={'checkin'}>
+        <CheckInOut show={true} onHide={() => navigate(-1)} />
+      </PopupManager>
+
     </>
   );
 }

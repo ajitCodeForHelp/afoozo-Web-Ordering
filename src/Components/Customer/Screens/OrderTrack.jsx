@@ -105,7 +105,6 @@ function OrderTrack() {
 
     const [issue, setIssue] = useState(false);
     const [searchParams] = useSearchParams();
-    console.log(searchParams.get('order_id'));
 
     const getPaymentStatus = async (orderReferenceId) => {
         try {
@@ -193,6 +192,16 @@ function OrderTrack() {
         }
         setShowMessagePopup(false);
     };
+
+    useEffect(() => {
+        window.history.pushState(null, null, window.location.href)
+        window.addEventListener("popstate", (event) => {
+            navigate("/");
+        })
+        return () => {
+            window.removeEventListener("popstate", () => { });
+        }
+    }, [navigate]);
 
     return (
         <>

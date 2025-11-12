@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
-import { FaLocationDot } from "react-icons/fa6";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import SidebarDrawer from "../../CommonComponent/Drawer";
@@ -11,12 +10,18 @@ import useIsMobile from "../../../../Utilities/IsMobile";
 import { Authorization } from "../../../../Utilities/Authorization";
 import logo from "../../../../Assets/notification_icon-removebg-preview.png";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import PopupManager from "../../CommonComponent/PopupWrapper";
+import { useDispatch, useSelector } from "react-redux";
+import { setDeliveryAddress } from "../../../../Redux/customerSlice";
 
 function Nav({ orderType }) {
+
+    const navigation = useNavigate();
+
     const [showDrawer, setShowDrawer] = useState(false);
     const { cart, dispatch } = useCart();
     // address
-    const [showAddressDrawer, setShowAddressDrawer] = useState(false);
+    // const [showAddressDrawer, setShowAddressDrawer] = useState(false);
 
     const getCurrentLocation = () => {
         navigator.geolocation.getCurrentPosition(
@@ -35,6 +40,7 @@ function Nav({ orderType }) {
         );
     };
 
+    const dispatchAddress = useDispatch();
     const getAddressList = async () => {
         try {
             // const mobile = localStorage.getItem("mobileNo");
@@ -54,8 +60,8 @@ function Nav({ orderType }) {
                         type: "SET_ADDRESS",
                         payload: getRes.responsePacket[0]
                     });
+                    dispatchAddress(setDeliveryAddress(getRes.responsePacket[0]));
                 }
-
             } else if (getRes.responsePacket?.length === 0) {
                 getCurrentLocation();
             }
@@ -63,6 +69,9 @@ function Nav({ orderType }) {
             console.log(e, "error in getAddress");
         }
     };
+
+    const deliveryAddress = useSelector((state) => state.customerData.address);
+    // console.log(deliveryAddress, "delivery addresss");
 
     useEffect(() => {
         if (!cart?.address) {
@@ -115,7 +124,9 @@ function Nav({ orderType }) {
             type: "SET_ADDRESS",
             payload: address
         });
-        setShowAddressDrawer(false);
+        dispatchAddress(setDeliveryAddress(address));
+        // setShowAddressDrawer(false);
+        navigation(-1)
     };
 
     const [balance, setBalance] = useState('');
@@ -139,14 +150,27 @@ function Nav({ orderType }) {
         walletBalance();
     }, []);
 
-  
+    const [search] = useSearchParams();
+    const url = search.get("modal");
+    useEffect(() => {
+        // console.log("run oustSide");
+        const drawer = url?.split(",") || [];
+        const isOpen = drawer.includes("drawer");
+        if (isOpen) {
+            // console.log("run inSide");
+            setShowDrawer(!showDrawer);
+        } else if (!isOpen) {
+            setShowDrawer(false);
+        }
+
+    }, [url]);
 
     return (
         <>
             <div className={`d-flex justify-content-between align-items-center px-3 ${isMobile ? "py-2" : "py-3"} sticky-top bg-dark shadow-sm`}>
                 <div className="d-flex align-items-center gap-2">
                     {/* setShowDrawer(!showDrawer) */}
-                    <button className="bg-transparent border-0 fs-2 text-white" style={{ marginTop: "-10px" }} onClick={() => setShowDrawer(!showDrawer)} type="button">
+                    <button className="bg-transparent border-0 fs-2 text-white" style={{ marginTop: "-10px" }} onClick={() => navigation('?modal=drawer')} type="button">
                         <span className=""><RxHamburgerMenu /></span>
                     </button>
                 </div>
@@ -227,12 +251,12 @@ function Nav({ orderType }) {
                         </Col>
 
                         {/* Location */}
-                        <Col xs="auto" className="d-flex align-items-center" onClick={() => setShowAddressDrawer(true)}>
+                        <Col xs="auto" className="d-flex align-items-center" onClick={() => navigation("?sub=address")}>
                             <FaMapMarkerAlt size={20} className="me-2 text-dark" />
                             <div className="location-text">
                                 <span className="fw-semibold small">Change Location</span>
                                 <div className="text-muted small address-text">
-                                    {cart?.address ? cart?.address?.addressLine1 : "Select Address"}
+                                    {deliveryAddress ? deliveryAddress?.addressLine1 : "Select Address"}
                                 </div>
                             </div>
                         </Col>
@@ -240,8 +264,10 @@ function Nav({ orderType }) {
                 </Container>
             </div>}
 
-            <SidebarDrawer isOpen={showDrawer} onClose={() => setShowDrawer(!showDrawer)} />
-            <AddressDrawer show={showAddressDrawer} onClose={() => setShowAddressDrawer(false)} handleUpdateAddress={handleUpdateAddress} />
+            <SidebarDrawer isOpen={showDrawer} onClose={() => navigation(-1)} />
+            <PopupManager popupKey={"address"}>
+                <AddressDrawer show={true} onClose={() => navigation(-1)} handleUpdateAddress={handleUpdateAddress} />
+            </PopupManager>
         </>
     );
 };

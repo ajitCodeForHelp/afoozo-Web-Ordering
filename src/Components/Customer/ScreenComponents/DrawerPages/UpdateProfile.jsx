@@ -6,21 +6,19 @@ import { Modal } from 'react-bootstrap';
 import { HiArrowNarrowLeft } from "react-icons/hi";
 import pic from "../../../../Assets/profilePic.png";
 import { Authorization } from '../../../../Utilities/Authorization';
-import { getSecureItem } from '../../../../Utilities/Storage';
+import { getSecureItem, setSecureItem } from '../../../../Utilities/Storage';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCustomerData } from '../../../../Redux/customerSlice';
 
-export default function ProfileUpdate({ show, onHide, profileData, getData }) {
+export default function ProfileUpdate({ show }) {
 
-
+    const navigate = useNavigate();
 
     const mobile = getSecureItem("mobileNo");
-
-    const dateFormate = (timestamp) => {
-        const get = new Date(timestamp);
-        const date = get?.toISOString().split("T")[0];
-        return date;
-    };
-
+    const customerData = useSelector((state) => state.customerData.customerData);
+    // console.log(customerData, "customer")
+    const dispatch = useDispatch();
 
     const [form, setForm] = useState({
         fullName: '',
@@ -32,17 +30,78 @@ export default function ProfileUpdate({ show, onHide, profileData, getData }) {
     });
 
     useEffect(() => {
-        if (show && profileData) {
+        const handlePopState = (event) => {
+            if (!customerData?.fullName || !customerData?.email) {
+                // Stop user from going back
+                alert("Please update your name and email before leaving this page.");
+                // Push same state again to lock user in current page
+                window.history.pushState(null, null, window.location.href);
+            } else {
+                // If both name and email are filled, allow back navigation
+                navigate('/');
+            }
+        };
+
+        // Push new history state and block back initially
+        window.history.pushState(null, null, window.location.href);
+        window.addEventListener("popstate", handlePopState);
+
+        return () => {
+            window.removeEventListener("popstate", handlePopState);
+        };
+
+    }, [navigate, form.fullName, form.email]);
+
+
+
+    // useEffect(() => {
+    //     if (modal === "drawer" && sub === "updateProfile") {
+    //         const handleBeforeUnload = (e) => {
+    //             if (!form.fullName || !form.email) {
+    //                 e.preventDefault();
+    //                 e.returnValue = ""; // Show browser confirm dialog
+    //             }
+    //         };
+
+    //         const handlePopState = (e) => {
+    //             if (!form.fullName || !form.email) {
+    //                 e.preventDefault();
+    //                 alert("Please update your name and email before leaving this page.");
+    //                 navigate(0); // Stay on same page
+    //             }
+    //         };
+
+    //         // Block page reload and tab close
+    //         window.addEventListener("beforeunload", handleBeforeUnload);
+    //         // Block navigation (back/forward)
+    //         window.addEventListener("popstate", handlePopState);
+
+    //         return () => {
+    //             window.removeEventListener("beforeunload", handleBeforeUnload);
+    //             window.removeEventListener("popstate", handlePopState);
+    //         };
+    //     }
+    // }, [modal, sub, form, navigate]);
+
+
+    const dateFormate = (timestamp) => {
+        const get = new Date(timestamp);
+        const date = get?.toISOString().split("T")[0];
+        return date;
+    };
+
+    useEffect(() => {
+        if (show && customerData) {
             setForm({
-                fullName: profileData?.fullName || '',
-                email: profileData?.email || '',
+                fullName: customerData?.fullName || '',
+                email: customerData?.email || '',
                 mobileNumber: mobile,
-                dateOfBirth: profileData?.dateOfBirth && dateFormate(profileData?.dateOfBirth) || '', // ISO for date inputs
-                anniversaryDate: profileData?.anniversaryDate && dateFormate(profileData?.anniversaryDate) || '',
-                gender: profileData?.gender || '',
+                dateOfBirth: customerData?.dateOfBirth && dateFormate(customerData?.dateOfBirth) || '', // ISO for date inputs
+                anniversaryDate: customerData?.anniversaryDate && dateFormate(customerData?.anniversaryDate) || '',
+                gender: customerData?.gender || '',
             });
         }
-    }, [show, profileData]);
+    }, [show, customerData]);
 
     const updateProfile = async () => {
         try {
@@ -70,14 +129,15 @@ export default function ProfileUpdate({ show, onHide, profileData, getData }) {
             const getRes = await res.json();
             if (getRes.errorCode === 0) {
                 // alert("update successfully !");
-                getData();
-                onHide();
+                // getData();
+                setSecureItem("customerData", getRes.resposePacket)
+                dispatch(setCustomerData(getRes.resposePacket));
+                navigate(-1);
             }
         } catch (e) {
             console.log(e, "error in profileUpdate api");
         }
     };
-
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -89,12 +149,10 @@ export default function ProfileUpdate({ show, onHide, profileData, getData }) {
         updateProfile();
     };
 
-    const navigation = useNavigate();
-
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={() => navigate(-1)}
             centered
             backdrop="static"
             keyboard={false}
@@ -102,7 +160,7 @@ export default function ProfileUpdate({ show, onHide, profileData, getData }) {
         >
             <div className="" style={{ paddingBottom: "74px" }}>
                 <div className="promo-header sticky-top them-bg-black d-flex align-items-center justify-content-between">
-                    <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-white" onClick={() => { onHide(); navigation(-1) }} role="button" />
+                    <HiArrowNarrowLeft className="ri-arrow-left-line fs-4 text-white" onClick={() => { navigate(-1) }} role="button" />
                     <h5 className="text-white m-auto">Update Profile</h5>
                     <span></span>
                 </div>
@@ -141,6 +199,7 @@ export default function ProfileUpdate({ show, onHide, profileData, getData }) {
                                     name="email"
                                     id="email"
                                     value={form.email}
+                                    required
                                     onChange={handleChange}
                                     placeholder="Email"
                                     className="form-control border-0"

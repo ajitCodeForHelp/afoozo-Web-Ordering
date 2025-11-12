@@ -229,8 +229,18 @@ function Restaurants() {
                 {!isMobile && <ServiceTabs orderType={orderType} setOrderType={setOrderType} getList={getLisz} />}
                 {orderType === "HomeDelivery" && <CafeCategory cuisineList={cuisineList} filterByCuisine={filterByCuisine} />}
                 {orderType === "DineIn" && <DineInScan setShowScanner={setShowScanner} />}
-                {isLoading ? <Loading fullScreen={false} /> : orderType !== "DineIn" && <RestaurantList restaurants={filterResList} selectedCuisine={selectedCuisine} setSelectedCuisine={setSelectedCuisine} orderType={orderType} />}
-                {orderType === "DineIn" && showScanner && <QRCodeScanner onScanSuccess={handleScanSuccess} onClose={() => setShowScanner(false)} />}
+                {isLoading ? <Loading fullScreen={false} /> : orderType !== "DineIn" &&
+                    <RestaurantList
+                        restaurants={filterResList}
+                        selectedCuisine={selectedCuisine}
+                        setSelectedCuisine={setSelectedCuisine}
+                        orderType={orderType} />
+                }
+                {orderType === "DineIn" && showScanner &&
+                    <QRCodeScanner
+                        onScanSuccess={handleScanSuccess}
+                        onClose={() => setShowScanner(false)}
+                    />}
                 {isMobile && <BottomNav orderType={orderType} setOrderType={setOrderType} getList={getLisz} />}
             </div>
         </>

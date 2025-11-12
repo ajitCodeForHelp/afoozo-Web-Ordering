@@ -17,18 +17,18 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import TaxPopup from '../CommonComponent/Modals/TaxPopup';
 import { Authorization } from '../../../Utilities/Authorization';
 import SlideToOrder from '../ScreenComponents/CartComponent/SliderToOrder';
+import PopupManager from '../CommonComponent/PopupWrapper';
+import { useNavigate } from 'react-router-dom';
 
 const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefId, saveOrder, dispatch, isLoading, isSmallLoading, cart }) => {
 
-    console.log(orderDetail, "orderDetail");
-
     // appling promocode
-    const [isPromoOpen, setPromoOpen] = useState(false);
+    // const [isPromoOpen, setPromoOpen] = useState(false);
     const [promoCode, setPromoCode] = useState('');
 
     const handlePromoApply = () => {
         alert(`Applying promo: ${promoCode}`);
-        setPromoOpen(false);
+        // setPromoOpen(false);
     };
 
     const [isWalletUsed, setIsWalletUsed] = useState(false);
@@ -94,7 +94,7 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
     }, [cart.items]);
 
     // Payment
-    const [showPaymentModeList, setShowPaymentModeList] = useState(false);
+    // const [showPaymentModeList, setShowPaymentModeList] = useState(false);
     const [selectPaymentType, setSelectPaymentType] = useState('');
     const getLastPaymentMode = async () => {
         try {
@@ -189,7 +189,7 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
     };
 
     // Address Drawer
-    const [showAddressDrawer, setShowAddressDrawer] = useState(false);
+    // const [showAddressDrawer, setShowAddressDrawer] = useState(false);
     const [selectedAddress, setSelectedAddress] = useState('');
     const addressRef = useRef();
     useEffect(() => {
@@ -197,7 +197,6 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
             const existAddress = cart?.address?.recordId === selectedAddress?.recordId
             if (existAddress && selectedAddress?.recordId !== addressRef.current) {
                 addressRef.current = selectedAddress?.recordId
-
             }
         }
     }, [cart.address]);
@@ -205,7 +204,8 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
     const handleUpdateAddress = (address) => {
         setSelectedAddress(address);
         saveOrder(address);
-        setShowAddressDrawer(false);
+        // setShowAddressDrawer(false);
+        navigate(-1);
     };
 
     // tax
@@ -213,21 +213,21 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
 
     // cart outside click
     const cartRef = useRef(null);
-    useEffect(() => {
-        document.body.style.overflow = show ? "hidden" : "auto";
-        const handleClickOutside = (event) => {
-            if (cartRef.current && !cartRef.current.contains(event.target)) {
-                onClose(); // close cart
-            }
-        };
-        if (show && !isPromoOpen && !showCookingPopup && !showAddressDrawer && !showPaymentModeList && !showTax) {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
+    // useEffect(() => {
+    //     document.body.style.overflow = show ? "hidden" : "auto";
+    //     const handleClickOutside = (event) => {
+    //         if (cartRef.current && !cartRef.current.contains(event.target)) {
+    //             onClose(); // close cart
+    //         }
+    //     };
+    //     if (show && !isPromoOpen && !showCookingPopup && !showAddressDrawer && !showPaymentModeList && !showTax) {
+    //         document.addEventListener('mousedown', handleClickOutside);
+    //     }
 
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [show, onClose, isPromoOpen, showCookingPopup, showAddressDrawer, showPaymentModeList, showTax]);
+    //     return () => {
+    //         document.removeEventListener('mousedown', handleClickOutside);
+    //     };
+    // }, [show, onClose, isPromoOpen, showCookingPopup, showAddressDrawer, showPaymentModeList, showTax]);
 
     // api calls
     useEffect(() => {
@@ -237,16 +237,18 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
         }
     }, [show]);
 
-    const popupStack = [
-        { id: "paymentMode", isOpen: showPaymentModeList, onClose: () => setShowPaymentModeList(false) },
-        { id: "addressDrawer", isOpen: showAddressDrawer, onClose: () => setShowAddressDrawer(false) },
-        { id: "cookingPopup", isOpen: showCookingPopup, onClose: () => setShowCookingPopup(false) },
-        { id: "promoCode", isOpen: isPromoOpen, onClose: () => setPromoOpen(false) },
-        { id: "cartDrawer", isOpen: show, onClose },
-    ];
-    usePopupBackHandler(popupStack);
+    // const popupStack = [
+    //     { id: "paymentMode", isOpen: showPaymentModeList, onClose: () => setShowPaymentModeList(false) },
+    //     { id: "addressDrawer", isOpen: showAddressDrawer, onClose: () => setShowAddressDrawer(false) },
+    //     { id: "cookingPopup", isOpen: showCookingPopup, onClose: () => setShowCookingPopup(false) },
+    //     { id: "promoCode", isOpen: isPromoOpen, onClose: () => setPromoOpen(false) },
+    //     { id: "cartDrawer", isOpen: show, onClose },
+    // ];
+    // usePopupBackHandler(popupStack);
 
     const isMobile = useIsMobile();
+
+    const navigate = useNavigate();
 
     return (
         <>
@@ -278,7 +280,7 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                             value={instruction}
                             onChange={(e) => setInstruction(e.target.value)}
                         />
-                        <PromoCodeBox onClick={() => setPromoOpen(true)} />
+                        <PromoCodeBox onClick={() => navigate("?modal=cart&sub=promocode")} />
                         <BillingInfo
                             bill={orderDetail?.orderSubTotal}
                             tax={orderDetail?.taxAmount}
@@ -291,20 +293,26 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                         {(orderDetail?.orderType === "HomeDelivery") &&
                             <DeliveryAddressBox
                                 address={cart?.address?.addressLine1 || "Select Address"}
-                                onChange={() => setShowAddressDrawer(true)}
-                            />}
+                                onChange={() => navigate("?modal=cart&sub=address")}
+                            />
+                        }
+
                         <PaymentSection
                             walletChecked={isWalletUsed}
                             onWalletChange={(e) => { setIsWalletUsed(e.target.checked); }}
                             walletAmount={Number(balance?.walletBalance)}
-                            onAddPayment={() => setShowPaymentModeList(true)}
+                            onAddPayment={() => navigate("?modal=cart&sub=paymentMethod")}
                             selectPaymentType={selectPaymentType}
                         />
                         {
                             selectPaymentType &&
-                            <div className="d-flex justify-content-evenly gap-2 fixed-bottom pb-3 bg-white pt-2 mx-3 shadow-sm">
-                                {/* <button className='border-0 px-3 py-2 bg-dark text-white'>Delivery Later</button>
-                                <button className='border-0 px-3 py-2 bg-dark text-white' onClick={generateOrder}>Deliver Now</button> */}
+                            <div className="d-flex justify-content-evenly gap-2 fixed-bottom pb-3 bg-white pt-2 mx-3">
+                                {orderDetail?.orderType === "HomeDelivery" &&
+                                    <button className='border-0 rounded-5 fs-12 px-2 py-1 bg-dark text-white'>
+                                        Delivery Later
+                                    </button>
+                                }
+                                {/* <button className='border-0 px-3 py-2 bg-dark text-white' onClick={generateOrder}>Deliver Now</button> */}
                                 <SlideToOrder onComplete={generateOrder} />
                             </div>
                         }
@@ -312,13 +320,15 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                 </div>
             </div>
 
-            <PromoCodePannel
-                visible={isPromoOpen}
-                onClose={() => { setPromoOpen(false); }}
-                onApply={handlePromoApply}
-                code={promoCode}
-                setCode={setPromoCode}
-            />
+            <PopupManager popupKey={"promocode"}>
+                <PromoCodePannel
+                    visible={true}
+                    onClose={() => navigate(-1)}
+                    onApply={handlePromoApply}
+                    code={promoCode}
+                    setCode={setPromoCode}
+                />
+            </PopupManager>
 
             <CookingInstructionModal
                 show={showCookingPopup}
@@ -327,14 +337,19 @@ const CartPanel = ({ show, onClose, increment, decrement, orderDetail, orderRefI
                 onClose={() => { setShowCookingPopup(false); }}
                 onAdd={handleAddInstruction}
             />
-            <AddressDrawer show={showAddressDrawer} onClose={() => { setShowAddressDrawer(false); }} handleUpdateAddress={handleUpdateAddress} />
-            <PaymentMode
-                visible={showPaymentModeList}
-                onClose={() => { setShowPaymentModeList(false); }}
-                orderTotal={orderDetail?.orderTotal}
-                selectPaymentType={selectPaymentType}
-                setSelectPaymentType={setSelectPaymentType}
-            />
+            <PopupManager popupKey={"address"}>
+                <AddressDrawer show={true} onClose={() => { navigate(-1) }} handleUpdateAddress={handleUpdateAddress} />
+            </PopupManager>
+
+            <PopupManager popupKey={"paymentMethod"}>
+                <PaymentMode
+                    visible={true}
+                    onClose={() => navigate(-1)}
+                    orderTotal={orderDetail?.orderTotal}
+                    selectPaymentType={selectPaymentType}
+                    setSelectPaymentType={setSelectPaymentType}
+                />
+            </PopupManager>
             <TaxPopup show={showTax} onClose={() => setShowTax(false)} taxJson={orderDetail?.taxJson} />
         </>
     );

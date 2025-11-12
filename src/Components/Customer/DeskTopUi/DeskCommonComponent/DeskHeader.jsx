@@ -1,15 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SidebarDrawer from "../../CommonComponent/Drawer";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { FaWallet } from "react-icons/fa";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 function DeskHeader({ handleSearch, balance }) {
+
     const [showDrawer, setShowDrawer] = useState(false);
+    const navigate = useNavigate();
+    const [search] = useSearchParams();
+    const url = search.get("modal");
+    useEffect(() => {
+        // console.log("run oustSide");
+        const drawer = url?.split(",") || [];
+        const isOpen = drawer.includes("drawer");
+        if (isOpen) {
+            // console.log("run inSide");
+            setShowDrawer(!showDrawer);
+        } else if (!isOpen) {
+            setShowDrawer(false);
+        }
+
+    }, [url]);
+
     return (
         <>
             <div className="d-flex justify-content-between align-items-center p-3 sticky-top bg-white shadow-sm" style={{ backgroundColor: '#181818' }}>
                 <div className="d-flex align-items-center gap-2">
-                    <button className="bg-transparent border-0 fs-2 text-dark" style={{ marginTop: "-10px" }} onClick={() => setShowDrawer(!showDrawer)} type="button">
+                    <button className="bg-transparent border-0 fs-2 text-dark" style={{ marginTop: "-10px" }} onClick={() => navigate('?modal=drawer')} type="button">
                         <span className=""><RxHamburgerMenu /></span>
                     </button>
                     <span className="text-dark fw-bold fs-5">AFOOZO</span>
@@ -43,7 +61,7 @@ function DeskHeader({ handleSearch, balance }) {
                     </div>
                 </div>
             </div>
-            <SidebarDrawer isOpen={showDrawer} onClose={() => setShowDrawer(!showDrawer)} />
+            <SidebarDrawer isOpen={showDrawer} onClose={() => navigate(-1)} />
         </>
     )
 };
