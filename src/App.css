@@ -32,7 +32,9 @@ input:focus {
   /* background: var(--white) !important; */
 }
 
-input:focus, textarea:focus, select:focus {
+input:focus,
+textarea:focus,
+select:focus {
   box-shadow: none !important;
   border-color: inherit !important;
   outline: none !important;
@@ -387,7 +389,8 @@ select:focus {
   min-width: 80px;
   flex-shrink: 0;
 }
-.category-icon{
+
+.category-icon {
   width: 70px;
   height: 70px;
   object-fit: cover;
@@ -396,6 +399,7 @@ select:focus {
   padding: 7.5px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+
 .category-icon img {
   width: 55px;
   height: 55px;
@@ -483,7 +487,7 @@ select:focus {
   color: #111;
   /* border-radius: 8px; */
   transition: background 0.2s;
-   border-bottom: .1px solid rgb(194, 193, 193);
+  border-bottom: .1px solid rgb(194, 193, 193);
 }
 
 .menu-list li:hover {
@@ -1998,4 +2002,9 @@ select:focus {
   height: 28px;
   text-align: center;
   font-weight: bold;
+}
+
+/* live order slide */
+.liver-order-slide .swiper-pagination-bullet {
+  background-color: rgb(255, 251, 0) !important;
 }

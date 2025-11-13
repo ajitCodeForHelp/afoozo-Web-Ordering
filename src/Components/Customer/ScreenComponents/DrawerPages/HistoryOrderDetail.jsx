@@ -3,9 +3,10 @@ import { Modal } from 'react-bootstrap';
 import { HiArrowNarrowLeft } from "react-icons/hi";
 import { IoIosCall } from "react-icons/io";
 import OrderDetails from '../OrderTrackComponent/OrderDetail';
-import OrderProgress from '../OrderTrackComponent/OrderProgress';
+// import OrderProgress from '../OrderTrackComponent/OrderProgress';
 import { BsGeoAlt, BsBriefcase } from "react-icons/bs";
 import { Authorization } from '../../../../Utilities/Authorization';
+import { useSearchParams } from 'react-router-dom';
 
 export default function HistoryOrderDetail({ show, onHide, orderId }) {
 
@@ -15,7 +16,7 @@ export default function HistoryOrderDetail({ show, onHide, orderId }) {
             // const mobile = localStorage.getItem("mobileNo");
             // const key = localStorage.getItem("secretKey");
             // const BasicAuth = btoa(`${mobile}:${key}`);
-              const BasicAuth = Authorization();
+            const BasicAuth = Authorization();
 
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/orderDetail/${orderReferenceId}`, {
                 headers: {
@@ -31,10 +32,19 @@ export default function HistoryOrderDetail({ show, onHide, orderId }) {
         }
     };
 
+    const [search] = useSearchParams();
+
+
+
     useEffect(() => {
-        if (show && orderId) {
+        const url = search.get("orderRef_id");
+
+        if (url && show) {
+            getOrderDetail(url);
+        } if (show && orderId) {
             getOrderDetail(orderId);
         }
+
     }, [show]);
 
     function formatDateTime(timestamp) {
@@ -70,6 +80,8 @@ export default function HistoryOrderDetail({ show, onHide, orderId }) {
                     <span className='text-white'><IoIosCall /> Call</span>
                 </div>
                 {/* <OrderProgress currentStep={2} /> */}
+
+              
 
                 <div className="mb-3 p-3 shadow-sm">
                     <div className="fw-bold">

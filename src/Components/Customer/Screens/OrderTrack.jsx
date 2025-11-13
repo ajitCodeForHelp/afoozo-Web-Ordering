@@ -5,6 +5,8 @@ import { HiArrowNarrowLeft } from "react-icons/hi";
 import MessagePopup from "../CommonComponent/Modals/MessagePopup";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Authorization } from "../../../Utilities/Authorization";
+import DeliveryLocationMap from "../ScreenComponents/OrderTrackComponent/DeliveryLocationMap";
+import Loading from "../CommonComponent/LoadingWait";
 
 function OrderTrack() {
     // const verifyPayment = async (orderReferenceId) => {
@@ -65,6 +67,8 @@ function OrderTrack() {
     //     }
     // };
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const [showMessagePopup, setShowMessagePopup] = useState(false);
     const [message, setMessage] = useState('');
     // const placeOrder = async (orderReferenceId, specialInstruction, paidByWallet, paymentType) => {
@@ -108,6 +112,7 @@ function OrderTrack() {
 
     const getPaymentStatus = async (orderReferenceId) => {
         try {
+            setIsLoading(true);
             const BasicAuth = Authorization();
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/cashFree/getPaymentStatus/${orderReferenceId}`, {
                 headers: {
@@ -131,6 +136,7 @@ function OrderTrack() {
                 setShowMessagePopup(true);
                 setMessage(getRes.message);
                 setIssue(true);
+                setIsLoading(false);
             }
         } catch (err) {
             console.log(err, "error in get payment status");
@@ -138,7 +144,7 @@ function OrderTrack() {
             setMessage("something went wrong!");
             setIssue(true);
         }
-    }
+    };
     useEffect(() => {
         // const orderData = JSON.parse(localStorage.getItem("orderData"));
         const orderId = searchParams.get('order_id');
@@ -181,6 +187,8 @@ function OrderTrack() {
             }
         } catch (e) {
             console.log(e, "error in orderDetail");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -210,9 +218,18 @@ function OrderTrack() {
                 <h5 className="text-white m-auto">Order Track</h5>
                 <span></span>
             </div>
-            <OrderProgress currentStep={orderStatus} />
-            {/* <DeliveryLocationMap lati="28.6139" long="77.2090" /> */}
-            <OrderDetails OrderDetail={orders} />
+            {isLoading ? <Loading fullScreen={true} message="Please wait..." />
+                :
+                <>
+                    <OrderProgress currentStep={orderStatus} />
+                    {orders?.orderType === "HomeDelivery" &&
+                        <DeliveryLocationMap
+                            lati={orders?.deliveryLatitude ? orders?.deliveryLatitude : "28.6139"}
+                            long={orders?.deliveryLongitude ? orders?.deliveryLongitude : "77.2090"}
+                        />}
+                    <OrderDetails OrderDetail={orders} />
+                </>
+            }
             <MessagePopup show={showMessagePopup} message={message} onClose={() => handleClose()} />
         </>
     )

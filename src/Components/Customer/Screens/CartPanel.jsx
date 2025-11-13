@@ -10,7 +10,7 @@ import PromoCodePannel from './PromoCodePannel';
 import CookingInstructionModal from '../CommonComponent/Modals/CookingInstructionModal';
 import AddressDrawer from '../ScreenComponents/AddressComonent.jsx/AddressSection';
 import PaymentMode from '../ScreenComponents/CartComponent/PaymentModeList';
-import usePopupBackHandler from '../../../Utilities/UsePopupStack';
+// import usePopupBackHandler from '../../../Utilities/UsePopupStack';
 import Loading from '../CommonComponent/LoadingWait';
 import useIsMobile from '../../../Utilities/IsMobile';
 import { IoMdArrowRoundBack } from "react-icons/io";

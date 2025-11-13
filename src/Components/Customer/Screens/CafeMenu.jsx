@@ -377,6 +377,7 @@ function CafeMenu() {
     const url = search.get("modal");
     useEffect(() => {
         if (url === "cart") {
+            saveOrder()
             setCartVisible(true);
         } else if (!url !== "cart") {
             setCartVisible(false);
@@ -406,7 +407,7 @@ function CafeMenu() {
 
                 {/* cartsection */}
                 {cart.items.length > 0 && cart?.restaurant?.restaurantUuid === id &&
-                    <CartButton openClose={() => { navigate("?modal=cart"); saveOrder() }} orderType={orderTypeee} restaurantId={id} />
+                    <CartButton openClose={() => { navigate("?modal=cart") }} orderType={orderTypeee} restaurantId={id} />
                 }
 
                 <CartPanel
@@ -437,6 +438,7 @@ function CafeMenu() {
             />
 
             <MessagePopup show={showMessagePopup} title="Afoozo" onClose={() => { setShowMessagePopup(false); setMessage(""); navigate(-1) }} message={message} />
+
             <ItemCustomPopup show={showItemCustom} onClose={() => setShowItemCustom(false)} data={customData} dispatch={dispatch} id={id} cart={cart} />
             <CookingInstructionModal
                 show={showCookingPopup}

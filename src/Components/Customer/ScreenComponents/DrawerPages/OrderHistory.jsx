@@ -6,6 +6,7 @@ import { Modal } from 'react-bootstrap';
 import { HiArrowNarrowLeft } from "react-icons/hi";
 import Loading from '../../CommonComponent/LoadingWait';
 import { Authorization } from '../../../../Utilities/Authorization';
+import { useNavigate } from 'react-router-dom';
 
 export default function OrderHistory({ show, onHide, setShowHistoryOrderDetail, setOrderId }) {
     const [list, setList] = useState([]);
@@ -57,6 +58,7 @@ export default function OrderHistory({ show, onHide, setShowHistoryOrderDetail, 
         return `${month} ${day} ${hours}:${minutes} ${ampm}`;
     };
 
+    const navigate = useNavigate();
 
     return (
         <Modal
@@ -79,7 +81,7 @@ export default function OrderHistory({ show, onHide, setShowHistoryOrderDetail, 
                             list?.map((itm) => {
                                 return (
                                     <>
-                                        <div className="card shadow-sm p-3 m-3 rounded-4" style={{ maxWidth: 500 }} onClick={() => { setShowHistoryOrderDetail(true); setOrderId(itm?.orderReferenceId) }}>
+                                        <div className="card shadow-sm p-3 m-3 rounded-4" style={{ maxWidth: 500 }} onClick={() => { navigate("?modal=drawer&sub=historyOrderDetail"); setOrderId(itm?.orderReferenceId) }}>
                                             <div className="d-flex justify-content-between align-items-start">
                                                 <div className="pe-2">
                                                     <h6 className="fw-bold mb-1">{itm?.restaurantName}</h6>

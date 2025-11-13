@@ -22,7 +22,7 @@ const DineInScan = ({ setShowScanner }) => {
 
         <div className="scan-order-card p-4 rounded-4 shadow-sm">
           <h5 className="fw-bold">Scan and Order</h5>
-          <p>Please Scan your QR Code on your table to place an Order</p>
+          <p>Please Scan QR Code on your table to place an Order</p>
           {/* <p className="text-muted small mb-1">You are seated at</p>
           <p className="text-muted small mb-1">Tata Guest House</p>
           <p className="text-muted small mb-1">house no 574, urban estate ph2, ludhiana</p>

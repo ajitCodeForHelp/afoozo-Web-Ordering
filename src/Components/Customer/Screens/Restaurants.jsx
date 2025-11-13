@@ -16,6 +16,7 @@ import { Authorization } from "../../../Utilities/Authorization";
 import { useDispatch, useSelector } from "react-redux";
 import { setOrderTypeee } from "../../../Redux/orderTypeSlice";
 import { fetchRestaurant } from "../../../Redux/ResturantApi";
+import LiveOrdersSlide from "../ScreenComponents/RestaurantsComponent/LiveOrdersSlide";
 
 function Restaurants() {
     const location = useContext(LocationContext);
@@ -241,6 +242,7 @@ function Restaurants() {
                         onScanSuccess={handleScanSuccess}
                         onClose={() => setShowScanner(false)}
                     />}
+                <LiveOrdersSlide />
                 {isMobile && <BottomNav orderType={orderType} setOrderType={setOrderType} getList={getLisz} />}
             </div>
         </>

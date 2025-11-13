@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from "react";
 const SlideToOrder = ({ onComplete }) => {
   const sliderRef = useRef(null);
   const [isSliding, setIsSliding] = useState(false);
-  const [slideX, setSlideX] = useState(0);
+  const [slideX, setSlideX] = useState(5);
   const [completed, setCompleted] = useState(false);
   const [sliderWidth, setSliderWidth] = useState(0);
   const circleSize = 50; // diameter of circle

@@ -6,6 +6,7 @@ import { Modal } from 'react-bootstrap';
 import { HiArrowNarrowLeft } from "react-icons/hi";
 import Loading from '../../CommonComponent/LoadingWait';
 import { Authorization } from '../../../../Utilities/Authorization';
+import { useNavigate } from 'react-router-dom';
 
 export default function LiveOrders({ show, onHide, setShowOrderDetail, setOrderId }) {
     const [list, setList] = useState([]);
@@ -16,7 +17,7 @@ export default function LiveOrders({ show, onHide, setShowOrderDetail, setOrderI
             // const mobile = localStorage.getItem("mobileNo");
             // const key = localStorage.getItem("secretKey");
             // const BasicAuth = btoa(`${mobile}:${key}`);
-              const BasicAuth = Authorization();
+            const BasicAuth = Authorization();
 
             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/v1/api/getOrderList/All/Live/0/-1`, {
                 headers: {
@@ -57,6 +58,7 @@ export default function LiveOrders({ show, onHide, setShowOrderDetail, setOrderI
         return `${month} ${day} ${hours}:${minutes} ${ampm}`;
     };
 
+    const navigate = useNavigate();
 
     return (
         <Modal
@@ -78,7 +80,7 @@ export default function LiveOrders({ show, onHide, setShowOrderDetail, setOrderI
                         list?.length > 0 ? list?.map((itm) => {
                             return (
                                 <>
-                                    <div className="card shadow-sm p-3 m-3 rounded-4" style={{ maxWidth: 500 }} onClick={() => { setShowOrderDetail(true); setOrderId(itm?.orderReferenceId) }}>
+                                    <div className="card shadow-sm p-3 m-3 rounded-4" style={{ maxWidth: 500 }} onClick={() => { navigate("?modal=drawer&sub=orderDetail"); setOrderId(itm?.orderReferenceId) }}>
                                         <div className="d-flex justify-content-between align-items-start">
                                             <div className="pe-2">
                                                 <h6 className="fw-bold mb-1">{itm?.restaurantName}</h6>

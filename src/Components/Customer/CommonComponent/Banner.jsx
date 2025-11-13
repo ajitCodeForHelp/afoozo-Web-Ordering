@@ -33,6 +33,7 @@ function Banner({ orderType }) {
     }, [orderType]);
 
     const isMobile = useIsMobile();
+
     return (
         <>
             {isMobile ?
@@ -56,6 +57,7 @@ function Banner({ orderType }) {
                     </Swiper>
                 </div > :
                 <DeskBanner images={slides} />
+                // 411 1500
             }
         </>
     )
